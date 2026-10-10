@@ -5,7 +5,7 @@
 //  - 본 쪽지(created_at <= last_seen_at)만 본문을 준다.
 //  - 쓰기는 해제 후 30분 안에만 (관리자는 언제나).
 //
-// 집에서 실패 화면 보기: 주소 끝에 ?mock=far (거리 멂) / ?mock=blur (위치 흐림)
+// 집에서 실패 화면 보기: 주소 끝에 ?mock=far (거리 멂) / ?mock=blur (위치 흐림) / ?mock=offline (연결 끊김)
 // 데이터는 새로고침하면 처음으로 돌아간다. 로그인만 이 브라우저에 기억한다.
 
 const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms))
@@ -59,6 +59,10 @@ const state = {
     seedNote(11, 'w16-union', 'food', AUTHORS.a3, '수요일은 돈가스 나와서 11시 반 전에 가야 해요', { helpful_count: 9, hint: '수요일 특식' }),
     seedNote(12, 'w16-union', 'warn', AUTHORS.a2, '12시 10분부터 줄이 계단까지 가요', { helpful_count: 4 }),
     seedNote(13, 'w6-liberal', 'class', AUTHORS.admin, '교양 수업 첫 주에는 강의실이 자주 바뀌니 공지를 꼭 확인하세요', { course_name: '대학생활과진로' }),
+    // "더 보기" 확인용: 미디어융합관에 14장 (화면 확인 전용 예시)
+    ...Array.from({ length: 14 }, (_, i) =>
+      seedNote(30 + i, 'w17-media', ['tip', 'study', 'food', 'warn', 'class'][i % 5], [AUTHORS.a1, AUTHORS.a2, AUTHORS.a3, AUTHORS.a4][i % 4], `더 보기 확인용 예시 쪽지 ${i + 1}번이에요`, { helpful_count: 14 - i }),
+    ),
   ],
   unlocks: {}, // place_id → { first_unlocked_at, last_seen_at, write_until }
   helpfuls: new Set(), // note_id
@@ -109,9 +113,26 @@ export async function me() {
   return currentUser
 }
 
+// 목업 로그인 규칙: 아이디마다 처음 쓴 비밀번호를 기억하고, 다르면 실패. 5번 실패하면 10분 잠금.
+const LOCK_AFTER = 5
+const LOCK_MS = 10 * 60_000
+const mockAccounts = {} // username → { password, failed, lockedUntil }
+
 export async function login({ username, password }) {
   await delay()
   if (!username || !password || password.length < 8) throw fail(401, 'bad_credentials')
+  const acc = (mockAccounts[username] ??= { password, failed: 0, lockedUntil: 0 })
+  if (Date.now() < acc.lockedUntil) throw fail(423, 'locked')
+  if (acc.password !== password) {
+    acc.failed += 1
+    if (acc.failed >= LOCK_AFTER) {
+      acc.failed = 0
+      acc.lockedUntil = Date.now() + LOCK_MS
+      throw fail(423, 'locked')
+    }
+    throw fail(401, 'bad_credentials', { remaining: LOCK_AFTER - acc.failed })
+  }
+  acc.failed = 0
   // 목업: 아이디가 admin으로 시작하면 관리자
   currentUser = {
     id: `u-${username}`,
@@ -208,6 +229,7 @@ export function placeSummary(placeId) {
 
 export async function listNotes(placeId) {
   await delay(250)
+  if (mockMode() === 'offline') throw fail(0, 'network')
   const u = state.unlocks[placeId]
   return {
     notes: visibleNotes(placeId).map(shapeNote),
@@ -220,6 +242,7 @@ export async function listNotes(placeId) {
 export async function unlock(placeId, body) {
   await delay(600)
   const mode = mockMode()
+  if (mode === 'offline') throw fail(0, 'network')
   if (body.method === 'gps') {
     if (mode === 'blur') return { unlocked: false, reason: 'low_accuracy', distance_m: null }
     if (mode === 'far') return { unlocked: false, reason: 'too_far', distance_m: 120 }

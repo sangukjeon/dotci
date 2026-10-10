@@ -66,7 +66,8 @@ function LoginForm({ goTo }) {
       await login(form)
       navigate(goTo, { replace: true })
     } catch (err) {
-      setError(LOGIN_ERRORS[err.code] ?? '로그인하지 못했어요. 잠시 후 다시 시도해 주세요.')
+      const base = LOGIN_ERRORS[err.code] ?? '로그인하지 못했어요. 잠시 후 다시 시도해 주세요.'
+      setError(err.remaining && err.remaining <= 3 ? `${base} ${err.remaining}번 더 틀리면 10분 동안 잠겨요.` : base)
     } finally {
       setBusy(false)
     }

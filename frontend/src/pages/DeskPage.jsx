@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, LayoutGroup } from 'motion/react'
-import { ChevronLeft, CircleCheck, Info, Lock, MapPin, PenLine, QrCode, Sparkles, TriangleAlert } from 'lucide-react'
+import { ChevronLeft, CircleCheck, Info, Lock, MapPin, MapPinOff, PenLine, QrCode, Sparkles, TriangleAlert, WifiOff } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import { getPosition } from '../geo.js'
 import { useAuth } from '../auth.jsx'
 import { useToast } from '../toast.jsx'
-import Desk from '../components/Desk.jsx'
+import Desk, { DeskSkeleton } from '../components/Desk.jsx'
 import NoteModal from '../components/NoteModal.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
 import * as server from '../mock/server.js' // TODO(10/12): 진짜 /api/places/{id}/notes, /unlock 로 교체
@@ -28,6 +28,8 @@ function bannerFor(result) {
       return { tone: 'warn', text: '코드를 다시 확인해 주세요.', qr: true }
     case 'rate_limited':
       return { tone: 'warn', text: '잠시 뒤에 다시 시도해 주세요.' }
+    case 'network':
+      return { tone: 'warn', text: '연결이 끊겼어요. 인터넷을 확인하고 다시 눌러 주세요.' }
     default:
       return { tone: 'warn', text: '확인하지 못했어요. 잠시 후 다시 시도해 주세요.' }
   }
@@ -49,20 +51,32 @@ export default function DeskPage() {
   const [openNote, setOpenNote] = useState(null)
   const [writing, setWriting] = useState(false)
   const [enteringId, setEnteringId] = useState(null)
+  const [loadError, setLoadError] = useState(null) // null | 'network' | 'notfound'
   const [, tick] = useState(0)
   const startedQr = useRef(false)
 
-  useEffect(() => {
-    getPlaces()
-      .then((list) => setPlace(list.find((p) => p.id === id) ?? { id, name: '', building: '' }))
-      .catch(() => setPlace({ id, name: '', building: '' }))
+  // 장소 정보와 쪽지를 함께 불러온다. 없는 장소면 notfound, 연결 문제면 network.
+  const load = useCallback(() => {
+    setLoadError(null)
     setData(null)
-    server.listNotes(id).then(setData)
+    Promise.all([getPlaces(), server.listNotes(id)])
+      .then(([list, notes]) => {
+        const found = list.find((p) => p.id === id)
+        if (!found) return setLoadError('notfound')
+        setPlace(found)
+        setData(notes)
+      })
+      .catch(() => setLoadError('network'))
+  }, [id])
+
+  useEffect(() => {
+    setPlace(null)
+    load()
     setNewIds([])
     setBanner(null)
     setEnteringId(null)
     startedQr.current = false // 다른 장소로 옮겨 왔으면 그 장소의 QR 코드도 처리
-  }, [id])
+  }, [load])
 
   // 쓰기 가능 시간이 지나면 버튼이 바뀌도록 30초마다 다시 그린다
   useEffect(() => {
@@ -102,6 +116,8 @@ export default function DeskPage() {
     setStatus('judging')
     try {
       applyUnlock(await server.unlock(id, { method: 'gps', ...pos }))
+    } catch {
+      setBanner(bannerFor({ reason: 'network' }))
     } finally {
       setStatus('idle')
     }
@@ -113,6 +129,8 @@ export default function DeskPage() {
       try {
         const result = await server.unlock(id, { method: 'qr', code })
         applyUnlock({ ...result, code })
+      } catch {
+        setBanner(bannerFor({ reason: 'network' }))
       } finally {
         setStatus('idle')
       }
@@ -172,6 +190,38 @@ export default function DeskPage() {
   const busy = status !== 'idle'
   const busyText = status === 'locating' ? '위치 확인 중...' : '확인 중...'
 
+  if (loadError) {
+    return (
+      <main className="desk-page">
+        <header className="top-bar">
+          <Link to="/" className="icon-btn pressable" aria-label="지도로 돌아가기">
+            <ChevronLeft size={26} aria-hidden="true" />
+          </Link>
+        </header>
+        <div className="desk-page__state" role="alert">
+          <span className="desk-page__state-icon">
+            {loadError === 'notfound' ? <MapPinOff size={24} aria-hidden="true" /> : <WifiOff size={24} aria-hidden="true" />}
+          </span>
+          <p className="desk-page__state-title">
+            {loadError === 'notfound' ? '찾을 수 없는 장소예요' : '책상을 불러오지 못했어요'}
+          </p>
+          <p className="desk-page__state-body">
+            {loadError === 'notfound' ? '주소가 바뀌었거나 없어진 장소예요. 지도에서 다시 골라 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.'}
+          </p>
+          {loadError === 'notfound' ? (
+            <Link to="/" className="btn-sub">
+              지도로 가기
+            </Link>
+          ) : (
+            <button className="btn-sub pressable" onClick={load}>
+              다시 시도
+            </button>
+          )}
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="desk-page">
       <header className="top-bar">
@@ -187,7 +237,7 @@ export default function DeskPage() {
       </section>
 
       <LayoutGroup>
-        {data && <Desk notes={notes} newIds={newIds} enteringId={enteringId} onOpen={openCard} />}
+        {data ? <Desk notes={notes} newIds={newIds} enteringId={enteringId} onOpen={openCard} /> : <DeskSkeleton />}
         <AnimatePresence>
           {openNote && (
             <NoteModal

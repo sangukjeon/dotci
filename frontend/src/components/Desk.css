@@ -7,10 +7,46 @@
 
 .desk__more {
   grid-column: 1 / -1;
-  text-align: center;
-  font-size: 14px;
-  line-height: 22px;
-  color: var(--text-2);
+  min-height: var(--btn-sub-h);
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.desk__more b {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* 로딩 뼈대: 카드 모양 회색 + 반짝이는 빛 */
+.desk__skeleton {
+  position: relative;
+  height: 144px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.desk__skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, var(--bg) 50%, transparent 80%);
+  animation: desk-shimmer 1.4s linear infinite;
+}
+@keyframes desk-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 /* 쪽지 0개 */

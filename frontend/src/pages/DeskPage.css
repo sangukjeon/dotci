@@ -55,3 +55,42 @@
   line-height: 20px;
   color: var(--text-2);
 }
+
+/* 불러오기 실패 / 없는 장소 */
+.desk-page__state {
+  margin: var(--sp-8) var(--sp-4);
+  padding: var(--sp-8) var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  text-align: center;
+}
+.desk-page__state-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.desk-page__state-title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.desk-page__state-body {
+  margin-bottom: var(--sp-3);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.desk-page__state .btn-sub {
+  text-decoration: none;
+}

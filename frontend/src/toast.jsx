@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { CircleCheck } from 'lucide-react'
 
@@ -41,3 +41,19 @@ export function ToastProvider({ children }) {
 }
 
 export const useToast = () => useContext(ToastContext)
+
+// 인터넷이 끊기거나 다시 연결되면 알려 준다
+export function OfflineNotice() {
+  const show = useToast()
+  useEffect(() => {
+    const off = () => show('연결이 끊겼어요. 인터넷을 확인해 주세요')
+    const on = () => show('다시 연결됐어요', { success: true })
+    window.addEventListener('offline', off)
+    window.addEventListener('online', on)
+    return () => {
+      window.removeEventListener('offline', off)
+      window.removeEventListener('online', on)
+    }
+  }, [show])
+  return null
+}

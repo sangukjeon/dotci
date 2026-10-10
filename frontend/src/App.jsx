@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from './auth.jsx'
-import { ToastProvider } from './toast.jsx'
+import { OfflineNotice, ToastProvider } from './toast.jsx'
 import { useServerWake } from './hooks/useServerWake.js'
 import WakeOverlay from './components/WakeOverlay.jsx'
 import AuthPage from './pages/AuthPage.jsx'
@@ -28,6 +28,7 @@ export default function App() {
           </Routes>
         </div>
         <WakeOverlay show={waking} />
+        <OfflineNotice />
       </ToastProvider>
     </AuthProvider>
   )
