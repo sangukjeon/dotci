@@ -1,0 +1,110 @@
+/* 바깥(.note): 위치·기울기 + 원근감(perspective)
+   안쪽(.note__card): 실제로 뒤집히는 카드
+   면(.note__face): 앞면·뒷면. 뒤를 향한 면은 보이지 않게(backface-visibility) */
+.note {
+  position: absolute;
+  width: var(--note-size);
+  height: var(--note-size);
+  transform: translate(-50%, 0) rotate(var(--rot));
+  perspective: 800px;
+}
+.note:active {
+  transform: translate(-50%, 0) rotate(var(--rot)) scale(0.95);
+}
+
+.note__card {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1.1);
+}
+.note__card--open {
+  transform: rotateY(180deg);
+}
+
+.note__face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-note);
+  box-shadow: var(--shadow-note);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-2);
+  color: var(--ink);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* 위쪽 반투명 테이프 */
+.note__face::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 42%;
+  height: 14px;
+  transform: translateX(-50%) rotate(-2deg);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 오른쪽 아래 종이 끝이 살짝 들뜬 느낌 */
+.note__face::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.1) 50%);
+}
+
+.note__back {
+  gap: 2px;
+}
+.note__hint {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.note__hint b {
+  font-weight: 700;
+}
+
+.note__front {
+  transform: rotateY(180deg);
+  font-family: var(--font-hand);
+  font-size: clamp(17px, 5vw, 22px);
+  line-height: 1.1;
+  word-break: keep-all;
+}
+.note__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+/* 동작 줄이기: 뒤집는 대신 서서히 바뀌기 */
+@media (prefers-reduced-motion: reduce) {
+  .note__card,
+  .note__card--open {
+    transform: none;
+  }
+  .note__front {
+    transform: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .note__card--open .note__front {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,139 @@
+@import "./styles/tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink);
+  background-color: var(--desk);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 나무 책상: 나뭇결 줄무늬 + 가장자리 어둡게(비네팅).
+   나무 텍스처 사진을 구하면 background-image 첫 줄을 url(...)로 바꾼다. */
+.desk-bg {
+  min-height: 100dvh;
+  background-color: var(--desk);
+  background-image:
+    radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.45) 100%),
+    repeating-linear-gradient(
+      92deg,
+      rgba(0, 0, 0, 0.05) 0 2px,
+      transparent 2px 22px,
+      rgba(255, 255, 255, 0.03) 22px 24px,
+      transparent 24px 47px
+    );
+}
+
+/* 화면 틀: 폰 기준, 큰 화면에서도 가운데 480px */
+.screen {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: var(--sp-4) var(--sp-4) calc(var(--btn-main-h) + var(--sp-8));
+}
+
+/* 접근성: 키보드 포커스 테두리는 지우지 않는다 */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 눌림 반응 */
+.pressable {
+  transition: transform 100ms ease-in-out;
+}
+.pressable:active {
+  transform: scale(0.92);
+}
+
+/* 버튼 */
+.btn-main {
+  position: fixed;
+  left: 50%;
+  bottom: var(--sp-4);
+  transform: translateX(-50%);
+  width: calc(min(480px, 100vw) - 2 * var(--sp-4));
+  height: var(--btn-main-h);
+  border-radius: var(--r-control);
+  background: var(--stamp);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  transition: transform 100ms ease-in-out, background-color 100ms;
+}
+.btn-main:active {
+  transform: translateX(-50%) scale(0.96);
+  background: var(--stamp-strong);
+}
+
+.btn-sub {
+  height: var(--btn-sub-h);
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-control);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper);
+}
+
+/* 화면 읽기 프로그램 전용 글자 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 휴대폰 "동작 줄이기" 설정 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}

@@ -1,0 +1,49 @@
+/* 핀 아래쪽 끝이 좌표에 오도록 가운데·아래 정렬. 누르는 영역은 최소 44px. */
+.pin {
+  position: absolute;
+  transform: translate(-50%, -24px);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink);
+}
+.pin:active {
+  transform: translate(-50%, -24px) scale(0.92);
+}
+
+.pin__icon {
+  color: var(--stamp);
+  fill: #fff;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.3));
+}
+.pin__icon--ok {
+  color: var(--ok);
+}
+
+.pin__tag {
+  margin-top: 2px;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  background: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.pin__tag b {
+  font-weight: 700;
+}
+
+.pin__dots {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+.pin__dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(58, 42, 28, 0.25);
+}

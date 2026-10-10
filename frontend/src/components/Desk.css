@@ -1,0 +1,23 @@
+/* 포스트잇이 놓이는 영역. pos_x/pos_y(0~100%)는 이 영역 기준. */
+.desk {
+  position: relative;
+  aspect-ratio: 3 / 4.2;
+  margin-top: var(--sp-6);
+}
+
+/* 쪽지 0개: 연필로 쓴 안내 포스트잇 */
+.desk__empty {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: 180px;
+  padding: var(--sp-6) var(--sp-4);
+  transform: translateX(-50%) rotate(-3deg);
+  background: var(--paper);
+  box-shadow: var(--shadow-note);
+  font-family: var(--font-hand);
+  font-size: 24px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink-2);
+}

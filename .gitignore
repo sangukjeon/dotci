@@ -1,0 +1,26 @@
+# 비밀값 — 절대 커밋 금지 (.env.example만 커밋)
+.env
+.env.*
+!.env.example
+
+# QR 원본 코드 (인쇄용, 비공개)
+*.local.csv
+
+# 내 컴퓨터용 DB
+*.db
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+dist/
+
+# 기타
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

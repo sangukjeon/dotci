@@ -1,0 +1,22 @@
+.desk-page__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 마스킹테이프 이름표 */
+.desk-page__label {
+  margin: 0;
+  padding: 4px 18px;
+  background: rgba(255, 243, 220, 0.9);
+  transform: rotate(-2deg);
+  box-shadow: var(--shadow-paper);
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

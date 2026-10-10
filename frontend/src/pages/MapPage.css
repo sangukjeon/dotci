@@ -1,0 +1,35 @@
+.map-title {
+  margin: var(--sp-2) 0 var(--sp-6);
+  text-align: center;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--paper);
+}
+
+.map-error {
+  margin-top: var(--sp-8);
+  padding: var(--sp-6);
+  border-radius: var(--r-card);
+  background: var(--paper);
+  text-align: center;
+}
+
+.map-actions {
+  position: fixed;
+  left: 50%;
+  bottom: var(--sp-4);
+  transform: translateX(-50%);
+  width: calc(min(480px, 100vw) - 2 * var(--sp-4));
+  display: flex;
+  gap: var(--sp-2);
+}
+.map-actions .btn-sub {
+  flex: 1;
+}
+/* 비활성은 투명도가 아니라 색으로 (DESIGN.md 6장) */
+.map-actions .btn-sub:disabled {
+  background: var(--desk-light);
+  color: var(--paper);
+  cursor: not-allowed;
+}
