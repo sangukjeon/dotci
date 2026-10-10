@@ -3,7 +3,7 @@
 실행 (backend 폴더에서):  .venv/Scripts/python seed.py
 
 - 이미 있는 데이터는 건너뛴다 (여러 번 실행해도 안전).
-- 장소 좌표는 아직 **예시 값**이다. 캠퍼스에서 실제 좌표를 모으면 PLACES를 고친다.
+- 장소는 우송대 서캠퍼스 건물 10곳. 현장 확인 후 이름·반경을 고친다.
 - QR 값과 6자리 코드는 무작위로 만들고, QR 인쇄용으로 qr_codes.local.csv에 저장한다.
   이 파일은 .gitignore에 있어 Git에 올라가지 않는다. 화면이나 API로는 절대 내보내지 않는다.
 """
@@ -14,7 +14,6 @@ import string
 
 from sqlmodel import Session, select
 
-from app.config import settings
 from app.db import create_db_and_tables, engine
 from app.models import Department, InviteCode, Place
 
@@ -27,19 +26,20 @@ INVITE_CODES = [
     ("경영학과", "BIZ-2026", 50),
 ]
 
-# (id, 이름, 건물, 위도 오프셋, 경도 오프셋, 반경m, 소개)
-# 위도·경도는 캠퍼스 중심(CAMPUS_LAT/LNG) + 오프셋인 **예시 값**. 0.001도 ≈ 111m.
+# (id, 이름, 건물, 위도, 경도, 반경m, 소개) — 우송대학교 서캠퍼스
+# 좌표 출처: OpenStreetMap (© OpenStreetMap contributors, ODbL). 건물 중심점이라 현장에서 반경을 조정한다.
+# 장소끼리 최소 60m 떨어져 있다. 가장 가까운 W16–W17(60m)은 반경을 30m로 줄였다.
 PLACES = [
-    ("lib-3f", "도서관 3층 열람실", "중앙도서관", 0.0000, 0.0000, 40, "조용히 공부하는 곳"),
-    ("lib-1f", "도서관 1층 로비", "중앙도서관", 0.0006, 0.0004, 40, "프린터와 사물함"),
-    ("cafeteria", "학생식당", "학생회관", -0.0012, 0.0010, 150, "점심 메뉴 꿀팁"),
-    ("eng-301", "공학관 301호", "공학관", 0.0015, -0.0012, 40, "전공 수업 강의실"),
-    ("union", "학생회관 라운지", "학생회관", -0.0008, 0.0018, 40, "동아리방과 휴게 공간"),
-    ("gate", "정문", "정문", -0.0030, 0.0000, 60, "캠퍼스 첫걸음"),
-    ("cafe", "본관 앞 카페", "본관", 0.0000, 0.0025, 150, "시험기간 생존 카페"),
-    ("gym", "체육관", "체육관", 0.0025, 0.0020, 60, "운동과 샤워실"),
-    ("hum-201", "인문관 201호", "인문관", 0.0020, -0.0025, 40, "교양 수업 강의실"),
-    ("dorm", "기숙사 1동", "기숙사", -0.0025, -0.0025, 60, "생활관 팁"),
+    ("w1-library", "우송도서관", "W1 우송도서관", 36.338101, 127.446411, 40, "공부 자리·열람실 팁"),
+    ("w4-railway", "철도물류관", "W4 철도물류관", 36.338765, 127.445733, 40, "전공 강의실 팁"),
+    ("w6-liberal", "교양관", "W6 교양관", 36.337563, 127.445734, 40, "교양 수업 팁"),
+    ("w7-admin", "우송관", "W7 우송관", 36.337102, 127.445092, 40, "학사·행정 처리 팁"),
+    ("w11-gym", "서캠 체육관", "W11 체육관", 36.335832, 127.443296, 50, "체육 수업·운동 팁"),
+    ("w13-tower", "우송타워", "W13 우송타워", 36.335600, 127.444313, 40, "강의실·휴게 공간 팁"),
+    ("w16-union", "학생회관", "W16 학생회관", 36.336068, 127.444977, 30, "식당·동아리 팁"),
+    ("w17-media", "미디어융합관", "W17 미디어융합관", 36.335810, 127.445564, 30, "전공 강의실 팁"),
+    ("dorm-cheongun1", "청운1숙", "청운1숙 기숙사", 36.337859, 127.447622, 50, "기숙사 생활 팁"),
+    ("cu-west", "서캠 CU", "편의점", 36.338896, 127.444856, 30, "간식·생필품 팁"),
 ]
 
 
@@ -78,15 +78,15 @@ def main() -> None:
         # 장소
         used_manual = set(session.exec(select(Place.manual_code)).all())
         new_codes = []
-        for pid, name, building, dlat, dlng, radius, intro in PLACES:
+        for pid, name, building, lat, lng, radius, intro in PLACES:
             if session.get(Place, pid) is not None:
                 continue
             place = Place(
                 id=pid,
                 name=name,
                 building=building,
-                lat=settings.campus_lat + dlat,
-                lng=settings.campus_lng + dlng,
+                lat=lat,
+                lng=lng,
                 radius_m=radius,
                 qr_code=random_qr_code(),
                 manual_code=random_manual_code(used_manual),

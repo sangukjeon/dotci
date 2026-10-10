@@ -23,9 +23,10 @@ class Settings(BaseSettings):
     jwt_secret: str = "dev-only-change-me"
 
     # 가입 시 "학교에 있어요" 확인에 쓰는 캠퍼스 중심 좌표와 허용 반경(m)
-    campus_lat: float = 37.0
-    campus_lng: float = 127.0
-    campus_radius_m: int = 800
+    # 기본값: 우송대학교 서캠퍼스 (장소 10곳의 중심, 가장 먼 장소까지 약 240m)
+    campus_lat: float = 36.33716
+    campus_lng: float = 127.44536
+    campus_radius_m: int = 400
 
     @property
     def is_prod(self) -> bool:

@@ -5,7 +5,7 @@
 //  - MOCK_CONTENTS: 해제에 성공했을 때만 서버가 보내 줄 본문.
 
 export const MOCK_LOCKED_NOTES = {
-  'lib-3f': [
+  'w1-library': [
     { id: 1, category: 'tip', author_grade: 4, helpful_count: 12, course_name: null, hint: null },
     { id: 2, category: 'study', author_grade: 3, helpful_count: 8, course_name: null, hint: '콘센트 명당' },
     { id: 3, category: 'food', author_grade: 2, helpful_count: 3, course_name: null, hint: '시험기간 필수' },
@@ -14,7 +14,7 @@ export const MOCK_LOCKED_NOTES = {
     { id: 6, category: 'warn', author_grade: 4, helpful_count: 21, course_name: null, hint: '문 조심' },
     { id: 7, category: 'study', author_grade: 1, helpful_count: 1, course_name: null, hint: null },
   ],
-  cafeteria: [
+  'w16-union': [
     { id: 11, category: 'food', author_grade: 3, helpful_count: 9, course_name: null, hint: '수요일 특식' },
     { id: 12, category: 'warn', author_grade: 2, helpful_count: 4, course_name: null, hint: null },
   ],
