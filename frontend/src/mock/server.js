@@ -33,7 +33,7 @@ const AUTHORS = {
   a3: { id: 'a3', nickname: '삼학년', grade: 3, department: '전자공학과' },
   a2: { id: 'a2', nickname: '학식러버', grade: 2, department: '경영학과' },
   a1: { id: 'a1', nickname: '새내기', grade: 1, department: '컴퓨터공학과' },
-  admin: { id: 'admin', nickname: '선배의 흔적', grade: 4, department: '운영진' },
+  admin: { id: 'admin', nickname: 'DOTCI', grade: 4, department: '운영진' },
 }
 
 // 화면 확인용 예시 쪽지 (실제 선배 팁이 아님)
@@ -67,7 +67,7 @@ const state = {
 
 // ---------- 로그인 (이 브라우저에만 기억) ----------
 
-const USER_KEY = 'seonbae-mock-user'
+const USER_KEY = 'dotci-mock-user'
 function loadUser() {
   try {
     return JSON.parse(localStorage.getItem(USER_KEY))

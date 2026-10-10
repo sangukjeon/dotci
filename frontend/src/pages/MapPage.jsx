@@ -71,7 +71,7 @@ export default function MapPage() {
 
   return (
     <main className="map-page">
-      <h1 className="sr-only">선배의 흔적 캠퍼스 지도</h1>
+      <h1 className="sr-only">DOTCI 캠퍼스 지도</h1>
 
       {view === 'map' && places && (
         <NaverMap
@@ -86,7 +86,9 @@ export default function MapPage() {
       {view === 'list' && (
         <div className="map-page__list">
           <div className="map-page__list-head">
-            <p className="map-page__brand">선배의 흔적</p>
+            <p className="map-page__brand">
+              DOTCI<span className="brand-dot" aria-hidden="true" />
+            </p>
             <MeButton user={user} onClick={() => setShowMe(true)} />
           </div>
           {mapError && <p className="map-page__notice">{MAP_ERRORS[mapError]}</p>}
@@ -96,7 +98,9 @@ export default function MapPage() {
 
       {view === 'map' && (
         <>
-          <div className="map-page__brand-pill">선배의 흔적</div>
+          <div className="map-page__brand-pill">
+            DOTCI<span className="brand-dot" aria-hidden="true" />
+          </div>
           <div className="map-page__me">
             <MeButton user={user} onClick={() => setShowMe(true)} />
           </div>

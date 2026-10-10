@@ -21,7 +21,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(
-    title="선배의 흔적 API",
+    title="DOTCI API",
     lifespan=lifespan,
     # 운영 모드에서는 API 설명 화면(/docs)을 숨긴다.
     docs_url=None if settings.is_prod else "/api/docs",

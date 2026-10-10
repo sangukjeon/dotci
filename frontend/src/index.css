@@ -318,3 +318,14 @@ a {
   font-size: 15px;
   line-height: 22px;
 }
+
+/* 로고 DOTCI 끝의 파란 점 (글자 크기에 맞춰 커짐) */
+.brand-dot {
+  display: inline-block;
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: 0.08em;
+  border-radius: 50%;
+  background: var(--primary);
+  vertical-align: baseline;
+}
