@@ -120,5 +120,10 @@ export default function NaverMap({ places, selectedId, onSelect, myPos, onError 
     map.panTo(pos)
   }, [myPos, ready])
 
-  return <div ref={boxRef} className="naver-map" role="application" aria-label="캠퍼스 지도" />
+  // 네이버 지도는 넘겨준 칸의 position을 바꾸므로, 바깥 틀이 크기를 잡고 안쪽 칸은 꽉 채우기만 한다.
+  return (
+    <div className="naver-map">
+      <div ref={boxRef} className="naver-map__box" role="application" aria-label="캠퍼스 지도" />
+    </div>
+  )
 }
