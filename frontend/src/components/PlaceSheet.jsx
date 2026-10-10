@@ -34,9 +34,16 @@ export default function PlaceSheet({ place, onClose }) {
           <span className="tag" style={{ background: 'var(--success-weak)', color: 'var(--success)' }}>
             <CircleCheck size={14} aria-hidden="true" /> 열어 본 장소
           </span>
+        ) : place.note_count > 0 ? (
+          <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
+            <Lock size={14} aria-hidden="true" />
+            <span>
+              쪽지 <b>{place.note_count}</b>개 잠김
+            </span>
+          </span>
         ) : (
           <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
-            <Lock size={14} aria-hidden="true" /> 쪽지 <b>{place.note_count}</b>개 잠김
+            아직 쪽지가 없어요
           </span>
         )}
         {cats.map((c) => (

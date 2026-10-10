@@ -67,7 +67,7 @@ Pretendard 하나만 쓴다 (CDN dynamic subset). 굵기 400 / 600 / 700.
 | 상단 바 | 높이 52px, 흰 바탕, 아래 1px `--line` |
 | 주 버튼 | 높이 56px, `--primary`, 흰 글자 title1. 화면 하단 흰 판(plate) 위에 고정 |
 | 보조 버튼 | 높이 48px, 흰 바탕 + 1px `--line` |
-| 쪽지 카드 | 2열 격자, 높이 132px, 패딩 14px |
+| 쪽지 카드 | 2열 격자, 높이 144px, 패딩 14px |
 | 지도 마커 | 지름 36px 원, `--primary` 바탕 흰 아이콘, 오른쪽 위 쪽지 수 배지. 연 장소는 `--success` |
 | 하단 시트 | 흰 바탕, 위 모서리 24px, 손잡이 36×4 `--line`, `--shadow-sheet` |
 | 태그 | 모서리 6px, caption, 연한 바탕 + 진한 글자 |

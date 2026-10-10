@@ -44,9 +44,16 @@ export default function DeskPage() {
           <span className="tag" style={{ background: 'var(--success-weak)', color: 'var(--success)' }}>
             <CircleCheck size={14} aria-hidden="true" /> 열었어요
           </span>
+        ) : notes.length > 0 ? (
+          <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
+            <Lock size={14} aria-hidden="true" />
+            <span>
+              쪽지 <b>{notes.length}</b>개 잠김
+            </span>
+          </span>
         ) : (
           <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
-            <Lock size={14} aria-hidden="true" /> 쪽지 <b>{notes.length}</b>개 잠김
+            아직 쪽지가 없어요
           </span>
         )}
       </section>
