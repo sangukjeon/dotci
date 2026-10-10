@@ -150,3 +150,64 @@
 .coll__done {
   margin-top: var(--sp-1);
 }
+
+/* 캠퍼스 수료증 카드 */
+.cert {
+  position: relative;
+  margin-top: var(--sp-2);
+  padding: var(--sp-6) var(--sp-4);
+  border-radius: var(--r-sheet);
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  text-align: center;
+}
+.cert__logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.cert__title {
+  margin-top: var(--sp-2);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--primary);
+}
+.cert__name {
+  margin-top: var(--sp-3);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.cert__meta {
+  font-size: 14px;
+  color: var(--text-2);
+}
+.cert__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: var(--sp-4) 0 var(--sp-2);
+}
+.cert__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+.cert__date {
+  font-size: 13px;
+  color: var(--text-2);
+}
+.cert__badge {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  color: #c98f00;
+}
+.cert__actions {
+  display: flex;
+  justify-content: center;
+  padding: var(--sp-3) var(--sp-4) 0;
+}

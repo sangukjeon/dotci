@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronRight, LogOut, ShieldCheck, Stamp } from 'lucide-react'
+import { BookOpen, ChevronRight, LogOut, Route, ShieldCheck, Stamp, Trophy } from 'lucide-react'
 import Sheet from './Sheet.jsx'
 import { useAuth } from '../auth.jsx'
 import './MeSheet.css'
@@ -34,6 +34,21 @@ export default function MeSheet({ onClose }) {
         <li>
           <Link to="/me" className="me__row">
             <Stamp size={20} aria-hidden="true" /> 내 도감 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+          </Link>
+        </li>
+        <li>
+          <Link to="/courses" className="me__row">
+            <Route size={20} aria-hidden="true" /> 멘토링 코스 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+          </Link>
+        </li>
+        <li>
+          <Link to="/subjects" className="me__row">
+            <BookOpen size={20} aria-hidden="true" /> 과목별 수강 팁 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+          </Link>
+        </li>
+        <li>
+          <Link to="/ranking" className="me__row">
+            <Trophy size={20} aria-hidden="true" /> 학과 대항전 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
           </Link>
         </li>
         {user.is_admin && (

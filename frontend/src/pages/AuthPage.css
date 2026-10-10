@@ -119,3 +119,18 @@
   height: 20px;
   accent-color: var(--primary);
 }
+
+/* 전시 관람객용 체험 버튼 */
+.auth__guest {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 40px;
+  margin-top: var(--sp-4);
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--primary-strong);
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { BadgeCheck, Heart, Lock } from 'lucide-react'
-import { CATEGORIES } from '../categories.js'
+import { CATEGORIES, gradeLabel } from '../categories.js'
 import './NoteCard.css'
 
 const FLIP_STEP_MS = 120
@@ -18,8 +18,8 @@ export default function NoteCard({ note, isNew = false, flipOrder = 0, entering 
   const lockedTitle = note.hint ? `“${note.hint}”` : note.course_name || cat.label
 
   const label = open
-    ? `${cat.label} 쪽지, ${note.author_grade}학년: ${note.content}`
-    : `잠긴 쪽지, ${cat.label}, ${lockedTitle}, ${note.author_grade}학년, 도움 ${note.helpful_count}명`
+    ? `${cat.label} 쪽지, ${gradeLabel(note.author_grade)}: ${note.content}`
+    : `잠긴 쪽지, ${cat.label}, ${lockedTitle}, ${gradeLabel(note.author_grade)}, 도움 ${note.helpful_count}명`
 
   return (
     <motion.button
@@ -46,7 +46,7 @@ export default function NoteCard({ note, isNew = false, flipOrder = 0, entering 
           <span className="ncard__bottom">
             <span className="ncard__title">{lockedTitle}</span>
             <span className="ncard__meta">
-              {note.author_grade}학년 · 도움 <b>{note.helpful_count}</b>
+              {gradeLabel(note.author_grade)} · 도움 <b>{note.helpful_count}</b>
             </span>
           </span>
         </span>
@@ -62,7 +62,7 @@ export default function NoteCard({ note, isNew = false, flipOrder = 0, entering 
           {isNew && <span className="ncard__new">NEW</span>}
           <span className="ncard__text">{open ? note.content : ''}</span>
           <span className="ncard__meta">
-            {note.author_grade}학년 ·{' '}
+            {gradeLabel(note.author_grade)} ·{' '}
             <Heart size={12} className={note.liked_by_me ? 'ncard__heart ncard__heart--on' : 'ncard__heart'} />{' '}
             <b>{note.helpful_count}</b>
           </span>

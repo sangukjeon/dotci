@@ -37,7 +37,7 @@ function bannerFor(result) {
 
 export default function DeskPage() {
   const { id } = useParams()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const toast = useToast()
   const navigate = useNavigate()
   const routeState = useLocation().state
@@ -59,7 +59,7 @@ export default function DeskPage() {
   const load = useCallback(() => {
     setLoadError(null)
     setData(null)
-    Promise.all([getPlaces(), server.listNotes(id)])
+    Promise.all([getPlaces().then(server.withMockPlaces), server.listNotes(id)])
       .then(([list, notes]) => {
         const found = list.find((p) => p.id === id)
         if (!found) return setLoadError('notfound')
@@ -163,6 +163,15 @@ export default function DeskPage() {
     setOpenNote(null)
     toast('쪽지를 지웠어요')
   }
+  const onReported = (result) => {
+    if (result.hidden) {
+      setData((d) => ({ ...d, notes: d.notes.filter((n) => n.id !== openNote.id) }))
+      setOpenNote(null)
+      toast('신고가 3건 모여 쪽지를 숨겼어요')
+    } else {
+      toast('신고했어요. 3건이 모이면 자동으로 숨겨져요')
+    }
+  }
   const onHide = async () => {
     await server.hideNote(openNote.id)
     setData((d) => ({ ...d, notes: d.notes.filter((n) => n.id !== openNote.id) }))
@@ -225,9 +234,18 @@ export default function DeskPage() {
   return (
     <main className="desk-page">
       <header className="top-bar">
-        <Link to="/" className="icon-btn pressable" aria-label="지도로 돌아가기">
-          <ChevronLeft size={26} aria-hidden="true" />
-        </Link>
+        {user?.is_guest ? (
+          <>
+            <span className="desk-page__guest-tag">관람객 체험 중 · {user.nickname}</span>
+            <button className="text-btn desk-page__guest-end" onClick={logout}>
+              체험 끝내기
+            </button>
+          </>
+        ) : (
+          <Link to="/" className="icon-btn pressable" aria-label="지도로 돌아가기">
+            <ChevronLeft size={26} aria-hidden="true" />
+          </Link>
+        )}
       </header>
 
       <section className="desk-page__head">
@@ -247,6 +265,7 @@ export default function DeskPage() {
               onHelpful={onHelpful}
               onDelete={onDelete}
               onHide={onHide}
+              onReported={onReported}
             />
           )}
         </AnimatePresence>

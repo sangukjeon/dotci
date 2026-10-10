@@ -114,3 +114,39 @@
 .map-page__action {
   text-decoration: none;
 }
+
+/* 근처 알림 띠 (지도 위) */
+.map-page__nearby {
+  position: absolute;
+  top: calc(var(--sp-3) + 52px + env(safe-area-inset-top));
+  left: var(--sp-4);
+  right: var(--sp-4);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 10px 4px 10px 14px;
+  border-radius: var(--r-card);
+  background: var(--text-strong);
+  color: #fff;
+  box-shadow: var(--shadow-float);
+}
+.map-page__nearby-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  color: #fff;
+}
+.map-page__nearby-main b {
+  font-weight: 700;
+}
+.map-page__nearby-main span {
+  font-size: 13px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.map-page__nearby-close {
+  color: #fff;
+}

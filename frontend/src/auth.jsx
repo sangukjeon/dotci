@@ -4,6 +4,8 @@ import * as server from './mock/server.js' // TODO(10/13): 진짜 /api/auth/* �
 
 const AuthContext = createContext(null)
 
+export const GUEST_HOME = '/place/booth'
+
 export function AuthProvider({ children }) {
   // undefined = 확인 중, null = 로그인 안 함
   const [user, setUser] = useState(undefined)
@@ -14,6 +16,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (form) => setUser(await server.login(form)), [])
   const signup = useCallback(async (form) => setUser(await server.signup(form)), [])
+  const guestLogin = useCallback(async () => setUser(await server.guestLogin()), [])
   const logout = useCallback(async () => {
     await server.logout()
     setUser(null)
@@ -23,18 +26,23 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
-  const value = useMemo(() => ({ user, login, signup, logout, withdraw }), [user, login, signup, logout, withdraw])
+  const value = useMemo(
+    () => ({ user, login, signup, guestLogin, logout, withdraw }),
+    [user, login, signup, guestLogin, logout, withdraw],
+  )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext)
 
 // 로그인한 사람만. 아니면 로그인 화면으로 보내고, 로그인 후 원래 화면으로 돌아온다.
+// 관람객(게스트)은 전시 부스 책상만 쓸 수 있다.
 export function RequireAuth({ children, admin = false }) {
   const { user } = useAuth()
   const location = useLocation()
   if (user === undefined) return null
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
+  if (user.is_guest && location.pathname !== GUEST_HOME) return <Navigate to={GUEST_HOME} replace />
   if (admin && !user.is_admin) return <Navigate to="/" replace />
   return children
 }

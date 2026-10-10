@@ -18,3 +18,6 @@ export const CATEGORIES = {
 }
 
 export const CATEGORY_KEYS = Object.keys(CATEGORIES)
+
+// 작성자 학년 표시. 관람객(게스트)은 학년이 없다.
+export const gradeLabel = (grade) => (grade ? `${grade}학년` : '관람객')

@@ -113,3 +113,25 @@
   color: #fff;
   font-weight: 600;
 }
+
+/* 신고 펼침 */
+.nmodal__report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+.nmodal__report-btn {
+  width: 100%;
+}
+.nmodal__report-btn:disabled {
+  background: var(--line);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.nmodal__sub:disabled {
+  color: var(--text-3);
+  cursor: not-allowed;
+}

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, CircleCheck, MapPin, QrCode } from 'lucide-react'
-import { useAuth } from '../auth.jsx'
-import { checkInvite } from '../mock/server.js'
+import { ChevronLeft, ChevronRight, CircleCheck, MapPin, QrCode } from 'lucide-react'
+import { GUEST_HOME, useAuth } from '../auth.jsx'
+import { BOOTH_CODE, checkInvite } from '../mock/server.js'
 import { getPosition } from '../geo.js'
 import './AuthPage.css'
 
@@ -18,12 +18,24 @@ const SIGNUP_ERRORS = {
 }
 
 export default function AuthPage() {
-  const { user } = useAuth()
+  const { user, guestLogin } = useAuth()
   const location = useLocation()
   const [tab, setTab] = useState('login')
+  const [guestBusy, setGuestBusy] = useState(false)
   const goTo = location.state?.from || '/'
 
+  // 관람객은 부스 책상으로 가서 바로 열린다 (부스 QR을 찍은 것과 같음)
+  if (user?.is_guest) return <Navigate to={GUEST_HOME} replace state={{ qrCode: BOOTH_CODE }} />
   if (user) return <Navigate to={goTo} replace />
+
+  const startGuest = async () => {
+    setGuestBusy(true)
+    try {
+      await guestLogin()
+    } finally {
+      setGuestBusy(false)
+    }
+  }
 
   return (
     <main className="auth">
@@ -32,6 +44,9 @@ export default function AuthPage() {
           DOTCI<span className="auth__dot" aria-hidden="true" />
         </h1>
         <p className="auth__tagline">점 하나, 이야기 하나.</p>
+        <button className="auth__guest pressable" onClick={startGuest} disabled={guestBusy}>
+          전시회에서 오셨나요? 로그인 없이 체험하기 <ChevronRight size={16} aria-hidden="true" />
+        </button>
       </header>
 
       <div className="auth__panel">

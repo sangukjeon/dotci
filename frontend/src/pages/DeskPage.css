@@ -94,3 +94,15 @@
 .desk-page__state .btn-sub {
   text-decoration: none;
 }
+
+/* 관람객(게스트) 상단 바 */
+.desk-page__guest-tag {
+  margin-left: var(--sp-3);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.desk-page__guest-end {
+  margin-left: auto;
+  margin-right: var(--sp-2);
+}

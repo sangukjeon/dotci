@@ -89,3 +89,32 @@
   text-align: center;
   color: var(--text-2);
 }
+
+.admin__tabs {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.admin__tab {
+  flex: 1;
+  min-height: 48px;
+  font-weight: 600;
+  color: var(--text-2);
+  border-bottom: 2px solid transparent;
+}
+.admin__tab[aria-selected="true"] {
+  color: var(--text-strong);
+  border-bottom-color: var(--text-strong);
+}
+.admin__report-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 600;
+  padding: 0 6px;
+  border-radius: var(--r-tag);
+  background: var(--cat-food-bg);
+  color: var(--cat-food-text);
+}

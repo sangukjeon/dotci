@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence } from 'motion/react'
-import { BadgeCheck, ChevronLeft, Eye, EyeOff, PenLine } from 'lucide-react'
+import { BadgeCheck, ChevronLeft, Eye, EyeOff, Flag, PenLine } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import { CATEGORIES } from '../categories.js'
 import { useToast } from '../toast.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
+import AdminStats from '../components/AdminStats.jsx'
 import * as server from '../mock/server.js' // TODO: /api/admin/*
 import './AdminPage.css'
 
@@ -16,9 +17,11 @@ export default function AdminPage() {
   const [placeId, setPlaceId] = useState('')
   const [notes, setNotes] = useState([])
   const [writing, setWriting] = useState(false)
+  const [tab, setTab] = useState('notes') // notes | stats
 
   useEffect(() => {
     getPlaces()
+      .then(server.withMockPlaces)
       .then((list) => {
         setPlaces(list)
         setPlaceId((cur) => cur || list[0]?.id || '')
@@ -49,6 +52,20 @@ export default function AdminPage() {
         <h1 className="admin__title">관리자</h1>
       </header>
 
+      <div className="admin__tabs" role="tablist">
+        <button role="tab" aria-selected={tab === 'notes'} className="admin__tab" onClick={() => setTab('notes')}>
+          쪽지 관리
+        </button>
+        <button role="tab" aria-selected={tab === 'stats'} className="admin__tab" onClick={() => setTab('stats')}>
+          통계
+        </button>
+      </div>
+
+      {tab === 'stats' ? (
+        <AdminStats places={places.filter((p) => !p.is_booth)} />
+      ) : (
+      <>
+
       <section className="admin__head">
         <label className="field" style={{ marginBottom: 0 }}>
           <span className="field__label">장소</span>
@@ -78,6 +95,12 @@ export default function AdminPage() {
                   </span>
                   {n.is_official && <BadgeCheck size={16} color="var(--primary)" aria-label="공식" />}
                   {n.is_hidden && <span className="admin__hidden-tag">숨김</span>}
+                  {n.report_count > 0 && (
+                    <span className="admin__report-tag">
+                      <Flag size={12} aria-hidden="true" /> 신고 {n.report_count}
+                      {n.report_count >= 3 ? ' · 자동 숨김' : ''}
+                    </span>
+                  )}
                 </span>
                 <span className="admin__text">{n.content}</span>
                 <span className="admin__meta">
@@ -102,6 +125,8 @@ export default function AdminPage() {
           <PenLine size={20} aria-hidden="true" /> 공식 쪽지 쓰기
         </button>
       </div>
+      </>
+      )}
 
       <AnimatePresence>
         {writing && (

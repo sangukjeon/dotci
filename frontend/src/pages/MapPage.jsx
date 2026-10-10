@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { Link } from 'react-router-dom'
-import { List, LocateFixed, Map as MapIcon, QrCode, UserRound } from 'lucide-react'
+import { BellRing, List, LocateFixed, Map as MapIcon, QrCode, UserRound, X } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import { useAuth } from '../auth.jsx'
 import MeSheet from '../components/MeSheet.jsx'
-import { placeSummary } from '../mock/server.js' // TODO(10/12): 쪽지 수·연 장소는 /api/places 응답 그대로 쓰기
+import { nearbyHint, placeSummary } from '../mock/server.js' // TODO(10/12): 쪽지 수·연 장소는 /api/places 응답 그대로 쓰기
 import NaverMap from '../components/NaverMap.jsx'
 import PlaceList from '../components/PlaceList.jsx'
 import PlaceSheet from '../components/PlaceSheet.jsx'
@@ -26,6 +26,7 @@ export default function MapPage() {
   const [mapError, setMapError] = useState(NAVER_CLIENT_ID ? null : 'no_key')
   const [myPos, setMyPos] = useState(null)
   const [showMe, setShowMe] = useState(false)
+  const [nearbyClosed, setNearbyClosed] = useState(false)
   const { user } = useAuth()
 
   const load = () =>
@@ -57,6 +58,8 @@ export default function MapPage() {
   }
 
   const selected = places?.find((p) => p.id === selectedId)
+  // TODO(시간 되면): watchPosition으로 내 위치를 따라가며 화면에서만 계산 (서버로 안 보냄)
+  const nearby = !nearbyClosed && places ? nearbyHint(places) : null
 
   if (loadError) {
     return (
@@ -101,6 +104,20 @@ export default function MapPage() {
           <div className="map-page__brand-pill">
             DOTCI<span className="brand-dot" aria-hidden="true" />
           </div>
+          {nearby && (
+            <div className="map-page__nearby" role="status">
+              <BellRing size={20} aria-hidden="true" />
+              <button className="map-page__nearby-main" onClick={() => setSelectedId(nearby.place.id)}>
+                <b>{nearby.place.name}</b>
+                <span>
+                  {nearby.distance_m}m 앞에 아직 안 연 책상이 있어요 · 쪽지 {nearby.place.note_count}장
+                </span>
+              </button>
+              <button className="icon-btn map-page__nearby-close" onClick={() => setNearbyClosed(true)} aria-label="알림 닫기">
+                <X size={18} aria-hidden="true" />
+              </button>
+            </div>
+          )}
           <div className="map-page__me">
             <MeButton user={user} onClick={() => setShowMe(true)} />
           </div>

@@ -1,0 +1,155 @@
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.course-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  text-decoration: none;
+}
+.course-card__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary-weak);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.course-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.course-card__title {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.course-card__meta {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.course-card__bar {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  overflow: hidden;
+}
+.course-card__bar span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: var(--r-pill);
+}
+.course-card__count {
+  font-size: 14px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+.course-card__count b {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.course__done {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-control);
+  background: var(--success-weak);
+  color: var(--success);
+  font-size: 14px;
+  font-weight: 600;
+}
+.page__lead b {
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+/* 단계 표시: 왼쪽 동그라미 + 세로 줄 */
+.steps {
+  display: flex;
+  flex-direction: column;
+}
+.step {
+  position: relative;
+  display: flex;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-6);
+}
+.step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 36px;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+.step--done:not(:last-child)::before {
+  background: var(--primary);
+}
+.step__dot {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-3);
+}
+.step--done .step__dot {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+.step--current .step__dot {
+  border-color: var(--primary);
+  background: var(--primary-weak);
+  color: var(--primary-strong);
+}
+.step__body {
+  flex: 1;
+  padding-top: 6px;
+}
+.step__title {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.step--locked .step__title {
+  color: var(--text-3);
+}
+.step__hint {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.step__go {
+  margin-top: var(--sp-3);
+  text-decoration: none;
+}
+.step__status {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}

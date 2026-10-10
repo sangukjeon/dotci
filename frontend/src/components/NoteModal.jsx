@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { BadgeCheck, EyeOff, Heart, Trash2, X } from 'lucide-react'
-import { CATEGORIES } from '../categories.js'
+import { BadgeCheck, EyeOff, Flag, Heart, Trash2, X } from 'lucide-react'
+import { CATEGORIES, gradeLabel } from '../categories.js'
 import { useAuth } from '../auth.jsx'
+import { REPORT_REASONS, reportedByMe, reportNote } from '../mock/server.js' // TODO(11/5): POST /api/notes/{id}/report
 import './NoteModal.css'
 
 function timeAgo(iso) {
@@ -15,10 +16,13 @@ function timeAgo(iso) {
 }
 
 // 열린 쪽지를 누르면 제자리에서 커지는 확대 화면 (카드와 같은 layoutId)
-export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide }) {
+export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide, onReported }) {
   const { user } = useAuth()
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [reporting, setReporting] = useState(false)
+  const [reason, setReason] = useState(null)
+  const [reported, setReported] = useState(() => reportedByMe(note.id))
   const cat = CATEGORIES[note.category] ?? CATEGORIES.tip
   const liked = note.liked_by_me
 
@@ -58,7 +62,7 @@ export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide }
         <p className="nmodal__text">{note.content}</p>
 
         <p className="nmodal__author">
-          {note.author_nickname} · {note.author_grade}학년 · {note.author_department} · {timeAgo(note.created_at)}
+          {note.author_nickname} · {gradeLabel(note.author_grade)} · {note.author_department} · {timeAgo(note.created_at)}
         </p>
 
         <div className="nmodal__actions">
@@ -93,12 +97,49 @@ export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide }
                 <Trash2 size={20} aria-hidden="true" />
               </button>
             ))}
+          {!note.is_mine && !user?.is_admin && (
+            <button
+              className="icon-btn nmodal__sub"
+              onClick={() => setReporting(!reporting)}
+              disabled={reported}
+              aria-label={reported ? '이미 신고한 쪽지' : '이 쪽지 신고하기'}
+              aria-expanded={reporting}
+            >
+              <Flag size={20} aria-hidden="true" />
+            </button>
+          )}
           {user?.is_admin && !note.is_mine && (
             <button className="icon-btn nmodal__sub" onClick={run(onHide)} disabled={busy} aria-label="이 쪽지 숨기기 (관리자)">
               <EyeOff size={20} aria-hidden="true" />
             </button>
           )}
         </div>
+
+        {reporting && !reported && (
+          <div className="nmodal__report">
+            <p className="field__label">어떤 문제가 있나요?</p>
+            <div className="chips" role="group" aria-label="신고 이유">
+              {REPORT_REASONS.map((r) => (
+                <button key={r} type="button" className="chip" aria-pressed={reason === r} onClick={() => setReason(r)}>
+                  {r}
+                </button>
+              ))}
+            </div>
+            <p className="field__help">신고는 익명이에요. 3건이 모이면 쪽지가 자동으로 숨겨지고 관리자가 확인해요.</p>
+            <button
+              className="nmodal__danger nmodal__report-btn"
+              disabled={!reason || busy}
+              onClick={run(async () => {
+                const result = await reportNote(note.id, reason)
+                setReported(true)
+                setReporting(false)
+                onReported?.(result)
+              })}
+            >
+              신고하기
+            </button>
+          </div>
+        )}
       </motion.article>
     </div>
   )

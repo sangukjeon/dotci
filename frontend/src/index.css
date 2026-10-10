@@ -329,3 +329,50 @@ a {
   background: var(--primary);
   vertical-align: baseline;
 }
+
+/* ---------- 하위 화면 공통 ---------- */
+.page-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.page {
+  min-height: 100dvh;
+  padding-bottom: var(--sp-8);
+}
+.page__intro {
+  padding: var(--sp-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.page__h1 {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.page__lead {
+  margin-top: var(--sp-1);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.page__section {
+  padding: var(--sp-4);
+}
+.card {
+  padding: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.list-plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* 목록이 화면 구역(page__section)이기도 할 때는 구역 여백을 지킨다 */
+.list-plain.page__section {
+  padding: var(--sp-4);
+}

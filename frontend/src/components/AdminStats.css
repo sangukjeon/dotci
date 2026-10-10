@@ -1,0 +1,132 @@
+.astats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+}
+.astats__loading {
+  padding: var(--sp-6);
+  text-align: center;
+  color: var(--text-2);
+}
+
+.astats__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.astats__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.astats__metric-label {
+  font-size: 13px;
+  color: var(--text-2);
+}
+.astats__metric-value {
+  font-size: 14px;
+  color: var(--text);
+}
+.astats__metric-value b {
+  margin-right: 2px;
+  font-size: 26px;
+  line-height: 34px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.astats__metric-sub {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.astats__h2 {
+  margin-bottom: var(--sp-3);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.astats__bar-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 32px;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 5px 0;
+}
+.astats__bar-label {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.astats__bar {
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  overflow: hidden;
+}
+.astats__bar span {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+}
+.astats__bar-value {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.astats__top li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0;
+}
+.astats__top li + li {
+  border-top: 1px solid var(--line);
+}
+.astats__top-no {
+  width: 24px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.astats__top-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.astats__top-text {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-strong);
+}
+.astats__top-meta {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.astats__top-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.astats__top-score svg {
+  color: var(--danger);
+}
+.astats__note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-2);
+}

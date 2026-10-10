@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Award, Check, ChevronLeft } from 'lucide-react'
+import { Award, Check, ChevronLeft, Download } from 'lucide-react'
+import { useAuth } from '../auth.jsx'
+import { useToast } from '../toast.jsx'
 import { getPlaces } from '../api.js'
 import { CATEGORIES } from '../categories.js'
 import * as server from '../mock/server.js' // TODO: GET /api/me/collection
@@ -15,13 +17,18 @@ const shortDate = (iso) => {
 export default function CollectionPage() {
   const [places, setPlaces] = useState([])
   const [data, setData] = useState(null)
+  const { user } = useAuth()
+  const toast = useToast()
 
   useEffect(() => {
     getPlaces().then(setPlaces).catch(() => setPlaces([]))
     server.collection().then(setData)
   }, [])
 
-  const opened = new Map((data?.unlocked ?? []).map((u) => [u.place_id, u.first_unlocked_at]))
+  // ?mock=complete 이면 전부 연 것처럼 (수료증 확인용)
+  const opened = server.isCompleteMock()
+    ? new Map(places.map((p, i) => [p.id, new Date(Date.now() - (places.length - i) * 86_400_000).toISOString()]))
+    : new Map((data?.unlocked ?? []).map((u) => [u.place_id, u.first_unlocked_at]))
   const total = places.length
   const done = places.filter((p) => opened.has(p.id)).length
   const placeName = (id) => places.find((p) => p.id === id)?.name ?? id
@@ -43,14 +50,35 @@ export default function CollectionPage() {
           <span style={{ width: total ? `${(done / total) * 100}%` : 0 }} />
         </div>
         {total > 0 && done === total ? (
-          <div className="banner banner--info coll__done">
-            <Award size={18} aria-hidden="true" />
-            <span>캠퍼스를 모두 돌아봤어요. 이제 다음 후배를 위한 흔적을 남겨 주세요.</span>
+          <div className="cert" role="img" aria-label={`캠퍼스 수료증, ${user?.nickname}, ${total}곳 완주`}>
+            <p className="cert__logo">
+              DOTCI<span className="brand-dot" aria-hidden="true" />
+            </p>
+            <p className="cert__title">캠퍼스 수료증</p>
+            <p className="cert__name">{user?.nickname}</p>
+            <p className="cert__meta">
+              {user?.department} · 우송대학교 서캠퍼스 {total}곳 완주
+            </p>
+            <div className="cert__dots" aria-hidden="true">
+              {places.map((p) => (
+                <span key={p.id} />
+              ))}
+            </div>
+            <p className="cert__date">{new Date().toLocaleDateString('ko-KR')}</p>
+            <Award className="cert__badge" size={28} aria-hidden="true" />
           </div>
         ) : (
           <p className="coll__help">장소에 도착해서 책상을 열면 도장이 찍혀요</p>
         )}
       </section>
+
+      {total > 0 && done === total && (
+        <div className="cert__actions">
+          <button className="btn-sub" onClick={() => toast('이미지 저장은 준비 중이에요')}>
+            <Download size={18} aria-hidden="true" /> 이미지로 저장
+          </button>
+        </div>
+      )}
 
       <ul className="coll__grid">
         {places.map((p) => {

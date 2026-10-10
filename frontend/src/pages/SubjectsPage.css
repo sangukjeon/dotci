@@ -1,0 +1,85 @@
+.subj__search {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  background: var(--surface-sub);
+  color: var(--text-2);
+}
+.subj__input {
+  flex: 1;
+  min-height: 48px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--text-strong);
+}
+.subj__input::placeholder {
+  color: var(--text-3);
+}
+
+.subj__count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-2);
+}
+.subj__empty,
+.subj__pick {
+  padding: var(--sp-4);
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.subj__h2 {
+  margin-bottom: var(--sp-3);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text);
+}
+.subj__h2 b {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+.subj__places {
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.subj__places li + li {
+  border-top: 1px solid var(--line);
+}
+.subj__place {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 64px;
+  padding: var(--sp-3) var(--sp-4);
+  text-decoration: none;
+}
+.subj__place-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.subj__place-name {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.subj__place-meta {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.subj__place-meta b {
+  font-weight: 700;
+  color: var(--text);
+}
