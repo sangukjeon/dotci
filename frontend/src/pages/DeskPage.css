@@ -1,6 +1,7 @@
+/* 하단 판(안내 띠·주 버튼·QR 링크) 높이만큼 아래 여백 */
 .desk-page {
   min-height: 100dvh;
-  padding-bottom: calc(var(--plate-h) + var(--sp-4));
+  padding-bottom: calc(var(--plate-h) + 96px);
 }
 
 .desk-page__head {
@@ -9,11 +10,13 @@
   border-bottom: 1px solid var(--line);
 }
 .desk-page__building {
+  min-height: 22px;
   font-size: 14px;
   line-height: 22px;
   color: var(--text-2);
 }
 .desk-page__name {
+  min-height: 30px;
   margin-bottom: var(--sp-2);
   font-size: 22px;
   line-height: 30px;
@@ -22,4 +25,33 @@
 }
 .desk-page__head .tag b {
   font-weight: 700;
+}
+.desk-page__tag-skeleton {
+  width: 110px;
+  height: 24px;
+  background: var(--bg);
+}
+
+.desk-page__banner {
+  margin-bottom: var(--sp-3);
+}
+.desk-page__qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: var(--sp-1);
+  text-decoration: none;
+  color: var(--text-2);
+}
+.desk-page__qr--strong {
+  color: var(--primary);
+}
+.desk-page__note {
+  margin-top: var(--sp-1);
+  text-align: center;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
 }

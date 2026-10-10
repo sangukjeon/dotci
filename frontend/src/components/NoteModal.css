@@ -1,0 +1,115 @@
+.nmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+}
+.nmodal__dim {
+  position: absolute;
+  inset: 0;
+  background: var(--dim);
+  backdrop-filter: blur(4px);
+}
+
+.nmodal__card {
+  position: relative;
+  width: min(440px, 100%);
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-6);
+  border-radius: var(--r-sheet);
+  background: var(--surface);
+  box-shadow: var(--shadow-sheet);
+}
+
+.nmodal__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+}
+.nmodal__chip {
+  font-size: 13px;
+  line-height: 20px;
+  padding: 2px 8px;
+}
+.nmodal__close {
+  margin-left: auto;
+  color: var(--text-2);
+}
+
+.nmodal__text {
+  margin: var(--sp-3) var(--sp-2) var(--sp-4) 0;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+  color: var(--text-strong);
+  word-break: keep-all;
+  white-space: pre-wrap;
+}
+.nmodal__author {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+
+.nmodal__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-6);
+}
+
+.nmodal__heart {
+  flex: 1;
+  height: var(--btn-sub-h);
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text);
+  transition: transform 100ms ease-in-out;
+}
+.nmodal__heart:active:not(:disabled) {
+  transform: scale(0.96);
+}
+.nmodal__heart b {
+  font-weight: 700;
+}
+.nmodal__heart-icon {
+  display: inline-flex;
+  color: var(--danger);
+}
+.nmodal__heart--on {
+  border-color: var(--cat-food-bg);
+  background: var(--cat-food-bg);
+  color: var(--cat-food-text);
+}
+.nmodal__heart--on svg {
+  fill: var(--danger);
+}
+.nmodal__heart:disabled:not(.nmodal__heart--on) {
+  background: var(--bg);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+.nmodal__sub {
+  color: var(--text-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  width: var(--btn-sub-h);
+  height: var(--btn-sub-h);
+}
+.nmodal__danger {
+  height: var(--btn-sub-h);
+  padding: 0 var(--sp-3);
+  border-radius: var(--r-control);
+  background: var(--danger);
+  color: #fff;
+  font-weight: 600;
+}

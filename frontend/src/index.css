@@ -122,6 +122,13 @@ a {
   transform: scale(0.96);
   background: var(--primary-strong);
 }
+/* 비활성: 투명도 대신 색 교체 */
+.btn-main:disabled {
+  background: var(--line);
+  color: var(--text-3);
+  cursor: not-allowed;
+  transform: none;
+}
 
 .btn-sub {
   height: var(--btn-sub-h);
@@ -173,4 +180,141 @@ a {
     transition-duration: 1ms !important;
     animation-duration: 1ms !important;
   }
+}
+
+/* ---------- 입력 양식 ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--sp-4);
+}
+.field__label {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+.field__help {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.field__error {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--danger);
+}
+.input,
+.textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: var(--r-control);
+  border: 1px solid transparent;
+  background: var(--surface-sub, var(--bg));
+  font: inherit;
+  color: var(--text-strong);
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-3);
+}
+/* 포커스 테두리(outline)는 공통 :focus-visible 규칙이 그린다 */
+.input:focus,
+.textarea:focus {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+.input--error {
+  border-color: var(--danger);
+}
+.textarea {
+  resize: vertical;
+  min-height: 112px;
+  line-height: 24px;
+}
+
+/* 알약 모양 선택 칩 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.chip {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 100ms ease-in-out;
+}
+.chip:active {
+  transform: scale(0.95);
+}
+.chip[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary-weak);
+  color: var(--primary-strong);
+}
+
+/* 안내 띠 (실패 이유 등) */
+.banner {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-control);
+  font-size: 14px;
+  line-height: 22px;
+}
+.banner--info {
+  background: var(--primary-weak);
+  color: var(--primary-strong);
+}
+.banner--warn {
+  background: var(--cat-warn-bg);
+  color: var(--cat-warn-text);
+}
+.banner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.text-btn {
+  min-height: 44px;
+  padding: 0 var(--sp-2);
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---------- 토스트 ---------- */
+.toast-zone {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--plate-h) + var(--sp-4));
+  z-index: 90;
+  transform: translateX(-50%);
+  width: calc(min(480px, 100vw) - 2 * var(--sp-4));
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 12px 16px;
+  border-radius: var(--r-control);
+  background: var(--text-strong);
+  color: #fff;
+  font-size: 15px;
+  line-height: 22px;
 }

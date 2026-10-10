@@ -1,0 +1,21 @@
+.write__where {
+  margin-bottom: var(--sp-4);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+
+.write__count {
+  align-self: flex-end;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+.write__count--short {
+  color: var(--danger);
+}
+
+.write__submit {
+  margin-top: var(--sp-2);
+}

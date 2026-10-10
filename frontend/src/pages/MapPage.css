@@ -83,3 +83,34 @@
   font-size: 14px;
   line-height: 22px;
 }
+
+/* 내 정보 버튼 (지도 위 오른쪽 위 / 목록 제목 옆) */
+.map-page__me {
+  position: absolute;
+  top: calc(var(--sp-3) + env(safe-area-inset-top));
+  right: var(--sp-4);
+  z-index: 5;
+}
+.map-page__me-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-page__list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-4);
+}
+.map-page__list-head .map-page__brand {
+  margin-bottom: 0;
+}
+.map-page__action {
+  text-decoration: none;
+}

@@ -141,3 +141,16 @@
     opacity: 1;
   }
 }
+
+.ncard__top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ncard__official {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.ncard__heart--on {
+  fill: var(--danger);
+}

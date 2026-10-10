@@ -1,0 +1,99 @@
+.auth {
+  min-height: 100dvh;
+  padding: var(--sp-8) var(--sp-4) calc(var(--plate-h) + var(--sp-6));
+  background: var(--surface);
+}
+
+.auth__brand {
+  margin: var(--sp-6) 0 var(--sp-8);
+}
+.auth__logo {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.auth__tagline {
+  margin-top: var(--sp-1);
+  font-size: 16px;
+  color: var(--text-2);
+}
+
+/* 탭: 아래 2px 막대가 선택 표시 */
+.auth__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-6);
+}
+.auth__tab {
+  flex: 1;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-2);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.auth__tab[aria-selected="true"] {
+  color: var(--text-strong);
+  border-bottom-color: var(--text-strong);
+}
+
+.auth__steps {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  min-height: 44px;
+  margin: calc(-1 * var(--sp-3)) 0 var(--sp-3) calc(-1 * var(--sp-3));
+  padding-left: var(--sp-3);
+}
+.auth__step-text {
+  font-size: 14px;
+  color: var(--text-2);
+}
+.auth__step-text b {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.auth__wide {
+  width: 100%;
+}
+.auth__ok {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 48px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-control);
+  background: var(--success-weak);
+  color: var(--success);
+  font-weight: 600;
+}
+
+.auth__consent {
+  margin: var(--sp-6) 0 var(--sp-4);
+  padding: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--bg);
+}
+.auth__consent ul {
+  margin: var(--sp-2) 0 var(--sp-3);
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+}
+.auth__check {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.auth__check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+}

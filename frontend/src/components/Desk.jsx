@@ -4,8 +4,8 @@ import './Desk.css'
 
 const MAX_ON_DESK = 12
 
-// 장소 책상: 쪽지 카드 2열. 도움됐어요 많은 순으로 최대 12장.
-export default function Desk({ notes, contents, newIds = [] }) {
+// 장소 책상: 쪽지 카드 2열. 도움됐어요 많은 순 → 최신순으로 최대 12장.
+export default function Desk({ notes, newIds = [], enteringId = null, onOpen }) {
   if (notes.length === 0) {
     return (
       <div className="desk-empty">
@@ -18,12 +18,21 @@ export default function Desk({ notes, contents, newIds = [] }) {
     )
   }
 
-  const shown = [...notes].sort((a, b) => b.helpful_count - a.helpful_count).slice(0, MAX_ON_DESK)
+  const shown = [...notes]
+    .sort((a, b) => b.helpful_count - a.helpful_count || b.created_at.localeCompare(a.created_at))
+    .slice(0, MAX_ON_DESK)
 
   return (
     <div className="desk">
       {shown.map((n, i) => (
-        <NoteCard key={n.id} note={n} content={contents[n.id]} isNew={newIds.includes(n.id)} flipOrder={i} />
+        <NoteCard
+          key={n.id}
+          note={n}
+          isNew={newIds.includes(n.id)}
+          flipOrder={i}
+          entering={n.id === enteringId}
+          onClick={() => onOpen?.(n)}
+        />
       ))}
       {notes.length > MAX_ON_DESK && (
         <p className="desk__more">쪽지 {notes.length - MAX_ON_DESK}장 더 있어요</p>

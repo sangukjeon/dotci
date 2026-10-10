@@ -1,0 +1,79 @@
+.scan {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--plate-h) + var(--sp-6));
+  background: var(--surface);
+}
+.scan__title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* 카메라: 정사각 화면 + 가운데 네모 안내선 */
+.scan__camera {
+  position: relative;
+  margin: var(--sp-4);
+  aspect-ratio: 1;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--text-strong);
+}
+.scan__reader,
+.scan__reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+/* html5-qrcode가 그리는 기본 테두리는 숨기고 우리 안내선을 쓴다 */
+.scan__reader #qr-shaded-region {
+  border-color: rgba(20, 26, 36, 0.45) !important;
+}
+.scan__reader #qr-shaded-region > div {
+  display: none;
+}
+.scan__frame {
+  position: absolute;
+  inset: 18%;
+  border: 3px solid #fff;
+  border-radius: var(--r-card);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.scan__help {
+  text-align: center;
+  color: var(--text);
+}
+.scan__error {
+  margin-top: var(--sp-2);
+  text-align: center;
+}
+.scan__switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: var(--sp-3) auto 0;
+}
+
+.scan__manual {
+  padding: var(--sp-6) var(--sp-4) 0;
+}
+.scan__code {
+  font-size: 24px;
+  letter-spacing: 0.3em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.scan__foot {
+  margin: var(--sp-6) var(--sp-4) 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.scan__foot a {
+  color: var(--primary);
+  font-weight: 600;
+}

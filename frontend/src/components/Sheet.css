@@ -1,0 +1,47 @@
+.sheet-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: var(--dim);
+}
+
+.sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 41;
+  width: min(480px, 100vw);
+  max-height: 92dvh;
+  margin-left: calc(min(480px, 100vw) / -2);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  box-shadow: var(--shadow-sheet);
+}
+
+.sheet__handle {
+  width: 36px;
+  height: 4px;
+  margin: var(--sp-3) auto 0;
+  border-radius: var(--r-pill);
+  background: var(--line);
+}
+
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-2) var(--sp-2) 0 var(--sp-4);
+}
+.sheet__title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.sheet__body {
+  overflow-y: auto;
+  padding: var(--sp-2) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom));
+}

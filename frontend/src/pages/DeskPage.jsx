@@ -1,33 +1,176 @@
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { ChevronLeft, CircleCheck, Lock, MapPin, PenLine } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { AnimatePresence, LayoutGroup } from 'motion/react'
+import { ChevronLeft, CircleCheck, Info, Lock, MapPin, PenLine, QrCode, Sparkles, TriangleAlert } from 'lucide-react'
 import { getPlaces } from '../api.js'
+import { getPosition } from '../geo.js'
+import { useAuth } from '../auth.jsx'
+import { useToast } from '../toast.jsx'
 import Desk from '../components/Desk.jsx'
-import { MOCK_CONTENTS, MOCK_LOCKED_NOTES } from '../mock.js'
+import NoteModal from '../components/NoteModal.jsx'
+import WriteSheet from '../components/WriteSheet.jsx'
+import * as server from '../mock/server.js' // TODO(10/12): 진짜 /api/places/{id}/notes, /unlock 로 교체
 import './DeskPage.css'
+
+// 실패 이유 → 안내 문구 (CLAUDE.md 8장 reason)
+function bannerFor(result) {
+  switch (result.reason) {
+    case 'too_far':
+      return { tone: 'warn', text: `아직 ${result.distance_m}m 남았어요. 조금 더 가까이 와 주세요.` }
+    case 'low_accuracy':
+    case 'timeout':
+    case 'unavailable':
+      return { tone: 'warn', text: '위치가 흐릿해요. 창가나 밖으로 나가거나 QR을 찍어 주세요.', qr: true }
+    case 'denied':
+    case 'unsupported':
+      return { tone: 'info', text: '위치 권한이 꺼져 있어요. 위치 없이도 QR로 열 수 있어요.', qr: true }
+    case 'bad_code':
+      return { tone: 'warn', text: '코드를 다시 확인해 주세요.', qr: true }
+    case 'rate_limited':
+      return { tone: 'warn', text: '잠시 뒤에 다시 시도해 주세요.' }
+    default:
+      return { tone: 'warn', text: '확인하지 못했어요. 잠시 후 다시 시도해 주세요.' }
+  }
+}
 
 export default function DeskPage() {
   const { id } = useParams()
+  const { user } = useAuth()
+  const toast = useToast()
+  const navigate = useNavigate()
+  const routeState = useLocation().state
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const [place, setPlace] = useState(null)
-  // 쪽지 id → 본문. 비어 있으면 모두 잠김. (해제 응답으로만 채운다)
-  const [contents, setContents] = useState({})
+  const [data, setData] = useState(null) // { notes, unlocked, write_until }
+  const [newIds, setNewIds] = useState([])
+  const [status, setStatus] = useState('idle') // idle | locating | judging
+  const [banner, setBanner] = useState(null)
+  const [openNote, setOpenNote] = useState(null)
+  const [writing, setWriting] = useState(false)
+  const [enteringId, setEnteringId] = useState(null)
+  const [, tick] = useState(0)
+  const startedQr = useRef(false)
 
   useEffect(() => {
     getPlaces()
-      .then((list) => setPlace(list.find((p) => p.id === id) ?? null))
-      .catch(() => setPlace(null))
+      .then((list) => setPlace(list.find((p) => p.id === id) ?? { id, name: '', building: '' }))
+      .catch(() => setPlace({ id, name: '', building: '' }))
+    setData(null)
+    server.listNotes(id).then(setData)
+    setNewIds([])
+    setBanner(null)
+    setEnteringId(null)
+    startedQr.current = false // 다른 장소로 옮겨 왔으면 그 장소의 QR 코드도 처리
   }, [id])
 
-  // TODO(10/12): GET /api/places/{id}/notes 로 교체
-  const notes = MOCK_LOCKED_NOTES[id] ?? []
-  const unlocked = Object.keys(contents).length > 0
+  // 쓰기 가능 시간이 지나면 버튼이 바뀌도록 30초마다 다시 그린다
+  useEffect(() => {
+    const t = setInterval(() => tick((n) => n + 1), 30_000)
+    return () => clearInterval(t)
+  }, [])
 
-  // TODO(10/12): 위치를 받아 POST /api/places/{id}/unlock 호출. 지금은 "서버가 본문을 보내 준" 상황을 흉내 낸다.
-  const mockUnlock = () => {
-    const received = {}
-    for (const n of notes) received[n.id] = MOCK_CONTENTS[n.id] ?? ''
-    setContents(received)
+  const applyUnlock = useCallback(
+    (result) => {
+      if (result.unlocked) {
+        setData({ notes: result.notes, unlocked: true, write_until: result.write_until })
+        setNewIds(result.new_ids)
+        setBanner(null)
+        if (!result.first_time && result.new_ids.length === 0) toast('그사이 새 흔적은 없어요')
+        else toast('도착했어요', { success: true })
+      } else if (result.reason === 'wrong_qr') {
+        toast('다른 장소의 QR이에요. 그 책상으로 갈게요')
+        navigate(`/place/${result.place_id}`, { replace: true, state: { qrCode: result.code } })
+      } else {
+        setBanner(bannerFor(result))
+      }
+    },
+    [navigate, toast],
+  )
+
+  const unlockWithGps = async () => {
+    setBanner(null)
+    setStatus('locating')
+    let pos
+    try {
+      pos = await getPosition()
+    } catch (err) {
+      setStatus('idle')
+      setBanner(bannerFor({ reason: err.code }))
+      return
+    }
+    setStatus('judging')
+    try {
+      applyUnlock(await server.unlock(id, { method: 'gps', ...pos }))
+    } finally {
+      setStatus('idle')
+    }
   }
+
+  const unlockWithCode = useCallback(
+    async (code) => {
+      setStatus('judging')
+      try {
+        const result = await server.unlock(id, { method: 'qr', code })
+        applyUnlock({ ...result, code })
+      } finally {
+        setStatus('idle')
+      }
+    },
+    [id, applyUnlock],
+  )
+
+  // QR로 들어온 경우: 스캔 화면에서 넘긴 코드, 또는 폰 카메라로 찍은 주소의 ?qr=
+  useEffect(() => {
+    if (!data || startedQr.current) return
+    const code = routeState?.qrCode || searchParams.get('qr')
+    if (!code) return
+    startedQr.current = true
+    if (searchParams.get('qr')) setSearchParams({}, { replace: true }) // 주소창에서 코드 지우기
+    unlockWithCode(code)
+  }, [data, routeState, searchParams, setSearchParams, unlockWithCode])
+
+  const updateNote = (noteId, patch) => {
+    setData((d) => ({ ...d, notes: d.notes.map((n) => (n.id === noteId ? { ...n, ...patch } : n)) }))
+    setOpenNote((n) => (n && n.id === noteId ? { ...n, ...patch } : n))
+  }
+
+  const onHelpful = async () => {
+    const { helpful_count } = await server.addHelpful(openNote.id)
+    updateNote(openNote.id, { helpful_count, liked_by_me: true })
+  }
+  const onDelete = async () => {
+    await server.deleteNote(openNote.id)
+    setData((d) => ({ ...d, notes: d.notes.filter((n) => n.id !== openNote.id) }))
+    setOpenNote(null)
+    toast('쪽지를 지웠어요')
+  }
+  const onHide = async () => {
+    await server.hideNote(openNote.id)
+    setData((d) => ({ ...d, notes: d.notes.filter((n) => n.id !== openNote.id) }))
+    setOpenNote(null)
+    toast('쪽지를 숨겼어요')
+  }
+  const onWritten = (note) => {
+    setWriting(false)
+    setData((d) => ({ ...d, unlocked: true, notes: [...d.notes, note] }))
+    setEnteringId(note.id)
+    toast('흔적을 남겼어요', { success: true })
+  }
+
+  const openCard = (note) => {
+    if (note.locked) {
+      toast('도착하면 열려요')
+      return
+    }
+    setOpenNote(note)
+  }
+
+  const notes = data?.notes ?? []
+  const unlocked = Boolean(data?.unlocked)
+  const canWrite = user?.is_admin || (unlocked && data?.write_until > Date.now())
+  const busy = status !== 'idle'
+  const busyText = status === 'locating' ? '위치 확인 중...' : '확인 중...'
 
   return (
     <main className="desk-page">
@@ -38,39 +181,95 @@ export default function DeskPage() {
       </header>
 
       <section className="desk-page__head">
-        <p className="desk-page__building">{place?.building ?? ''}</p>
-        <h1 className="desk-page__name">{place?.name ?? ''}</h1>
-        {unlocked ? (
-          <span className="tag" style={{ background: 'var(--success-weak)', color: 'var(--success)' }}>
-            <CircleCheck size={14} aria-hidden="true" /> 열었어요
-          </span>
-        ) : notes.length > 0 ? (
-          <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
-            <Lock size={14} aria-hidden="true" />
-            <span>
-              쪽지 <b>{notes.length}</b>개 잠김
-            </span>
-          </span>
-        ) : (
-          <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
-            아직 쪽지가 없어요
-          </span>
-        )}
+        <p className="desk-page__building">{place?.building || ' '}</p>
+        <h1 className="desk-page__name">{place?.name || ' '}</h1>
+        <StatusTag notes={notes} unlocked={unlocked} newCount={newIds.length} loading={!data} />
       </section>
 
-      <Desk notes={notes} contents={contents} />
+      <LayoutGroup>
+        {data && <Desk notes={notes} newIds={newIds} enteringId={enteringId} onOpen={openCard} />}
+        <AnimatePresence>
+          {openNote && (
+            <NoteModal
+              key={openNote.id}
+              note={openNote}
+              onClose={() => setOpenNote(null)}
+              onHelpful={onHelpful}
+              onDelete={onDelete}
+              onHide={onHide}
+            />
+          )}
+        </AnimatePresence>
+      </LayoutGroup>
 
       <div className="bottom-plate">
-        {unlocked ? (
-          <button className="btn-main" type="button">
+        {banner && (
+          <div className={`banner banner--${banner.tone} desk-page__banner`} role="alert">
+            {banner.tone === 'warn' ? <TriangleAlert size={18} aria-hidden="true" /> : <Info size={18} aria-hidden="true" />}
+            <span>{banner.text}</span>
+          </div>
+        )}
+
+        {canWrite ? (
+          <button className="btn-main" type="button" onClick={() => setWriting(true)}>
             <PenLine size={20} aria-hidden="true" /> 흔적 남기기
           </button>
         ) : (
-          <button className="btn-main" type="button" onClick={mockUnlock}>
-            <MapPin size={20} aria-hidden="true" /> 도착 확인하기
-          </button>
+          <>
+            <button className="btn-main" type="button" onClick={unlockWithGps} disabled={busy || !data}>
+              <MapPin size={20} aria-hidden="true" />
+              {busy ? busyText : unlocked ? '다시 도착 확인하기' : '도착 확인하기'}
+            </button>
+            <Link
+              to="/scan"
+              state={{ placeId: id, placeName: place?.name }}
+              className={banner?.qr ? 'text-btn desk-page__qr desk-page__qr--strong' : 'text-btn desk-page__qr'}
+            >
+              <QrCode size={18} aria-hidden="true" /> QR이나 코드로 열기
+            </Link>
+          </>
         )}
+        {unlocked && !canWrite && <p className="desk-page__note">쪽지를 남기려면 다시 도착 확인이 필요해요</p>}
       </div>
+
+      <AnimatePresence>
+        {writing && (
+          <WriteSheet placeId={id} placeName={place?.name} onClose={() => setWriting(false)} onWritten={onWritten} />
+        )}
+      </AnimatePresence>
     </main>
+  )
+}
+
+function StatusTag({ notes, unlocked, newCount, loading }) {
+  if (loading) return <span className="tag desk-page__tag-skeleton" aria-hidden="true" />
+  if (unlocked && newCount > 0)
+    return (
+      <span className="tag" style={{ background: 'var(--cat-food-bg)', color: 'var(--cat-food-text)' }}>
+        <Sparkles size={14} aria-hidden="true" />
+        <span>
+          새 쪽지 <b>{newCount}</b>장
+        </span>
+      </span>
+    )
+  if (unlocked)
+    return (
+      <span className="tag" style={{ background: 'var(--success-weak)', color: 'var(--success)' }}>
+        <CircleCheck size={14} aria-hidden="true" /> 열었어요
+      </span>
+    )
+  if (notes.length === 0)
+    return (
+      <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
+        아직 쪽지가 없어요
+      </span>
+    )
+  return (
+    <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
+      <Lock size={14} aria-hidden="true" />
+      <span>
+        쪽지 <b>{notes.length}</b>개 잠김
+      </span>
+    </span>
   )
 }

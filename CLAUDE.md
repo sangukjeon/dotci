@@ -151,6 +151,7 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 | `GET /api/places` | — | id, name, building, lat, lng, intro, note_count, category_counts, unlocked |
 | `GET /api/places/{id}/notes` | — | 안 본 쪽지: `{id, category, author_grade, helpful_count, course_name, hint, locked:true}` (**content 없음**) / 본 쪽지: 본문·작성자·학년·학과·helpful_count·liked_by_me |
 | `POST /api/places/{id}/unlock` | GPS: `{method:"gps",lat,lng,accuracy}` / QR: `{method:"qr",code}` | 성공: `{unlocked:true, notes, new_ids, write_token, token_expires_at}` / 실패: `{unlocked:false, reason, distance_m}` |
+| `POST /api/codes/resolve` | `{code}` (QR 값 또는 6자리) | `{place_id}` — 지도에서 바로 QR을 찍었을 때 어느 장소인지만 알려 줌. 해제는 그 장소 책상에서 `unlock`으로 |
 | `POST /api/places/{id}/notes` | category, content, course_name?, hint?, parent_id?, write_token, client_request_id | 저장된 쪽지 (관리자는 write_token 불필요) |
 | `DELETE /api/notes/{id}` | — | `{ok:true}` (작성자 본인 또는 관리자만) |
 | `POST /api/notes/{id}/helpful` | — | `{helpful_count}` |
@@ -158,6 +159,8 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 | `POST /api/admin/notes/{id}/hide` | — | `{ok:true}` (is_admin 확인) |
 
 실패 이유 `reason`: `too_far`, `low_accuracy`, `wrong_qr`(정답 장소 id 포함), `bad_code`, `rate_limited`
+
+QR에 담는 값: `https://도메인/place/{장소id}?qr={qr_code}` — 폰 기본 카메라로 찍어도 바로 그 책상이 열린다. 화면은 주소의 `?qr=`를 읽은 뒤 주소창에서 지운다.
 
 잠금 판정: 하버사인 거리. 쓰기 토큰 = PyJWT로 {place_id, user_id, exp=30분} 서명.
 해제 시도: 사용자당 1분 10회 제한.

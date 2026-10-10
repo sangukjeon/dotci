@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
-import { List, LocateFixed, Map as MapIcon, QrCode } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { List, LocateFixed, Map as MapIcon, QrCode, UserRound } from 'lucide-react'
 import { getPlaces } from '../api.js'
+import { useAuth } from '../auth.jsx'
+import MeSheet from '../components/MeSheet.jsx'
+import { placeSummary } from '../mock/server.js' // TODO(10/12): 쪽지 수·연 장소는 /api/places 응답 그대로 쓰기
 import NaverMap from '../components/NaverMap.jsx'
 import PlaceList from '../components/PlaceList.jsx'
 import PlaceSheet from '../components/PlaceSheet.jsx'
@@ -21,10 +25,12 @@ export default function MapPage() {
   const [view, setView] = useState(NAVER_CLIENT_ID ? 'map' : 'list')
   const [mapError, setMapError] = useState(NAVER_CLIENT_ID ? null : 'no_key')
   const [myPos, setMyPos] = useState(null)
+  const [showMe, setShowMe] = useState(false)
+  const { user } = useAuth()
 
   const load = () =>
     getPlaces()
-      .then(setPlaces)
+      .then((list) => setPlaces(list.map((p) => ({ ...p, ...placeSummary(p.id) }))))
       .catch(() => setLoadError(true))
 
   useEffect(() => {
@@ -79,7 +85,10 @@ export default function MapPage() {
 
       {view === 'list' && (
         <div className="map-page__list">
-          <p className="map-page__brand">선배의 흔적</p>
+          <div className="map-page__list-head">
+            <p className="map-page__brand">선배의 흔적</p>
+            <MeButton user={user} onClick={() => setShowMe(true)} />
+          </div>
           {mapError && <p className="map-page__notice">{MAP_ERRORS[mapError]}</p>}
           <PlaceList places={places ?? []} />
         </div>
@@ -88,6 +97,9 @@ export default function MapPage() {
       {view === 'map' && (
         <>
           <div className="map-page__brand-pill">선배의 흔적</div>
+          <div className="map-page__me">
+            <MeButton user={user} onClick={() => setShowMe(true)} />
+          </div>
           <button className="map-page__fab map-page__fab--locate pressable" onClick={locate} aria-label="내 위치 보기">
             <LocateFixed size={22} aria-hidden="true" />
           </button>
@@ -102,10 +114,9 @@ export default function MapPage() {
 
       {!selected && (
         <div className="map-page__actions">
-          {/* QR 스캔 화면은 10/13 */}
-          <button className="btn-sub map-page__action" disabled>
+          <Link to="/scan" className="btn-sub map-page__action pressable">
             <QrCode size={20} aria-hidden="true" /> QR 찍기
-          </button>
+          </Link>
           {mapError ? null : view === 'map' ? (
             <button className="btn-sub map-page__action pressable" onClick={() => setView('list')}>
               <List size={20} aria-hidden="true" /> 목록
@@ -117,6 +128,16 @@ export default function MapPage() {
           )}
         </div>
       )}
+
+      <AnimatePresence>{showMe && <MeSheet onClose={() => setShowMe(false)} />}</AnimatePresence>
     </main>
+  )
+}
+
+function MeButton({ user, onClick }) {
+  return (
+    <button className="map-page__me-btn pressable" onClick={onClick} aria-label={`내 정보: ${user?.nickname ?? ''}`}>
+      <UserRound size={20} aria-hidden="true" />
+    </button>
   )
 }

@@ -1,0 +1,52 @@
+import { useEffect, useRef, useState } from 'react'
+
+const RETRY_MS = 3000
+const KEEP_AWAKE_MS = 10 * 60_000
+const SHOW_LOADING_AFTER_MS = 1500
+
+// Render 무료 서버 깨우기 (CLAUDE.md 6장)
+// - 앱을 열면 /api/health 를 성공할 때까지 3초 간격으로 부른다.
+// - 1.5초 넘게 걸릴 때만 waking=true ("책상 닦는 중" 표시)
+// - 화면이 보이는 동안만 10분마다, 다른 앱에서 돌아오면 즉시 다시 깨운다.
+export function useServerWake() {
+  const [waking, setWaking] = useState(false)
+  const running = useRef(false)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function wake() {
+      if (running.current) return
+      running.current = true
+      const slow = setTimeout(() => !cancelled && setWaking(true), SHOW_LOADING_AFTER_MS)
+      for (;;) {
+        try {
+          const res = await fetch('/api/health', { cache: 'no-store' })
+          if (res.ok) break
+        } catch {
+          /* 아직 자는 중 */
+        }
+        if (cancelled) break
+        await new Promise((r) => setTimeout(r, RETRY_MS))
+      }
+      clearTimeout(slow)
+      running.current = false
+      if (!cancelled) setWaking(false)
+    }
+
+    wake()
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') wake()
+    }, KEEP_AWAKE_MS)
+    const onVisible = () => document.visibilityState === 'visible' && wake()
+    document.addEventListener('visibilitychange', onVisible)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [])
+
+  return waking
+}
