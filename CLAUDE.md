@@ -93,7 +93,8 @@
 
 학교 메일 인증은 접근성이 낮아 쓰지 않는다. **A(캠퍼스 위치) + B(학과 초대 코드)** 방식.
 
-- 가입: 아이디 + 비밀번호(8자 이상) + 닉네임 + 학년 + **학과 초대 코드** + **캠퍼스 위치 확인**
+- 가입: 아이디 + 비밀번호(8자 이상) + 학년 + **학과 초대 코드** + **캠퍼스 위치 확인**
+  - **닉네임은 입력받지 않는다.** 서버가 "조용한 다람쥐 42"처럼 자동으로 짓는다 (`backend/app/nicknames.py`). 실명·아이디가 쪽지에 드러나지 않게 하기 위함
   - 위치 확인: GPS가 캠퍼스 범위 안(설정값: 캠퍼스 중심 좌표 + 반경) **또는** 등록된 장소 QR 스캔
   - 학과는 초대 코드로 자동 결정 (사용자가 고르지 않음)
   - 초대 코드: 사용 횟수 제한, 만료일, 비활성화 가능
@@ -128,7 +129,7 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 |---|---|---|
 | `departments` | id, name | |
 | `invite_codes` | code, department_id, max_uses, used_count, expires_at, is_active | |
-| `users` | id(uuid), username(unique), password_hash, nickname, grade, department_id, is_admin, failed_logins, locked_until, created_at | |
+| `users` | id(uuid), username(unique), password_hash, nickname(서버가 자동 생성), grade, department_id, is_admin, failed_logins, locked_until, created_at | |
 | `places` | id(텍스트 슬러그, 예 `lib-3f`), name, building, lat, lng, radius_m(기본 40), qr_code(무작위 16자), manual_code(6자리), intro, is_active | qr_code·manual_code는 **절대 응답에 포함 금지**. 반경은 **장소마다** 정한다 (맛집처럼 미리 알아야 하는 장소는 넓게, 예 150~200m) |
 | `notes` | id, place_id, author_id, category(`tip`,`study`,`food`,`warn`,`class`), course_name(nullable), content, hint(nullable, 15자 이하), helpful_count, parent_id(덧붙이기), is_official, is_hidden, client_request_id(unique), created_at | `hint`는 잠김 상태에서도 공개되는 작성자 한마디. 카드 순서는 도움됐어요 순 → 최신순 |
 | `unlocks` | place_id, user_id, method(`gps`,`qr`), first_unlocked_at, last_seen_at | (place_id, user_id) 유일. **좌표 저장 안 함** |
@@ -146,7 +147,7 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 | 방식·주소 | 보내는 값 | 받는 값 |
 |---|---|---|
 | `GET /api/health` | — | `{ok: true}` |
-| `POST /api/auth/signup` | username, password, nickname, grade, invite_code, location(`{method:"gps",lat,lng,accuracy}` 또는 `{method:"qr",code}`) | 사용자 정보 + 로그인 쿠키 |
+| `POST /api/auth/signup` | username, password, grade, invite_code, location(`{method:"gps",lat,lng,accuracy}` 또는 `{method:"qr",code}`) | 사용자 정보 + 로그인 쿠키 |
 | `POST /api/auth/login` | username, password | 사용자 정보 + 로그인 쿠키 |
 | `POST /api/auth/logout` | — | 쿠키 삭제 |
 | `GET /api/auth/me` | — | 닉네임, 학년, 학과, is_admin |

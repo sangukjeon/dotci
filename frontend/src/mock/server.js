@@ -65,6 +65,16 @@ const state = {
   lastWriteAt: 0,
 }
 
+// ---------- 닉네임 (진짜 서버의 backend/app/nicknames.py 와 같은 방식) ----------
+
+const ADJECTIVES = ['조용한', '부지런한', '느긋한', '용감한', '다정한', '씩씩한', '엉뚱한', '꼼꼼한', '명랑한', '차분한', '든든한', '반짝이는', '졸린', '배고픈', '호기심많은', '수줍은']
+const ANIMALS = ['다람쥐', '고양이', '강아지', '토끼', '부엉이', '펭귄', '수달', '고슴도치', '판다', '여우', '햄스터', '참새', '거북이', '코알라', '두더지', '알파카']
+const pick = (list) => list[Math.floor(Math.random() * list.length)]
+function randomNickname() {
+  const name = `${pick(ADJECTIVES)} ${pick(ANIMALS)} ${10 + Math.floor(Math.random() * 90)}`
+  return name.length <= 12 ? name : name.split(' ').slice(1).join(' ')
+}
+
 // ---------- 로그인 (이 브라우저에만 기억) ----------
 
 const USER_KEY = 'dotci-mock-user'
@@ -106,7 +116,7 @@ export async function login({ username, password }) {
   currentUser = {
     id: `u-${username}`,
     username,
-    nickname: username,
+    nickname: randomNickname(),
     grade: 2,
     department: '컴퓨터공학과',
     is_admin: username.startsWith('admin'),
@@ -122,13 +132,13 @@ export async function checkInvite(code) {
   return { department }
 }
 
-export async function signup({ username, password, nickname, grade, invite_code, location }) {
+export async function signup({ username, password, grade, invite_code, location }) {
   await delay()
   const department = MOCK_INVITES[invite_code?.trim().toUpperCase()]
   if (!department) throw fail(400, 'bad_invite')
   if (mockMode() === 'far' && location?.method === 'gps') throw fail(400, 'off_campus')
   if (location?.method === 'qr' && !findPlaceByCode(location.code)) throw fail(400, 'bad_code')
-  currentUser = { id: `u-${username}`, username, nickname, grade, department, is_admin: false }
+  currentUser = { id: `u-${username}`, username, nickname: randomNickname(), grade, department, is_admin: false }
   saveUser(currentUser)
   void password
   return currentUser

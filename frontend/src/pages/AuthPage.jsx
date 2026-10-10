@@ -112,7 +112,7 @@ function SignupForm({ goTo }) {
   const { signup } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
-  const [form, setForm] = useState({ username: '', password: '', nickname: '', grade: null, invite_code: '' })
+  const [form, setForm] = useState({ username: '', password: '', grade: null, invite_code: '' })
   const [department, setDepartment] = useState('')
   const [location, setLocation] = useState(null) // {method:'gps', lat, lng, accuracy} | {method:'qr', code}
   const [manualCode, setManualCode] = useState('')
@@ -126,7 +126,6 @@ function SignupForm({ goTo }) {
     e.preventDefault()
     if (!/^[a-z0-9_]{4,20}$/.test(form.username)) return setError('아이디는 영어 소문자·숫자·_ 4~20자로 만들어요.')
     if (form.password.length < 8) return setError('비밀번호는 8자 이상이에요.')
-    if (form.nickname.trim().length < 2 || form.nickname.trim().length > 12) return setError('닉네임은 2~12자예요.')
     if (!form.grade) return setError('학년을 골라 주세요.')
     setError('')
     setStep(2)
@@ -168,7 +167,7 @@ function SignupForm({ goTo }) {
     setBusy(true)
     setError('')
     try {
-      await signup({ ...form, nickname: form.nickname.trim(), location: loc })
+      await signup({ ...form, location: loc })
       navigate(goTo, { replace: true })
     } catch (err) {
       setError(SIGNUP_ERRORS[err.code] ?? '가입하지 못했어요. 잠시 후 다시 시도해 주세요.')
@@ -202,11 +201,6 @@ function SignupForm({ goTo }) {
             <input className="input" type="password" autoComplete="new-password" value={form.password} onChange={set('password')} />
             <span className="field__help">8자 이상</span>
           </label>
-          <label className="field">
-            <span className="field__label">닉네임</span>
-            <input className="input" value={form.nickname} onChange={set('nickname')} placeholder="열람실지박령" maxLength={12} />
-            <span className="field__help">쪽지에 이름 대신 보여요. 실명은 쓰지 마세요.</span>
-          </label>
           <div className="field">
             <span className="field__label" id="grade-label">학년</span>
             <div className="chips" role="group" aria-labelledby="grade-label">
@@ -217,6 +211,7 @@ function SignupForm({ goTo }) {
               ))}
             </div>
           </div>
+          <p className="field__help">쪽지에 보이는 이름은 "조용한 다람쥐 42"처럼 자동으로 지어져요.</p>
           {error && <p className="field__error" role="alert">{error}</p>}
           <div className="bottom-plate">
             <button className="btn-main" type="submit">다음</button>
@@ -289,7 +284,8 @@ function SignupForm({ goTo }) {
           <div className="auth__consent">
             <p className="field__label">수집하는 정보</p>
             <ul>
-              <li>아이디, 닉네임, 학년, 학과(초대 코드로 정해짐)</li>
+              <li>아이디, 학년, 학과(초대 코드로 정해짐)</li>
+              <li>쪽지에 보이는 이름은 자동으로 지어져요</li>
               <li>실명·학번·전화번호·이메일은 받지 않아요</li>
               <li>위치는 확인할 때만 쓰고 저장하지 않아요</li>
               <li>탈퇴하면 계정과 기록을 모두 지워요</li>
