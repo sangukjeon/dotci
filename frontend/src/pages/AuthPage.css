@@ -1,22 +1,44 @@
+/* 위: 연한 파랑 바탕의 로고 영역 / 아래: 둥근 흰 판(탭·입력칸)이 살짝 겹쳐 올라온다 */
 .auth {
   min-height: 100dvh;
-  padding: var(--sp-8) var(--sp-4) calc(var(--plate-h) + var(--sp-6));
-  background: var(--surface);
+  background: var(--primary-weak);
 }
 
-.auth__brand {
-  margin: var(--sp-6) 0 var(--sp-8);
+.auth__hero {
+  padding: calc(var(--sp-8) * 2 + env(safe-area-inset-top)) var(--sp-6) calc(var(--sp-8) + var(--sp-6));
 }
 .auth__logo {
-  font-size: 28px;
-  line-height: 36px;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 40px;
+  line-height: 44px;
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text-strong);
 }
+.auth__dot {
+  width: 12px;
+  height: 12px;
+  margin-bottom: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+}
 .auth__tagline {
-  margin-top: var(--sp-1);
-  font-size: 16px;
-  color: var(--text-2);
+  margin-top: var(--sp-2);
+  font-size: 17px;
+  line-height: 26px;
+  color: var(--text);
+}
+
+.auth__panel {
+  position: relative;
+  min-height: calc(100dvh - 200px);
+  margin-top: calc(-1 * var(--sp-6));
+  padding: var(--sp-2) var(--sp-4) calc(var(--plate-h) + var(--sp-6));
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  background: var(--surface);
+  box-shadow: 0 -1px 0 var(--line);
 }
 
 /* 탭: 아래 2px 막대가 선택 표시 */

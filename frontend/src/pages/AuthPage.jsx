@@ -27,21 +27,25 @@ export default function AuthPage() {
 
   return (
     <main className="auth">
-      <div className="auth__brand">
-        <p className="auth__logo">선배의 흔적</p>
-        <p className="auth__tagline">검색하지 마세요, 도착하세요.</p>
-      </div>
+      <header className="auth__hero">
+        <h1 className="auth__logo">
+          DOTCI<span className="auth__dot" aria-hidden="true" />
+        </h1>
+        <p className="auth__tagline">점 하나, 이야기 하나.</p>
+      </header>
 
-      <div className="auth__tabs" role="tablist">
-        <button role="tab" aria-selected={tab === 'login'} className="auth__tab" onClick={() => setTab('login')}>
-          로그인
-        </button>
-        <button role="tab" aria-selected={tab === 'signup'} className="auth__tab" onClick={() => setTab('signup')}>
-          가입
-        </button>
-      </div>
+      <div className="auth__panel">
+        <div className="auth__tabs" role="tablist">
+          <button role="tab" aria-selected={tab === 'login'} className="auth__tab" onClick={() => setTab('login')}>
+            로그인
+          </button>
+          <button role="tab" aria-selected={tab === 'signup'} className="auth__tab" onClick={() => setTab('signup')}>
+            가입
+          </button>
+        </div>
 
-      {tab === 'login' ? <LoginForm goTo={goTo} /> : <SignupForm goTo={goTo} />}
+        {tab === 'login' ? <LoginForm goTo={goTo} /> : <SignupForm goTo={goTo} />}
+      </div>
     </main>
   )
 }
