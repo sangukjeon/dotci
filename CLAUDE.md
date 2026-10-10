@@ -1,10 +1,11 @@
 # 선배의 흔적 — 프로젝트 안내 (CLAUDE.md)
 
-> 마지막 갱신: 2026-10-11 (뒷면 힌트·수업 색·삭제 API·대체 콘티 반영). 이 파일이 최신 결정이다.
+> 마지막 갱신: 2026-10-11 (네이버 지도, 카드형 책상, 디자인 규칙 DESIGN.md 반영). 이 파일이 최신 결정이다.
+> 화면 디자인 규칙은 **DESIGN.md**를 따른다.
 > 기획·설계 문서(https://claude.ai/code/artifact/e6bc60cf-cc87-4b33-b2ed-e0f732caa809)는
 > 같은 결정(회원가입, Vercel + Render + Neon, 서버 깨우기)으로 갱신되어 있으나, 이번 갱신분은 아직 반영 전이다.
 > 둘이 다르면 **이 파일을 따른다.**
-> 화면 설계(책상·포스트잇 애니메이션), PPT 목차, 시연 콘티, 심사 예상 질문은 그 문서를 참고한다.
+> PPT 목차, 시연 콘티, 심사 예상 질문은 그 문서를 참고한다. (기획 문서의 나무 책상·흩어진 포스트잇 화면 설계는 DESIGN.md로 대체됨)
 
 ## 1. 프로젝트 한 줄
 
@@ -33,7 +34,8 @@
 
 | 역할 | 기술 | 배포 |
 |---|---|---|
-| 화면 | React (Vite), react-router-dom, motion(구 Framer Motion), html5-qrcode | **Vercel** (보유 도메인 연결) |
+| 화면 | React (Vite), react-router-dom, motion(구 Framer Motion), html5-qrcode, lucide-react | **Vercel** (보유 도메인 연결) |
+| 지도 | **네이버 지도 API** (NAVER Cloud Maps, Web Dynamic Map) | 브라우저에서 직접 불러옴 |
 | 서버 | FastAPI (Python), SQLModel, psycopg[binary], pydantic-settings, bcrypt, PyJWT | **Render** 무료 웹 서비스 |
 | DB | PostgreSQL | **Neon** 무료 요금제 |
 | 위치 | 브라우저 Geolocation (https 필수) | — |
@@ -48,6 +50,8 @@
   → CORS 설정 불필요, httpOnly 쿠키 로그인 가능.
 - 홈 서버(Proxmox)는 이번 제출에는 쓰지 않는다. 11/5 이전 여유 있으면 이전 검토.
 - Supabase는 쓰지 않는다 (무료 프로젝트 7일 비활성 정지, 아이디 로그인 우회 필요).
+- 네이버 지도 Client ID는 비밀키가 아니다(브라우저에 공개되는 값, 등록한 주소에서만 동작). `frontend/.env`의 `VITE_NAVER_MAP_CLIENT_ID`에 둔다.
+  NAVER Cloud 콘솔의 Web 서비스 URL에 `http://localhost:5173`과 배포 도메인을 등록해야 한다. 무료 이용량은 대표 계정에만 있으니 콘솔에서 확인.
 
 ## 4. 핵심 기능
 
@@ -55,8 +59,8 @@
 | ID | 기능 | 요점 |
 |---|---|---|
 | F1 | 회원가입·로그인 | 아래 5장 참고 |
-| F2 | 캠퍼스 지도 | 일러스트 지도 이미지 위 장소 핀(% 좌표), 핀마다 쪽지 개수·카테고리 색 점. 내용은 안 보냄 |
-| F3 | 장소 책상 | 잠긴 쪽지는 뒷면만: 색+아이콘 + **뒷면 힌트**(예 "4학년이 남김 · 12명이 도움받음", 수업이면 과목명, `hint`가 있으면 그 한마디). 0개면 "첫 흔적의 주인공이 되어 보세요". 최대 12개 표시(도움됐어요 순), 나머지는 "서랍 열기" |
+| F2 | 캠퍼스 지도 | **네이버 지도** 위에 장소 마커(위도·경도), 마커마다 쪽지 개수 배지. 누르면 하단 시트로 장소 카드 → "책상 열기". 내 위치 점은 화면에만 표시(서버로 안 보냄). 내용은 안 보냄 |
+| F3 | 장소 책상 | **2열 카드**(DESIGN.md). 잠긴 카드는 카테고리 연한 색 + 아이콘 + **뒷면 힌트**(`hint`, 과목명, "4학년 · 도움 12") + 자물쇠. 0개면 "첫 흔적의 주인공이 되어 보세요". 최대 12개 표시(도움됐어요 순), 나머지는 "더 보기" |
 | F4 | GPS 잠금 해제 | 좌표+정확도 전송 → 서버 판정. 정확도 100m 초과면 거절, 반경 + min(정확도, 25m) 안이면 열림 |
 | F5 | QR 잠금 해제 | 장소 QR 스캔 또는 6자리 수동 코드. 다른 장소 QR이면 그 장소로 안내 |
 | F6 | 열람 | 해제 시 안 본 쪽지가 순서대로 뒤집힘. 한 번 본 쪽지는 계속 볼 수 있음. 재방문 시 새 쪽지만 NEW로 뒤집힘 |
@@ -79,7 +83,7 @@
 - 신고 3건 자동 숨김, PWA, 멘토링 코스, 실사용 테스트(15~20명, 쪽지 100개 목표)
 
 ### 하지 않음
-장소 사진 인식, 에타 연동(공식 API 없음·약관·보안), 학교 대항전, 사진 첨부(보류), 앱 꺼진 상태 푸시, 외부 지도 API,
+장소 사진 인식, 에타 연동(공식 API 없음·약관·보안), 학교 대항전, 사진 첨부(보류), 앱 꺼진 상태 푸시, 직접 그린 지도 일러스트,
 본문 앞부분 자동 미리보기(규칙 8 위반)
 
 ## 5. 회원가입·로그인
@@ -122,8 +126,8 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 | `departments` | id, name | |
 | `invite_codes` | code, department_id, max_uses, used_count, expires_at, is_active | |
 | `users` | id(uuid), username(unique), password_hash, nickname, grade, department_id, is_admin, failed_logins, locked_until, created_at | |
-| `places` | id(텍스트 슬러그, 예 `lib-3f`), name, building, lat, lng, radius_m(기본 40), qr_code(무작위 16자), manual_code(6자리), map_x, map_y(0~100%), intro, is_active | qr_code·manual_code는 **절대 응답에 포함 금지**. 반경은 **장소마다** 정한다 (맛집처럼 미리 알아야 하는 장소는 넓게, 예 150~200m) |
-| `notes` | id, place_id, author_id, category(`tip`,`study`,`food`,`warn`,`class`), course_name(nullable), content, hint(nullable, 15자 이하), pos_x, pos_y, rotation, helpful_count, parent_id(덧붙이기), is_official, is_hidden, client_request_id(unique), created_at | 위치·기울기(−6°~+6°)는 서버가 정해 저장. `hint`는 잠김 상태에서도 공개되는 작성자 한마디 |
+| `places` | id(텍스트 슬러그, 예 `lib-3f`), name, building, lat, lng, radius_m(기본 40), qr_code(무작위 16자), manual_code(6자리), intro, is_active | qr_code·manual_code는 **절대 응답에 포함 금지**. 반경은 **장소마다** 정한다 (맛집처럼 미리 알아야 하는 장소는 넓게, 예 150~200m) |
+| `notes` | id, place_id, author_id, category(`tip`,`study`,`food`,`warn`,`class`), course_name(nullable), content, hint(nullable, 15자 이하), helpful_count, parent_id(덧붙이기), is_official, is_hidden, client_request_id(unique), created_at | `hint`는 잠김 상태에서도 공개되는 작성자 한마디. 카드 순서는 도움됐어요 순 → 최신순 |
 | `unlocks` | place_id, user_id, method(`gps`,`qr`), first_unlocked_at, last_seen_at | (place_id, user_id) 유일. **좌표 저장 안 함** |
 | `helpfuls` | note_id, user_id, created_at | 두 칼럼 복합 기본키 |
 | `timetable_entries` | id, user_id, course_name, day(0~4), start_time, end_time, building, place_id(nullable) | 시간 되면 |
@@ -132,15 +136,7 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 "다시 보기" 규칙: 사용자는 `notes.created_at <= unlocks.last_seen_at`인 쪽지만 본문을 받는다.
 재해제 시 `last_seen_at` = 지금, 그사이 생긴 쪽지 id를 `new_ids`로 반환.
 
-카테고리 (앞면 / 뒷면 / 뒷면 아이콘):
-
-| 카테고리 | 값 | 앞면 | 뒷면 | 아이콘 |
-|---|---|---|---|---|
-| 꿀팁 | `tip` | `#FFE66D` | `#F2D14C` | 전구 |
-| 공부 | `study` | `#A0D8F1` | `#7FC4E6` | 책 |
-| 맛집 | `food` | `#FFB3C6` | `#F598B0` | 숟가락 |
-| 주의 | `warn` | `#FFB067` | `#F5964A` | 느낌표 |
-| 수업 | `class` | `#B8E986` | `#9FD46E` | 연필 |
+카테고리: 꿀팁 `tip` / 공부 `study` / 맛집 `food` / 주의 `warn` / 수업 `class`. 색·아이콘은 DESIGN.md 1장.
 
 ## 8. API (모두 `/api` 아래, 인증은 쿠키)
 
@@ -152,8 +148,8 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 | `POST /api/auth/logout` | — | 쿠키 삭제 |
 | `GET /api/auth/me` | — | 닉네임, 학년, 학과, is_admin |
 | `DELETE /api/auth/me` | password(재확인) | 계정·쪽지·해제 기록 삭제 + 쿠키 삭제 |
-| `GET /api/places` | — | id, name, building, map_x, map_y, note_count, category_counts, unlocked |
-| `GET /api/places/{id}/notes` | — | 안 본 쪽지: `{id, category, pos_x, pos_y, rotation, author_grade, helpful_count, course_name, hint, locked:true}` (**content 없음**) / 본 쪽지: 본문·작성자·학년·학과·helpful_count·liked_by_me |
+| `GET /api/places` | — | id, name, building, lat, lng, intro, note_count, category_counts, unlocked |
+| `GET /api/places/{id}/notes` | — | 안 본 쪽지: `{id, category, author_grade, helpful_count, course_name, hint, locked:true}` (**content 없음**) / 본 쪽지: 본문·작성자·학년·학과·helpful_count·liked_by_me |
 | `POST /api/places/{id}/unlock` | GPS: `{method:"gps",lat,lng,accuracy}` / QR: `{method:"qr",code}` | 성공: `{unlocked:true, notes, new_ids, write_token, token_expires_at}` / 실패: `{unlocked:false, reason, distance_m}` |
 | `POST /api/places/{id}/notes` | category, content, course_name?, hint?, parent_id?, write_token, client_request_id | 저장된 쪽지 (관리자는 write_token 불필요) |
 | `DELETE /api/notes/{id}` | — | `{ok:true}` (작성자 본인 또는 관리자만) |
@@ -187,7 +183,7 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 
 | 날짜 | 할 일 |
 |---|---|
-| 10/11 (일) | 선배·동기에게 장소별 팁 + 에타 시간표 캡처 요청 / 장소 10곳 좌표(서로 50m 이상) / 지도 이미지·핀 % 좌표 / Neon 생성·SQLModel 테이블(`hint` 칼럼 포함) / FastAPI 뼈대 + `GET /api/places` / React 지도·책상·포스트잇 정적 화면(5색 + 뒷면 힌트) |
+| 10/11 (일) | 선배·동기에게 장소별 팁 + 에타 시간표 캡처 요청 / 장소 10곳 좌표(서로 50m 이상) / **네이버 클라우드 Maps 신청·Client ID** / Neon 생성·SQLModel 테이블(`hint` 칼럼 포함) / FastAPI 뼈대 + `GET /api/places` / React 지도·책상 카드 정적 화면 |
 | 10/12 (월) **생존선** | unlock 판정 + notes 조회(잠김/열림 분리, 뒷면 정보 힌트 포함) / Render·Vercel 배포, rewrites, 도메인 / 위치 받기 → 해제 → 뒤집기 / 서버 깨우기 기본형 / 관리자 시딩 / 캠퍼스 2곳 실제 테스트 |
 | 10/13 (화) | 회원가입·로그인(초대 코드+위치) / QR 스캔+수동 코드, QR 인쇄 / 쓰기(토큰, 붙이기 애니메이션, 시간 되면 "뒷면 한마디") / 쪽지 삭제 / 서버 깨우기 완성(apiFetch 재시도) |
 | 10/14 (수) | 확대·도움됐어요·수강 팁 / 캠퍼스 10곳 순회·반경 조정·QR 부착 / 쪽지 30개 시딩, 동기 3~5명 사용 / 시연 영상 촬영 / PPT 초안 |
@@ -197,14 +193,14 @@ Render 무료 웹 서비스는 15분간 요청이 없으면 잠들고, 첫 요�
 
 시연 영상 대체 콘티 (기능이 잘렸을 때):
 - 1:10 덧붙이기·세대 표시 → **새 쪽지 쓰기 → "착" 붙기**
-- 1:32 도감 스탬프 → **지도에서 연 장소 핀에 체크 표시**
+- 1:32 도감 스탬프 → **지도에서 연 장소 마커에 체크 표시**
 - 1:22 개발자 도구 장면은 유지: "잠긴 응답에는 작성자가 공개한 한마디뿐, 본문은 없음"
 
 개발 팁: 크롬 개발자 도구 Sensors로 위치를 바꿔 집에서 해제 테스트. 폰 오류는 `chrome://inspect`로 확인.
 
 ## 11. 남은 확인 사항
 
-- 학교 공식 지도 사용 가능 여부 (안 되면 직접 그린 일러스트)
+- 네이버 지도 무료 이용량(대표 계정 여부) 콘솔에서 확인
 - 50m 안으로 붙은 장소 유무, 캠퍼스 중심 좌표·가입 허용 반경
 - 대회 심사 기준·배점, 시연 영상 길이 제한, 제출 마감 **시각**
 - 쓰기 가능 시간 30분 유지 여부

@@ -1,0 +1,59 @@
+import { Heart, Lock } from 'lucide-react'
+import { CATEGORIES } from '../categories.js'
+import './NoteCard.css'
+
+const FLIP_STEP_MS = 120
+
+// 쪽지 카드 한 장.
+// - content가 없으면(서버가 안 보냄) 잠긴 면: 카테고리 연한 색 + 아이콘 + 뒷면 힌트
+// - content가 오면 흰 면으로 뒤집힌다. flipOrder 순서대로 120ms씩 늦게.
+export default function NoteCard({ note, content, isNew = false, flipOrder = 0 }) {
+  const cat = CATEGORIES[note.category] ?? CATEGORIES.tip
+  const open = typeof content === 'string'
+  const { Icon } = cat
+
+  // 잠긴 면의 제목: 작성자 한마디 > 과목명 > 카테고리 이름
+  const lockedTitle = note.hint ? `“${note.hint}”` : note.course_name || cat.label
+  const meta = (
+    <>
+      {note.author_grade}학년 · 도움 <b>{note.helpful_count}</b>
+    </>
+  )
+
+  const label = open
+    ? `${cat.label} 쪽지, ${note.author_grade}학년: ${content}`
+    : `잠긴 쪽지, ${cat.label}, ${lockedTitle}, ${note.author_grade}학년, 도움 ${note.helpful_count}명`
+
+  return (
+    <button type="button" className="ncard pressable" aria-label={label}>
+      <span
+        className={open ? 'ncard__inner ncard__inner--open' : 'ncard__inner'}
+        style={{ transitionDelay: `${flipOrder * FLIP_STEP_MS}ms` }}
+      >
+        {/* 잠긴 면 */}
+        <span className="ncard__face ncard__locked" style={{ background: cat.bg }} aria-hidden="true">
+          <span className="ncard__icon" style={{ color: cat.icon }}>
+            <Icon size={18} strokeWidth={2.2} />
+          </span>
+          <Lock className="ncard__lock" size={14} />
+          <span className="ncard__bottom">
+            <span className="ncard__title">{lockedTitle}</span>
+            <span className="ncard__meta">{meta}</span>
+          </span>
+        </span>
+
+        {/* 열린 면 */}
+        <span className="ncard__face ncard__open" aria-hidden="true">
+          <span className="ncard__chip" style={{ background: cat.bg, color: cat.text }}>
+            {note.course_name ? `${cat.label} · ${note.course_name}` : cat.label}
+          </span>
+          {isNew && <span className="ncard__new">NEW</span>}
+          <span className="ncard__text">{open ? content : ''}</span>
+          <span className="ncard__meta">
+            {note.author_grade}학년 · <Heart size={12} className="ncard__heart" /> <b>{note.helpful_count}</b>
+          </span>
+        </span>
+      </span>
+    </button>
+  )
+}

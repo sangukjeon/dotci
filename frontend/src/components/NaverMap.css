@@ -1,0 +1,79 @@
+.naver-map {
+  position: absolute;
+  inset: 0;
+  background: var(--line);
+}
+
+/* 장소 마커: 파란 원 + 쪽지 수 배지 + 이름표 */
+.nmarker {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-family: var(--font);
+}
+.nmarker__dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-float);
+  transition: transform 150ms ease-in-out;
+}
+.nmarker--open .nmarker__dot {
+  background: var(--success);
+}
+.nmarker--selected .nmarker__dot {
+  transform: scale(1.2);
+}
+.nmarker__badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid #fff;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  line-height: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+.nmarker__label {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--line);
+}
+.nmarker--selected .nmarker__label {
+  background: var(--text-strong);
+  color: #fff;
+  box-shadow: none;
+}
+
+/* 내 위치 점 */
+.nmarker-me {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 8px rgba(43, 107, 243, 0.2);
+}

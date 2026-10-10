@@ -1,35 +1,85 @@
-.map-title {
-  margin: var(--sp-2) 0 var(--sp-6);
-  text-align: center;
-  font-size: 22px;
-  line-height: 30px;
-  font-weight: 700;
-  color: var(--paper);
+.map-page {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
 }
-
-.map-error {
-  margin-top: var(--sp-8);
+.map-page--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
   padding: var(--sp-6);
-  border-radius: var(--r-card);
-  background: var(--paper);
   text-align: center;
 }
 
-.map-actions {
-  position: fixed;
-  left: 50%;
-  bottom: var(--sp-4);
-  transform: translateX(-50%);
-  width: calc(min(480px, 100vw) - 2 * var(--sp-4));
+/* 지도 위에 뜬 요소들 */
+.map-page__brand-pill {
+  position: absolute;
+  top: calc(var(--sp-3) + env(safe-area-inset-top));
+  left: var(--sp-4);
+  z-index: 5;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.map-page__fab {
+  position: absolute;
+  z-index: 5;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-page__fab--locate {
+  right: var(--sp-4);
+  bottom: calc(var(--btn-sub-h) + var(--sp-8));
+}
+
+.map-page__actions {
+  position: absolute;
+  left: var(--sp-4);
+  right: var(--sp-4);
+  bottom: calc(var(--sp-4) + env(safe-area-inset-bottom));
+  z-index: 5;
   display: flex;
   gap: var(--sp-2);
 }
-.map-actions .btn-sub {
+.map-page__action {
   flex: 1;
+  box-shadow: var(--shadow-float);
 }
-/* 비활성은 투명도가 아니라 색으로 (DESIGN.md 6장) */
-.map-actions .btn-sub:disabled {
-  background: var(--desk-light);
-  color: var(--paper);
-  cursor: not-allowed;
+
+/* 목록 보기 */
+.map-page__list {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--sp-6) var(--sp-4) calc(var(--btn-sub-h) + var(--sp-8));
+}
+.map-page__brand {
+  margin-bottom: var(--sp-4);
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.map-page__notice {
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-control);
+  background: var(--primary-weak);
+  color: var(--primary-strong);
+  font-size: 14px;
+  line-height: 22px;
 }

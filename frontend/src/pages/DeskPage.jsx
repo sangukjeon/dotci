@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ChevronLeft, MapPin, PenLine } from 'lucide-react'
+import { ChevronLeft, CircleCheck, Lock, MapPin, PenLine } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import Desk from '../components/Desk.jsx'
 import { MOCK_CONTENTS, MOCK_LOCKED_NOTES } from '../mock.js'
@@ -22,7 +22,7 @@ export default function DeskPage() {
   const notes = MOCK_LOCKED_NOTES[id] ?? []
   const unlocked = Object.keys(contents).length > 0
 
-  // TODO(10/12): 위치를 받아 POST /api/places/{id}/unlock 호출. 지금은 가짜로 "서버가 본문을 보내 준" 상황을 흉내 낸다.
+  // TODO(10/12): 위치를 받아 POST /api/places/{id}/unlock 호출. 지금은 "서버가 본문을 보내 준" 상황을 흉내 낸다.
   const mockUnlock = () => {
     const received = {}
     for (const n of notes) received[n.id] = MOCK_CONTENTS[n.id] ?? ''
@@ -30,26 +30,40 @@ export default function DeskPage() {
   }
 
   return (
-    <main className="screen desk-page">
-      <header className="desk-page__top">
+    <main className="desk-page">
+      <header className="top-bar">
         <Link to="/" className="icon-btn pressable" aria-label="지도로 돌아가기">
           <ChevronLeft size={26} aria-hidden="true" />
         </Link>
-        <h1 className="desk-page__label">{place?.name ?? id}</h1>
-        <span className="icon-btn" aria-hidden="true" />
       </header>
+
+      <section className="desk-page__head">
+        <p className="desk-page__building">{place?.building ?? ''}</p>
+        <h1 className="desk-page__name">{place?.name ?? ''}</h1>
+        {unlocked ? (
+          <span className="tag" style={{ background: 'var(--success-weak)', color: 'var(--success)' }}>
+            <CircleCheck size={14} aria-hidden="true" /> 열었어요
+          </span>
+        ) : (
+          <span className="tag" style={{ background: 'var(--bg)', color: 'var(--text-2)' }}>
+            <Lock size={14} aria-hidden="true" /> 쪽지 <b>{notes.length}</b>개 잠김
+          </span>
+        )}
+      </section>
 
       <Desk notes={notes} contents={contents} />
 
-      {unlocked ? (
-        <button className="btn-main" type="button">
-          <PenLine size={20} aria-hidden="true" /> 흔적 남기기
-        </button>
-      ) : (
-        <button className="btn-main" type="button" onClick={mockUnlock}>
-          <MapPin size={20} aria-hidden="true" /> 여기 도착했어요
-        </button>
-      )}
+      <div className="bottom-plate">
+        {unlocked ? (
+          <button className="btn-main" type="button">
+            <PenLine size={20} aria-hidden="true" /> 흔적 남기기
+          </button>
+        ) : (
+          <button className="btn-main" type="button" onClick={mockUnlock}>
+            <MapPin size={20} aria-hidden="true" /> 도착 확인하기
+          </button>
+        )}
+      </div>
     </main>
   )
 }

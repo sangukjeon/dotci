@@ -14,43 +14,34 @@ body,
 }
 
 body {
-  font-family: var(--font-ui);
+  font-family: var(--font);
   font-size: 16px;
   line-height: 24px;
-  color: var(--ink);
-  background-color: var(--desk);
+  color: var(--text);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 나무 책상: 나뭇결 줄무늬 + 가장자리 어둡게(비네팅).
-   나무 텍스처 사진을 구하면 background-image 첫 줄을 url(...)로 바꾼다. */
-.desk-bg {
-  min-height: 100dvh;
-  background-color: var(--desk);
-  background-image:
-    radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.45) 100%),
-    repeating-linear-gradient(
-      92deg,
-      rgba(0, 0, 0, 0.05) 0 2px,
-      transparent 2px 22px,
-      rgba(255, 255, 255, 0.03) 22px 24px,
-      transparent 24px 47px
-    );
+h1,
+h2,
+h3,
+p {
+  margin: 0;
 }
 
-/* 화면 틀: 폰 기준, 큰 화면에서도 가운데 480px */
-.screen {
+/* 화면 틀: 폰 기준, 큰 화면에서는 가운데 480px */
+.app {
   position: relative;
   max-width: 480px;
-  margin: 0 auto;
   min-height: 100dvh;
-  padding: var(--sp-4) var(--sp-4) calc(var(--btn-main-h) + var(--sp-8));
+  margin: 0 auto;
+  background: var(--bg);
 }
 
 /* 접근성: 키보드 포커스 테두리는 지우지 않는다 */
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -62,50 +53,29 @@ button {
   padding: 0;
   cursor: pointer;
 }
+a {
+  color: inherit;
+}
 
 /* 눌림 반응 */
 .pressable {
   transition: transform 100ms ease-in-out;
 }
 .pressable:active {
-  transform: scale(0.92);
+  transform: scale(0.96);
 }
 
-/* 버튼 */
-.btn-main {
-  position: fixed;
-  left: 50%;
-  bottom: var(--sp-4);
-  transform: translateX(-50%);
-  width: calc(min(480px, 100vw) - 2 * var(--sp-4));
-  height: var(--btn-main-h);
-  border-radius: var(--r-control);
-  background: var(--stamp);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
+/* 상단 바 */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: var(--bar-h);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  transition: transform 100ms ease-in-out, background-color 100ms;
-}
-.btn-main:active {
-  transform: translateX(-50%) scale(0.96);
-  background: var(--stamp-strong);
-}
-
-.btn-sub {
-  height: var(--btn-sub-h);
-  padding: 0 var(--sp-4);
-  border-radius: var(--r-control);
-  background: var(--paper);
-  color: var(--ink);
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
+  padding: 0 var(--sp-1);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
 
 .icon-btn {
@@ -115,7 +85,74 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--paper);
+  color: var(--text-strong);
+  text-decoration: none;
+}
+
+/* 하단 고정 판 + 주 버튼 */
+.bottom-plate {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 20;
+  transform: translateX(-50%);
+  width: min(480px, 100vw);
+  padding: var(--sp-3) var(--sp-4) calc(var(--sp-3) + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.btn-main {
+  width: 100%;
+  height: var(--btn-main-h);
+  border-radius: var(--r-control);
+  background: var(--primary);
+  color: #fff;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  text-decoration: none;
+  transition: transform 100ms ease-in-out, background-color 100ms;
+}
+.btn-main:active {
+  transform: scale(0.96);
+  background: var(--primary-strong);
+}
+
+.btn-sub {
+  height: var(--btn-sub-h);
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-control);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+/* 비활성은 투명도가 아니라 색으로 (DESIGN.md 6장) */
+.btn-sub:disabled {
+  background: var(--bg);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+/* 태그 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--r-tag);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
 }
 
 /* 화면 읽기 프로그램 전용 글자 */

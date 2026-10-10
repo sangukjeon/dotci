@@ -6,17 +6,17 @@
 
 export const MOCK_LOCKED_NOTES = {
   'lib-3f': [
-    { id: 1, category: 'tip', pos_x: 18, pos_y: 14, rotation: -4, author_grade: 4, helpful_count: 12, course_name: null, hint: null },
-    { id: 2, category: 'study', pos_x: 50, pos_y: 11, rotation: 3, author_grade: 3, helpful_count: 8, course_name: null, hint: '콘센트 명당' },
-    { id: 3, category: 'food', pos_x: 82, pos_y: 15, rotation: -2, author_grade: 2, helpful_count: 3, course_name: null, hint: '시험기간 필수' },
-    { id: 4, category: 'class', pos_x: 17, pos_y: 39, rotation: 5, author_grade: 3, helpful_count: 5, course_name: '자료구조', hint: null },
-    { id: 5, category: 'tip', pos_x: 49, pos_y: 37, rotation: -5, author_grade: 2, helpful_count: 0, course_name: null, hint: null },
-    { id: 6, category: 'warn', pos_x: 83, pos_y: 40, rotation: 2, author_grade: 4, helpful_count: 21, course_name: null, hint: '문 조심' },
-    { id: 7, category: 'study', pos_x: 32, pos_y: 63, rotation: 1, author_grade: 1, helpful_count: 1, course_name: null, hint: null },
+    { id: 1, category: 'tip', author_grade: 4, helpful_count: 12, course_name: null, hint: null },
+    { id: 2, category: 'study', author_grade: 3, helpful_count: 8, course_name: null, hint: '콘센트 명당' },
+    { id: 3, category: 'food', author_grade: 2, helpful_count: 3, course_name: null, hint: '시험기간 필수' },
+    { id: 4, category: 'class', author_grade: 3, helpful_count: 5, course_name: '자료구조', hint: null },
+    { id: 5, category: 'tip', author_grade: 2, helpful_count: 0, course_name: null, hint: null },
+    { id: 6, category: 'warn', author_grade: 4, helpful_count: 21, course_name: null, hint: '문 조심' },
+    { id: 7, category: 'study', author_grade: 1, helpful_count: 1, course_name: null, hint: null },
   ],
   cafeteria: [
-    { id: 11, category: 'food', pos_x: 20, pos_y: 14, rotation: 3, author_grade: 3, helpful_count: 9, course_name: null, hint: '수요일 특식' },
-    { id: 12, category: 'warn', pos_x: 52, pos_y: 12, rotation: -3, author_grade: 2, helpful_count: 4, course_name: null, hint: null },
+    { id: 11, category: 'food', author_grade: 3, helpful_count: 9, course_name: null, hint: '수요일 특식' },
+    { id: 12, category: 'warn', author_grade: 2, helpful_count: 4, course_name: null, hint: null },
   ],
 }
 

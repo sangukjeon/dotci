@@ -38,8 +38,9 @@ class PlaceOut(BaseModel):
     id: str
     name: str
     building: str
-    map_x: float
-    map_y: float
+    lat: float
+    lng: float
+    intro: str
     note_count: int
     category_counts: dict[str, int]
     unlocked: bool
@@ -75,8 +76,9 @@ def list_places(session: Session = Depends(get_session)) -> list[PlaceOut]:
                 id=p.id,
                 name=p.name,
                 building=p.building,
-                map_x=p.map_x,
-                map_y=p.map_y,
+                lat=p.lat,
+                lng=p.lng,
+                intro=p.intro,
                 note_count=sum(by_cat.values()),
                 category_counts=by_cat,
                 unlocked=False,  # 로그인(10/13)이 생기면 unlocks 테이블로 판단

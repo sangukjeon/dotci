@@ -36,6 +36,7 @@ API 설명 화면: http://localhost:8000/api/docs
 ```bash
 cd frontend
 npm install
+cp .env.example .env          # 네이버 지도 Client ID 넣기. 비워 두면 목록 화면으로 표시
 npm run dev
 ```
 

@@ -1,0 +1,143 @@
+/* 바깥(.ncard): 격자 칸 + 원근감
+   안쪽(.ncard__inner): 실제로 뒤집히는 부분
+   면(.ncard__face): 잠긴 면·열린 면. 뒤를 향한 면은 숨김 */
+.ncard {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 132px;
+  perspective: 900px;
+  text-align: left;
+}
+
+.ncard__inner {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.ncard__inner--open {
+  transform: rotateY(180deg);
+}
+
+.ncard__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  border-radius: var(--r-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+/* 잠긴 면 */
+.ncard__locked {
+  justify-content: space-between;
+}
+.ncard__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ncard__lock {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: rgba(20, 26, 36, 0.3);
+}
+.ncard__bottom {
+  display: flex;
+  flex-direction: column;
+}
+.ncard__title {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ncard__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-2);
+}
+.ncard__meta b {
+  font-weight: 700;
+  color: var(--text);
+}
+.ncard__heart {
+  color: var(--danger);
+}
+
+/* 열린 면 */
+.ncard__open {
+  transform: rotateY(180deg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.ncard__chip {
+  align-self: flex-start;
+  max-width: 80%;
+  padding: 1px 7px;
+  border-radius: var(--r-tag);
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ncard__new {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 700;
+}
+.ncard__text {
+  flex: 1;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-strong);
+  word-break: keep-all;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* 동작 줄이기: 뒤집는 대신 서서히 바뀌기 */
+@media (prefers-reduced-motion: reduce) {
+  .ncard__inner,
+  .ncard__inner--open,
+  .ncard__open {
+    transform: none;
+  }
+  .ncard__open {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .ncard__inner--open .ncard__open {
+    opacity: 1;
+  }
+}

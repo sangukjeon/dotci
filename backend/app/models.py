@@ -63,8 +63,6 @@ class Place(SQLModel, table=True):
     radius_m: int = 40
     qr_code: str = Field(max_length=16, unique=True)  # 응답 금지
     manual_code: str = Field(max_length=6, unique=True)  # 응답 금지
-    map_x: float  # 지도 이미지 위 가로 위치 0~100%
-    map_y: float  # 지도 이미지 위 세로 위치 0~100%
     intro: str = Field(default="", max_length=200)
     is_active: bool = True
 
@@ -79,9 +77,6 @@ class Note(SQLModel, table=True):
     course_name: Optional[str] = Field(default=None, max_length=40)
     content: str = Field(max_length=200)  # 잠금 해제 전에는 절대 응답에 넣지 않음
     hint: Optional[str] = Field(default=None, max_length=15)  # 잠겨 있어도 보이는 작성자 한마디
-    pos_x: float  # 책상 위 위치 0~100% (서버가 정함)
-    pos_y: float
-    rotation: float  # -6 ~ +6도 (서버가 정함)
     helpful_count: int = 0
     parent_id: Optional[int] = Field(default=None, foreign_key="notes.id")  # 덧붙이기
     is_official: bool = False

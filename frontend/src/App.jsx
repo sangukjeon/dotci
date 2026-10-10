@@ -4,7 +4,7 @@ import DeskPage from './pages/DeskPage.jsx'
 
 export default function App() {
   return (
-    <div className="desk-bg">
+    <div className="app">
       <Routes>
         <Route path="/" element={<MapPage />} />
         <Route path="/place/:id" element={<DeskPage />} />

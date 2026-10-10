@@ -1,35 +1,41 @@
 /* 디자인 토큰 — 값은 루트의 DESIGN.md와 같아야 한다. */
 :root {
-  /* 바탕 */
-  --desk: #7a5234;
-  --desk-light: #a57a55;
-  --paper: #fff3dc;
+  /* 기본 */
+  --bg: #f2f3f8;
   --surface: #ffffff;
-  --surface-sub: #f2f3f8;
-  --ink: #3a2a1c;
-  --ink-2: #6b5744;
-  --ink-3: #8e7b69;
-  --stamp: #d7263d;
-  --stamp-strong: #b51d31;
-  --ok: #3b6d11;
-  --dim: rgba(20, 14, 8, 0.48);
+  --line: #e5e8ef;
+  --text-strong: #141a24;
+  --text: #354153;
+  --text-2: #697383;
+  --text-3: #99a1b1;
+  --primary: #2b6bf3;
+  --primary-strong: #1e56d6;
+  --primary-weak: #ebf2ff;
+  --danger: #e5484d;
+  --success: #2f8a4e;
+  --success-weak: #e6f4ea;
+  --dim: rgba(20, 26, 36, 0.44);
 
-  /* 포스트잇: 앞면 / 뒷면 */
-  --note-tip: #ffe66d;
-  --note-tip-back: #f2d14c;
-  --note-study: #a0d8f1;
-  --note-study-back: #7fc4e6;
-  --note-food: #ffb3c6;
-  --note-food-back: #f598b0;
-  --note-warn: #ffb067;
-  --note-warn-back: #f5964a;
-  --note-class: #b8e986;
-  --note-class-back: #9fd46e;
+  /* 카테고리: 바탕 / 아이콘 / 글자 */
+  --cat-tip-bg: #fff5d1;
+  --cat-tip-icon: #d99a00;
+  --cat-tip-text: #7a5600;
+  --cat-study-bg: #e5f2fd;
+  --cat-study-icon: #2d8cd6;
+  --cat-study-text: #17507e;
+  --cat-food-bg: #fdeaf0;
+  --cat-food-icon: #e0577a;
+  --cat-food-text: #8f2e48;
+  --cat-warn-bg: #ffefe0;
+  --cat-warn-icon: #f07800;
+  --cat-warn-text: #8a4300;
+  --cat-class-bg: #eaf6df;
+  --cat-class-icon: #4c9a1a;
+  --cat-class-text: #2f6110;
 
   /* 글꼴 */
-  --font-ui: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-    "Malgun Gothic", "Noto Sans KR", sans-serif;
-  --font-hand: "Nanum Pen Script", "Pretendard", cursive;
+  --font: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
 
   /* 간격 */
   --sp-1: 4px;
@@ -40,19 +46,20 @@
   --sp-8: 32px;
 
   /* 모서리 */
-  --r-pill: 999px;
+  --r-tag: 6px;
   --r-control: 14px;
   --r-card: 16px;
   --r-sheet: 24px;
-  --r-note: 2px;
+  --r-pill: 999px;
 
-  /* 그림자 (책상 위 물건만) */
-  --shadow-note: 0 1px 1px rgba(0, 0, 0, 0.15), 0 8px 14px -6px rgba(0, 0, 0, 0.4);
-  --shadow-paper: 0 10px 18px -8px rgba(0, 0, 0, 0.5);
-  --shadow-sheet: 0 0 20px rgba(0, 0, 0, 0.25);
+  /* 그림자 */
+  --shadow-sm: 0 1px 2px rgba(20, 26, 36, 0.06);
+  --shadow-float: 0 4px 12px rgba(20, 26, 36, 0.16);
+  --shadow-sheet: 0 0 20px rgba(0, 0, 0, 0.18);
 
   /* 크기 */
-  --note-size: min(28vw, 120px);
+  --bar-h: 52px;
   --btn-main-h: 56px;
   --btn-sub-h: 48px;
+  --plate-h: calc(var(--btn-main-h) + 2 * var(--sp-3));
 }

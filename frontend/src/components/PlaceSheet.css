@@ -1,0 +1,55 @@
+.place-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 30;
+  width: min(480px, 100vw);
+  margin-left: calc(min(480px, 100vw) / -2);
+  padding: var(--sp-3) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  box-shadow: var(--shadow-sheet);
+}
+
+.place-sheet__handle {
+  width: 36px;
+  height: 4px;
+  margin: 0 auto var(--sp-3);
+  border-radius: var(--r-pill);
+  background: var(--line);
+}
+
+.place-sheet__close {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-2);
+  color: var(--text-2);
+}
+
+.place-sheet__building {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.place-sheet__name {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.place-sheet__intro {
+  margin-top: var(--sp-1);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+}
+
+.place-sheet__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--sp-3) 0 var(--sp-4);
+}
+.place-sheet__tags b {
+  font-weight: 700;
+}
