@@ -6,6 +6,9 @@ import { useAuth } from '../auth.jsx'
 import { REPORT_REASONS, reportedByMe, reportNote } from '../server.js'
 import './NoteModal.css'
 
+const OTHER_REASON = '기타'
+const DETAIL_MAX = 100
+
 function timeAgo(iso) {
   const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60_000)
   if (min < 1) return '방금'
@@ -22,6 +25,7 @@ export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide, 
   const [busy, setBusy] = useState(false)
   const [reporting, setReporting] = useState(false)
   const [reason, setReason] = useState(null)
+  const [detail, setDetail] = useState('') // '기타'일 때만 적는 사유 (선택)
   const [reported, setReported] = useState(() => reportedByMe(note.id))
   const cat = CATEGORIES[note.category] ?? CATEGORIES.tip
   const liked = note.liked_by_me
@@ -126,12 +130,27 @@ export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide, 
                 </button>
               ))}
             </div>
+            {reason === OTHER_REASON && (
+              <label className="field">
+                <span className="field__label">자세한 사유 (선택)</span>
+                <textarea
+                  className="textarea"
+                  value={detail}
+                  onChange={(e) => setDetail(e.target.value.slice(0, DETAIL_MAX))}
+                  placeholder="어떤 점이 문제인지 적어 주면 관리자가 확인할 때 도움이 돼요"
+                  rows={3}
+                />
+                <span className="nmodal__count">
+                  {detail.length}/{DETAIL_MAX}
+                </span>
+              </label>
+            )}
             <p className="field__help">신고는 익명이에요. 3건이 모이면 쪽지가 자동으로 숨겨지고 관리자가 확인해요.</p>
             <button
               className="nmodal__danger nmodal__report-btn"
               disabled={!reason || busy}
               onClick={run(async () => {
-                const result = await reportNote(note.id, reason)
+                const result = await reportNote(note.id, reason, reason === OTHER_REASON ? detail.trim() : '')
                 setReported(true)
                 setReporting(false)
                 onReported?.(result)

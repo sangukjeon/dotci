@@ -126,6 +126,13 @@
 .nmodal__report-btn {
   width: 100%;
 }
+.nmodal__count {
+  align-self: flex-end;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
 .nmodal__report-btn:disabled {
   background: var(--line);
   color: var(--text-3);

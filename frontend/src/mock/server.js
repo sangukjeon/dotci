@@ -438,7 +438,8 @@ export const BOOTH_CODE = MOCK_CODES.booth.qr // 부스에 세워 둘 QR (목업
 export const REPORT_REASONS = ['욕설·비방', '광고·홍보', '틀린 정보', '개인정보 노출', '기타']
 const AUTO_HIDE_AT = 3
 
-export async function reportNote(noteId, reason) {
+// detail: '기타'를 고른 사람이 적은 사유 (선택, 100자 이하)
+export async function reportNote(noteId, reason, detail = '') {
   await delay()
   if (state.myReports.has(noteId)) throw fail(409, 'already_reported')
   state.myReports.add(noteId)
@@ -446,7 +447,7 @@ export async function reportNote(noteId, reason) {
   const note = state.notes.find((n) => n.id === noteId)
   const hidden = state.reports[noteId] >= AUTO_HIDE_AT
   if (note && hidden) note.is_hidden = true
-  void reason
+  void reason, detail
   return { report_count: state.reports[noteId], hidden }
 }
 export const reportCount = (noteId) => state.reports[noteId] ?? 0
