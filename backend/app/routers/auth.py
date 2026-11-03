@@ -17,6 +17,7 @@ from ..deps import current_user, fail
 from ..geo import distance_m
 from ..models import Department, Helpful, InviteCode, Note, Place, Report, TimetableEntry, Unlock, User, now_utc
 from ..nicknames import random_nickname
+from ..passwords import weak_reason
 from ..security import (
     DUMMY_HASH,
     clear_session_cookie,
@@ -63,6 +64,11 @@ class SignupIn(BaseModel):
 class LoginIn(BaseModel):
     username: str = Field(min_length=1, max_length=40)
     password: str = Field(min_length=1, max_length=64)
+
+
+class PasswordCheckIn(BaseModel):
+    username: str = Field(max_length=40)
+    password: str = Field(max_length=64)
 
 
 class InviteIn(BaseModel):
@@ -121,8 +127,18 @@ def check_invite(body: InviteIn, session: Session = Depends(get_session)) -> dic
     return {"department": session.get(Department, invite.department_id).name}
 
 
+@router.post("/password-check")
+def password_check(body: PasswordCheckIn) -> dict:
+    """가입 첫 단계에서 비밀번호가 너무 쉬운지 미리 알려 준다. 비밀번호는 저장하지 않는다."""
+    reason = weak_reason(body.username, body.password)
+    return {"ok": reason is None, "reason": reason}
+
+
 @router.post("/signup", response_model=UserOut)
 def signup(body: SignupIn, response: Response, session: Session = Depends(get_session)) -> UserOut:
+    reason = weak_reason(body.username, body.password)
+    if reason:
+        raise fail(400, "weak_password", reason=reason)
     invite = usable_invite(session, body.invite_code)
     if invite is None:
         raise fail(400, "bad_invite")

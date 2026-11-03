@@ -11,7 +11,7 @@ const server = IS_DEMO ? mock : { ...mock, ...real }
 
 export const {
   // 로그인
-  me, login, checkInvite, signup, logout, withdraw, guestLogin,
+  me, login, checkInvite, checkPassword, signup, logout, withdraw, guestLogin,
   // 장소·쪽지
   withMockPlaces, placeSummary, listNotes, unlock, resolveCode, writeNote, addHelpful, deleteNote,
   // 관리자·도감

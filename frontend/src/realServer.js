@@ -22,6 +22,7 @@ const post = (path, body) => call(path, { method: 'POST', body: body ?? {} })
 export const me = () => call('/api/auth/me')
 export const login = ({ username, password }) => post('/api/auth/login', { username, password })
 export const checkInvite = (code) => post('/api/auth/invite', { code })
+export const checkPassword = (username, password) => post('/api/auth/password-check', { username, password })
 export const signup = (form) => post('/api/auth/signup', form)
 export async function logout() {
   await post('/api/auth/logout')

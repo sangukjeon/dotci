@@ -51,7 +51,7 @@ def make_client() -> TestClient:
 def signup(client: TestClient, username: str = "senior4", grade: int = 4, **extra):
     body = {
         "username": username,
-        "password": "password123",
+        "password": "cozy-desk-731",
         "grade": grade,
         "invite_code": "TEST-2026",
         "location": {"method": "qr", "code": "111111"},
@@ -61,7 +61,7 @@ def signup(client: TestClient, username: str = "senior4", grade: int = 4, **extr
 
 
 def login(client: TestClient, username: str = "senior4"):
-    return client.post("/api/auth/login", json={"username": username, "password": "password123"})
+    return client.post("/api/auth/login", json={"username": username, "password": "cozy-desk-731"})
 
 
 def unlock_gps(client: TestClient, place: str = "w1-library", pos=LIB, accuracy: float = 10):

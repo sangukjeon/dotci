@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, CircleCheck, MapPin, QrCode } from 'lucide-react'
 import { GUEST_HOME, useAuth } from '../auth.jsx'
-import { BOOTH_CODE, checkInvite, GUEST_ENABLED } from '../server.js'
+import { BOOTH_CODE, checkInvite, checkPassword, GUEST_ENABLED } from '../server.js'
 import { getPosition } from '../geo.js'
 import './AuthPage.css'
 
@@ -128,6 +128,14 @@ function LoginForm({ goTo }) {
 
 const GRADES = [1, 2, 3, 4]
 
+// 서버가 알려 주는 "너무 쉬운 비밀번호" 이유
+const WEAK_PASSWORD = {
+  common: '너무 흔한 비밀번호예요. 유출 목록에 자주 나오는 값이라 다른 걸로 정해 주세요.',
+  has_username: '비밀번호에 아이디가 들어 있어요. 다른 걸로 정해 주세요.',
+  repeated: '같은 글자만 반복돼요. 다른 걸로 정해 주세요.',
+  sequence: '1234·qwerty처럼 차례대로 누른 비밀번호예요. 다른 걸로 정해 주세요.',
+}
+
 function SignupForm({ goTo }) {
   const { signup } = useAuth()
   const navigate = useNavigate()
@@ -142,13 +150,22 @@ function SignupForm({ goTo }) {
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
 
-  const nextFromStep1 = (e) => {
+  const nextFromStep1 = async (e) => {
     e.preventDefault()
     if (!/^[a-z0-9_]{4,20}$/.test(form.username)) return setError('아이디는 영어 소문자·숫자·_ 4~20자로 만들어요.')
     if (form.password.length < 8) return setError('비밀번호는 8자 이상이에요.')
     if (!form.grade) return setError('학년을 골라 주세요.')
+    setBusy(true)
     setError('')
-    setStep(2)
+    try {
+      const { ok, reason } = await checkPassword(form.username, form.password)
+      if (!ok) return setError(WEAK_PASSWORD[reason] ?? '다른 비밀번호로 정해 주세요.')
+      setStep(2)
+    } catch {
+      setError('연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   const nextFromStep2 = async (e) => {
@@ -192,6 +209,10 @@ function SignupForm({ goTo }) {
     } catch (err) {
       // 위치 확인에 실패하면 받은 위치를 버려서, 다시 시도하거나 장소 코드를 넣을 수 있게 한다
       if (err.code === 'off_campus' || err.code === 'low_accuracy' || err.code === 'bad_code') setLocation(null)
+      if (err.code === 'weak_password') {
+        setStep(1)
+        return setError(WEAK_PASSWORD[err.reason] ?? '다른 비밀번호로 정해 주세요.')
+      }
       setError(SIGNUP_ERRORS[err.code] ?? '가입하지 못했어요. 잠시 후 다시 시도해 주세요.')
     } finally {
       setBusy(false)
@@ -221,7 +242,7 @@ function SignupForm({ goTo }) {
           <label className="field">
             <span className="field__label">비밀번호</span>
             <input className="input" type="password" autoComplete="new-password" value={form.password} onChange={set('password')} />
-            <span className="field__help">8자 이상</span>
+            <span className="field__help">8자 이상, 다른 사이트에서 쓰지 않는 비밀번호</span>
           </label>
           <div className="field">
             <span className="field__label" id="grade-label">학년</span>
@@ -236,7 +257,9 @@ function SignupForm({ goTo }) {
           <p className="field__help">쪽지에 보이는 이름은 "조용한 다람쥐 42"처럼 자동으로 지어져요.</p>
           {error && <p className="field__error" role="alert">{error}</p>}
           <div className="bottom-plate">
-            <button className="btn-main" type="submit">다음</button>
+            <button className="btn-main" type="submit" disabled={busy}>
+              {busy ? '확인 중...' : '다음'}
+            </button>
           </div>
         </form>
       )}

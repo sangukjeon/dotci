@@ -168,6 +168,11 @@ export async function login({ username, password }) {
   return currentUser
 }
 
+// 목업은 비밀번호를 검사하지 않는다 (흔한 비밀번호 목록은 진짜 서버에만 있음)
+export async function checkPassword() {
+  return { ok: true, reason: null }
+}
+
 export async function checkInvite(code) {
   await delay(250)
   const department = MOCK_INVITES[code?.trim().toUpperCase()]
