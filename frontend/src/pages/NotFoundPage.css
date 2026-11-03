@@ -1,0 +1,64 @@
+.notfound {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-6);
+  text-align: center;
+  background: var(--bg);
+}
+
+/* 빈 책상: 쪽지 대신 먼지만 */
+.notfound__desk {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 96px;
+  margin-bottom: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  color: var(--text-3);
+}
+.notfound__dust {
+  position: absolute;
+  right: 22px;
+  bottom: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: notfound-blink 1.6s ease-in-out infinite;
+}
+@keyframes notfound-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.notfound__code {
+  font-size: 48px;
+  line-height: 56px;
+  font-weight: 800;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.notfound__title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.notfound__body {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.notfound__btn {
+  width: min(320px, 100%);
+  margin-top: var(--sp-6);
+}

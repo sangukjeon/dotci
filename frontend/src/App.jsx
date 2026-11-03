@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from './auth.jsx'
 import { OfflineNotice, ToastProvider } from './toast.jsx'
 import { useServerWake } from './hooks/useServerWake.js'
@@ -13,6 +13,7 @@ import RankingPage from './pages/RankingPage.jsx'
 import { CourseDetailPage, CoursesPage } from './pages/CoursesPage.jsx'
 import SubjectsPage from './pages/SubjectsPage.jsx'
 import DisplayPage from './pages/DisplayPage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 
 export default function App() {
   const { waking, done } = useServerWake()
@@ -34,7 +35,8 @@ export default function App() {
             <Route path="/subjects" element={<RequireAuth><SubjectsPage /></RequireAuth>} />
             {/* 전시 부스 모니터: 로그인 없이 */}
             <Route path="/display" element={<DisplayPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* 없는 주소: 404 화면 */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
         <WakeOverlay show={waking} done={done} />
