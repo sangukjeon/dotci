@@ -47,7 +47,6 @@ export default function MealsPage() {
 
       <section className="page__intro">
         <p className="page__h1">오늘 뭐 먹지?</p>
-        <p className="page__lead">학교 홈페이지 식단을 하루 네 번 가져와요. 실제 메뉴와 다를 수 있어요.</p>
         <div className="chips meals__dates" role="group" aria-label="날짜">
           {dates.map((d) => (
             <button key={d} type="button" className="chip" aria-pressed={d === date} onClick={() => select('d', d)}>
