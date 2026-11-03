@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, CircleCheck, MapPin, QrCode } from 'lucide-react'
 import { GUEST_HOME, useAuth } from '../auth.jsx'
-import { BOOTH_CODE, checkInvite } from '../mock/server.js'
+import { BOOTH_CODE, checkInvite, GUEST_ENABLED } from '../server.js'
 import { getPosition } from '../geo.js'
 import './AuthPage.css'
 
@@ -14,6 +14,7 @@ const SIGNUP_ERRORS = {
   bad_invite: '초대 코드를 확인해 주세요. 학과 대표에게 받은 코드를 넣어요.',
   off_campus: '학교 안에서만 가입할 수 있어요. 캠퍼스에 와서 다시 시도해 주세요.',
   bad_code: '장소 코드를 확인해 주세요.',
+  bad_request: '입력한 값을 확인해 주세요. 아이디는 영문·숫자 3~20자, 비밀번호는 8자 이상이에요.',
   username_taken: '이미 쓰고 있는 아이디예요.',
 }
 
@@ -44,9 +45,11 @@ export default function AuthPage() {
           DOTCI<span className="auth__dot" aria-hidden="true" />
         </h1>
         <p className="auth__tagline">점 하나, 이야기 하나.</p>
-        <button className="auth__guest pressable" onClick={startGuest} disabled={guestBusy}>
-          전시회에서 오셨나요? 로그인 없이 체험하기 <ChevronRight size={16} aria-hidden="true" />
-        </button>
+        {GUEST_ENABLED && (
+          <button className="auth__guest pressable" onClick={startGuest} disabled={guestBusy}>
+            전시회에서 오셨나요? 로그인 없이 체험하기 <ChevronRight size={16} aria-hidden="true" />
+          </button>
+        )}
       </header>
 
       <div className="auth__panel">

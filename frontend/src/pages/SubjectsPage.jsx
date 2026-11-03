@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ChevronRight, CircleCheck, Lock, Search } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import PageHeader from '../components/PageHeader.jsx'
-import * as server from '../mock/server.js' // TODO: GET /api/subjects
+import * as server from '../server.js'
 import './SubjectsPage.css'
 
 // 과목별 수강 팁: 과목을 고르면 "팁이 있는 장소"만 보여 준다. 내용은 그 장소에 가야 열린다.

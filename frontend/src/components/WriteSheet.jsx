@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Info } from 'lucide-react'
 import Sheet from './Sheet.jsx'
 import { CATEGORIES, CATEGORY_KEYS } from '../categories.js'
-import * as server from '../mock/server.js' // TODO(10/13): POST /api/places/{id}/notes
+import * as server from '../server.js'
 import './WriteSheet.css'
 
 const MIN = 10

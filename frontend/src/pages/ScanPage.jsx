@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Html5Qrcode } from 'html5-qrcode'
 import { CameraOff, ChevronLeft, Keyboard } from 'lucide-react'
-import * as server from '../mock/server.js' // TODO: POST /api/codes/resolve
+import * as server from '../server.js'
 import './ScanPage.css'
 
 const READER_ID = 'qr-reader'

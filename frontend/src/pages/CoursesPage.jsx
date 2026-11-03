@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Check, ChevronRight, Lock, MapPin, Route } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import PageHeader from '../components/PageHeader.jsx'
-import * as server from '../mock/server.js' // TODO(11/5): GET /api/courses, /api/courses/{id}
+import * as server from '../server.js'
 import './CoursesPage.css'
 
 // 멘토링 코스 목록: 학생회·멘토가 만든 "정해진 순서대로 도는 장소 묶음"

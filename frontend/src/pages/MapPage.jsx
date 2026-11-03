@@ -5,7 +5,7 @@ import { BellRing, List, LocateFixed, Map as MapIcon, QrCode, UserRound, X } fro
 import { getPlaces } from '../api.js'
 import { useAuth } from '../auth.jsx'
 import MeSheet from '../components/MeSheet.jsx'
-import { nearbyHint, placeSummary } from '../mock/server.js' // TODO(10/12): 쪽지 수·연 장소는 /api/places 응답 그대로 쓰기
+import { nearbyHint, placeSummary } from '../server.js'
 import NaverMap from '../components/NaverMap.jsx'
 import PlaceList from '../components/PlaceList.jsx'
 import PlaceSheet from '../components/PlaceSheet.jsx'

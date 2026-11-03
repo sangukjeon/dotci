@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Heart } from 'lucide-react'
 import { CATEGORIES, CATEGORY_KEYS } from '../categories.js'
-import * as server from '../mock/server.js' // TODO(11/5): GET /api/admin/stats
+import * as server from '../server.js'
 import './AdminStats.css'
 
 // 숫자로 증명하기: 실사용 기록을 PPT에 옮길 수 있게 보여 주는 관리자 통계

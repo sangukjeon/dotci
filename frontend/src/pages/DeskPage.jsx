@@ -9,7 +9,7 @@ import { useToast } from '../toast.jsx'
 import Desk, { DeskSkeleton } from '../components/Desk.jsx'
 import NoteModal from '../components/NoteModal.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
-import * as server from '../mock/server.js' // TODO(10/12): 진짜 /api/places/{id}/notes, /unlock 로 교체
+import * as server from '../server.js'
 import './DeskPage.css'
 
 // 실패 이유 → 안내 문구 (CLAUDE.md 8장 reason)

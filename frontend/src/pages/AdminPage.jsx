@@ -7,7 +7,7 @@ import { CATEGORIES } from '../categories.js'
 import { useToast } from '../toast.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
 import AdminStats from '../components/AdminStats.jsx'
-import * as server from '../mock/server.js' // TODO: /api/admin/*
+import * as server from '../server.js'
 import './AdminPage.css'
 
 // 관리자: 장소를 골라 어디서나 공식 쪽지 쓰기, 쪽지 숨기기·되살리기

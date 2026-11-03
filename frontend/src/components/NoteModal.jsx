@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { BadgeCheck, EyeOff, Flag, Heart, Trash2, X } from 'lucide-react'
 import { CATEGORIES, gradeLabel } from '../categories.js'
 import { useAuth } from '../auth.jsx'
-import { REPORT_REASONS, reportedByMe, reportNote } from '../mock/server.js' // TODO(11/5): POST /api/notes/{id}/report
+import { REPORT_REASONS, reportedByMe, reportNote } from '../server.js'
 import './NoteModal.css'
 
 function timeAgo(iso) {

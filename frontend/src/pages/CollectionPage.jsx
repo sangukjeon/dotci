@@ -5,7 +5,7 @@ import { useAuth } from '../auth.jsx'
 import { useToast } from '../toast.jsx'
 import { getPlaces } from '../api.js'
 import { CATEGORIES } from '../categories.js'
-import * as server from '../mock/server.js' // TODO: GET /api/me/collection
+import * as server from '../server.js'
 import './CollectionPage.css'
 
 const shortDate = (iso) => {

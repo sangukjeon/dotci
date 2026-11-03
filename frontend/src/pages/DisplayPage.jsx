@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Heart, QrCode, Users } from 'lucide-react'
 import { CATEGORIES } from '../categories.js'
-import * as server from '../mock/server.js' // TODO(11/5): GET /api/display/booth (몇 초마다 새로 고침)
+import * as server from '../server.js'
 import './DisplayPage.css'
 
 const ADD_EVERY_MS = 6000

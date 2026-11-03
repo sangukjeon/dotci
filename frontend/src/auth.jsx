@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
-import * as server from './mock/server.js' // TODO(10/13): 진짜 /api/auth/* 로 교체
+import * as server from './server.js'
 
 const AuthContext = createContext(null)
 

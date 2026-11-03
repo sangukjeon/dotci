@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Heart, Trophy } from 'lucide-react'
 import { useAuth } from '../auth.jsx'
 import PageHeader from '../components/PageHeader.jsx'
-import * as server from '../mock/server.js' // TODO(11/5): GET /api/rankings/departments
+import * as server from '../server.js'
 import './RankingPage.css'
 
 // 학과 대항전: 학과별로 "받은 도움됐어요" 합계. 쪽지 개수가 아니라서 의미 없는 쪽지 남발을 막는다.
