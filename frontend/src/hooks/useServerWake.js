@@ -12,12 +12,10 @@ const DONE_HOLD_MS = 900 // 다 깨면 게이지 100%를 잠깐 보여 주고 �
 // - 1.5초 넘게 걸릴 때만 waking=true ("책상 닦는 중" 표시)
 // - 화면이 보이는 동안만 10분마다, 다른 앱에서 돌아오면 즉시 다시 깨운다.
 // - 응답 없이 10초가 지나면 그 요청은 끊고 다시 시도한다.
-// - cancel(): 안내 화면만 닫고, 깨우기는 뒤에서 계속한다.
 export function useServerWake() {
   const [waking, setWaking] = useState(false)
   const [done, setDone] = useState(false)
   const running = useRef(false)
-  const dismissed = useRef(false)
 
   useEffect(() => {
     if (IS_DEMO) return // 체험판에는 깨울 서버가 없다
@@ -26,12 +24,8 @@ export function useServerWake() {
     async function wake() {
       if (running.current) return
       running.current = true
-      dismissed.current = false
       setDone(false)
-      const slow = setTimeout(
-        () => !cancelled && !dismissed.current && setWaking(true),
-        SHOW_LOADING_AFTER_MS,
-      )
+      const slow = setTimeout(() => !cancelled && setWaking(true), SHOW_LOADING_AFTER_MS)
       for (;;) {
         try {
           const res = await fetch('/api/health', {
@@ -68,10 +62,5 @@ export function useServerWake() {
     }
   }, [])
 
-  function cancel() {
-    dismissed.current = true
-    setWaking(false)
-  }
-
-  return { waking, done, cancel }
+  return { waking, done }
 }

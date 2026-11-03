@@ -19,7 +19,7 @@ const STEP_MS = 4000
 const GAUGE_SPEED_S = 18
 
 // 서버가 깨어나는 동안 덮는 화면: 걸레가 책상을 쓱쓱 닦는다
-export default function WakeOverlay({ show, done, onCancel }) {
+export default function WakeOverlay({ show, done }) {
   return (
     <AnimatePresence>
       {show && (
@@ -37,14 +37,9 @@ export default function WakeOverlay({ show, done, onCancel }) {
           </div>
           <Progress done={done} />
           {!done && (
-            <div className="wake__actions">
-              <button type="button" className="text-btn" onClick={onCancel}>
-                기다리지 않고 닫기
-              </button>
-              <a className="text-btn wake__demo" href={DEMO_URL}>
-                체험판 둘러보기
-              </a>
-            </div>
+            <a className="text-btn wake__demo" href={DEMO_URL}>
+              기다리는 동안 체험판 둘러보기
+            </a>
           )}
         </motion.div>
       )}

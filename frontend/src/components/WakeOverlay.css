@@ -93,13 +93,9 @@
   color: var(--primary);
   font-variant-numeric: tabular-nums;
 }
-.wake__actions {
-  display: flex;
-  gap: var(--sp-2);
-  margin-top: var(--sp-4);
-}
 .wake__demo {
   display: inline-flex;
   align-items: center;
+  margin-top: var(--sp-4);
   color: var(--text-2);
 }
