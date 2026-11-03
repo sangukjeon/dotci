@@ -106,8 +106,10 @@
 - [x] 모든 화면 (목업 데이터)
 - [x] 서버: 장소 목록, GPS 거리 판정 함수, 자동 닉네임
 - [x] 체험판 배포 (GitHub Pages)
-- [ ] 서버: 로그인·가입, 쪽지 조회·잠금 해제·쓰기 API
-- [ ] 정식 배포 (Vercel + Render) · 네이버 지도 연결
+- [x] 서버: 로그인·가입, 쪽지 조회·잠금 해제·쓰기, 도움됐어요, 관리자 숨기기, 도감 API + pytest 19개
+- [ ] 정식 배포 (Vercel + Render + Neon)
+- [ ] 서버로 옮길 확장 기능: 학과 대항전, 멘토링 코스, 과목별 팁, 신고, 통계, 게스트 모드 (지금은 화면 목업)
+- [ ] 네이버 지도 연결
 
 ## 내 컴퓨터에서 실행하기 (Windows)
 
@@ -123,6 +125,15 @@ cp .env.example .env          # 값 채우기. 비워 두면 SQLite(dev.db) 사�
 ```
 
 API 설명 화면: http://localhost:8000/api/docs
+
+자동 테스트 (잠긴 쪽지에 본문이 안 나가는지, 멀면 안 열리는지 등):
+
+```bash
+.venv/Scripts/python -m pip install -r requirements-dev.txt
+.venv/Scripts/python -m pytest
+```
+
+관리자 지정 (가입한 뒤): `.venv/Scripts/python make_admin.py 아이디`
 
 **2. 화면 (frontend)** — 새 터미널에서
 
@@ -141,6 +152,14 @@ http://localhost:5173 접속. `/api` 요청은 자동으로 8000번 서버로 �
 
 `main`에 올리면 GitHub Actions(`.github/workflows/pages.yml`)가 자동으로 체험판을 빌드해서 GitHub Pages에 올립니다.
 처음 한 번만 저장소 **Settings → Pages → Source**를 **GitHub Actions**로 바꾸면 됩니다.
+
+## 정식 배포 (Render + Vercel + Neon)
+
+| 무엇 | 어디 | 설정 |
+|---|---|---|
+| DB | Neon (ap-southeast-1) | `backend/.env`의 `DATABASE_URL`로 `seed.py` 실행 → QR 값은 `qr_codes.local.csv`에만 |
+| 서버 | Render (Singapore, 무료) | 저장소의 `render.yaml`을 Blueprint로. `DATABASE_URL`만 대시보드에 직접 입력, `JWT_SECRET`은 Render가 자동 생성 |
+| 화면 | Vercel | Root Directory `frontend`. `vercel.json`이 `/api/*`를 Render로 넘겨서 같은 주소처럼 쓴다 |
 
 ## 문서
 

@@ -1,0 +1,29 @@
+# Render 설정 (Blueprint). Render 대시보드 → New → Blueprint → 이 저장소를 고르면 아래대로 서버가 만들어진다.
+# 비밀값: JWT_SECRET은 Render가 무작위로 만들어 주고, DATABASE_URL(Neon 주소)은 대시보드에서 직접 붙여 넣는다.
+services:
+  - type: web
+    name: dotci-api
+    runtime: python
+    region: singapore # Neon(ap-southeast-1)과 같은 지역이라 DB 왕복이 빠르다
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # 작업자 1개 (해제 시도 제한 기록이 서버 메모리에 있어서, CLAUDE.md 6장)
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --proxy-headers
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: ENV
+        value: prod
+      - key: PYTHON_VERSION
+        value: 3.13.9
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false # 대시보드에서 직접 입력 (Git에 올리지 않음)
+      - key: CAMPUS_LAT
+        value: "36.33716"
+      - key: CAMPUS_LNG
+        value: "127.44536"
+      - key: CAMPUS_RADIUS_M
+        value: "400"
