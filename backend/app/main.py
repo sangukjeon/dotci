@@ -5,13 +5,13 @@
 
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
-from pydantic import BaseModel
-from sqlmodel import Session, func, select
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from .config import settings
-from .db import create_db_and_tables, get_session
-from .models import CATEGORIES, Note, Place
+from .db import create_db_and_tables
+from .routers import auth, notes, places
 
 
 @asynccontextmanager
@@ -30,23 +30,11 @@ app = FastAPI(
 )
 
 
-# ---------- 응답 모양 ----------
-# 응답은 항상 이 모양으로만 내보낸다. qr_code·manual_code 같은 칼럼이 실수로 새지 않게 하기 위함.
-
-
-class PlaceOut(BaseModel):
-    id: str
-    name: str
-    building: str
-    lat: float
-    lng: float
-    intro: str
-    note_count: int
-    category_counts: dict[str, int]
-    unlocked: bool
-
-
-# ---------- 주소 ----------
+@app.exception_handler(RequestValidationError)
+async def bad_request(_request: Request, exc: RequestValidationError) -> JSONResponse:
+    """입력 형식이 틀리면 422. 운영 모드에서는 어느 칸이 틀렸는지만 알려 주고 입력값은 돌려보내지 않는다."""
+    fields = [".".join(str(p) for p in e["loc"][1:]) for e in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": {"code": "bad_request", "fields": fields}})
 
 
 @app.get("/api/health")
@@ -54,34 +42,6 @@ def health() -> dict:
     return {"ok": True}
 
 
-@app.get("/api/places", response_model=list[PlaceOut])
-def list_places(session: Session = Depends(get_session)) -> list[PlaceOut]:
-    places = session.exec(select(Place).where(Place.is_active).order_by(Place.id)).all()
-
-    # 장소별·카테고리별 쪽지 개수 (숨긴 쪽지, 덧붙이기 꼬리는 제외)
-    rows = session.exec(
-        select(Note.place_id, Note.category, func.count())
-        .where(Note.is_hidden == False, Note.parent_id == None)  # noqa: E711, E712
-        .group_by(Note.place_id, Note.category)
-    ).all()
-    counts: dict[str, dict[str, int]] = {}
-    for place_id, category, n in rows:
-        counts.setdefault(place_id, {})[category] = n
-
-    result = []
-    for p in places:
-        by_cat = {c: counts.get(p.id, {}).get(c, 0) for c in CATEGORIES}
-        result.append(
-            PlaceOut(
-                id=p.id,
-                name=p.name,
-                building=p.building,
-                lat=p.lat,
-                lng=p.lng,
-                intro=p.intro,
-                note_count=sum(by_cat.values()),
-                category_counts=by_cat,
-                unlocked=False,  # 로그인(10/13)이 생기면 unlocks 테이블로 판단
-            )
-        )
-    return result
+app.include_router(auth.router)
+app.include_router(places.router)
+app.include_router(notes.router)

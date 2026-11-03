@@ -45,5 +45,5 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-if settings.is_prod and settings.jwt_secret == "dev-only-change-me":
-    raise RuntimeError("운영 모드에서는 JWT_SECRET 환경변수를 반드시 설정해야 합니다.")
+if settings.is_prod and (settings.jwt_secret == "dev-only-change-me" or len(settings.jwt_secret) < 32):
+    raise RuntimeError("운영 모드에서는 32자 이상의 JWT_SECRET 환경변수를 반드시 설정해야 합니다.")
