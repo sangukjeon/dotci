@@ -67,3 +67,19 @@
   line-height: 22px;
   color: var(--text-2);
 }
+.wake__elapsed {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-3, var(--text-2));
+  font-variant-numeric: tabular-nums;
+}
+.wake__actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+}
+.wake__demo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-2);
+}

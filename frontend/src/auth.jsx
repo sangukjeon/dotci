@@ -40,7 +40,8 @@ export const useAuth = () => useContext(AuthContext)
 export function RequireAuth({ children, admin = false }) {
   const { user } = useAuth()
   const location = useLocation()
-  if (user === undefined) return null
+  // 로그인 확인 중 (서버 깨우는 화면을 닫았을 때 빈 화면 대신 보인다)
+  if (user === undefined) return <p className="auth-wait">서버에 연결하는 중이에요…</p>
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
   if (user.is_guest && location.pathname !== GUEST_HOME) return <Navigate to={GUEST_HOME} replace />
   if (admin && !user.is_admin) return <Navigate to="/" replace />
