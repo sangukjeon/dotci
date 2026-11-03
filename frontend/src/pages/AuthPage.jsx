@@ -12,7 +12,8 @@ const LOGIN_ERRORS = {
 }
 const SIGNUP_ERRORS = {
   bad_invite: '초대 코드를 확인해 주세요. 학과 대표에게 받은 코드를 넣어요.',
-  off_campus: '학교 안에서만 가입할 수 있어요. 캠퍼스에 와서 다시 시도해 주세요.',
+  off_campus: '위치가 캠퍼스 밖으로 잡혔어요. 근처 장소의 QR 아래 6자리 코드로 확인해 주세요.',
+  low_accuracy: '위치가 흐리게 잡혔어요(노트북은 자주 그래요). 근처 장소의 QR 아래 6자리 코드로 확인해 주세요.',
   bad_code: '장소 코드를 확인해 주세요.',
   bad_request: '입력한 값을 확인해 주세요. 아이디는 영문·숫자 3~20자, 비밀번호는 8자 이상이에요.',
   username_taken: '이미 쓰고 있는 아이디예요.',
@@ -189,6 +190,8 @@ function SignupForm({ goTo }) {
       await signup({ ...form, location: loc })
       navigate(goTo, { replace: true })
     } catch (err) {
+      // 위치 확인에 실패하면 받은 위치를 버려서, 다시 시도하거나 장소 코드를 넣을 수 있게 한다
+      if (err.code === 'off_campus' || err.code === 'low_accuracy' || err.code === 'bad_code') setLocation(null)
       setError(SIGNUP_ERRORS[err.code] ?? '가입하지 못했어요. 잠시 후 다시 시도해 주세요.')
     } finally {
       setBusy(false)
@@ -246,7 +249,7 @@ function SignupForm({ goTo }) {
               className="input"
               value={form.invite_code}
               onChange={set('invite_code')}
-              placeholder="CSE-2026"
+              placeholder="학과 대표에게 받은 코드"
               autoCapitalize="characters"
             />
             <span className="field__help">학과 대표(과대·학생회)에게 받은 코드예요. 학과는 코드로 정해져요.</span>

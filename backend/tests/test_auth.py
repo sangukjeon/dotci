@@ -68,3 +68,14 @@ def test_logout_and_withdraw(client):
     login(client)
     assert client.delete("/api/auth/me").status_code == 200
     assert login(client).status_code == 401
+
+
+def test_signup_gps_allows_blurry_laptop_location(client):
+    # 캠퍼스 중심에서 약 450m, 오차 300m (노트북 와이파이 위치) → 400 + 200 안이라 통과
+    laptop = {"method": "gps", "lat": 36.33716 + 0.00405, "lng": 127.44536, "accuracy": 300}
+    assert signup(client, location=laptop).status_code == 200
+
+
+def test_signup_gps_rejects_too_blurry(client):
+    blurry = {"method": "gps", "lat": 36.33716, "lng": 127.44536, "accuracy": 1500}
+    assert signup(client, location=blurry).json()["detail"]["code"] == "low_accuracy"

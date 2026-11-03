@@ -14,7 +14,7 @@ from sqlmodel import Session, col, delete, or_, select
 from ..config import settings
 from ..db import get_session
 from ..deps import current_user, fail
-from ..geo import judge_gps
+from ..geo import distance_m
 from ..models import Department, Helpful, InviteCode, Note, Place, Report, TimetableEntry, Unlock, User, now_utc
 from ..nicknames import random_nickname
 from ..security import (
@@ -29,6 +29,8 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 LOCK_AFTER = 5
 LOCK_FOR = timedelta(minutes=10)
+SIGNUP_MAX_ACCURACY_M = 1000  # 가입 때 받아 주는 위치 오차 한도
+SIGNUP_ACCURACY_BONUS_M = 200  # 오차만큼 봐주되 최대 200m까지
 
 # 아이디: 영문·숫자·_·- 3~20자 / 비밀번호: 8~64자 (bcrypt는 72바이트까지만 읽음)
 USERNAME = Field(min_length=3, max_length=20, pattern=r"^[A-Za-z0-9_-]+$")
@@ -130,10 +132,12 @@ def signup(body: SignupIn, response: Response, session: Session = Depends(get_se
     # 캠퍼스 위치 확인: GPS가 캠퍼스 안이거나, 등록된 장소 QR·코드를 알고 있으면 통과
     loc = body.location
     if isinstance(loc, GpsLocation):
-        ok, _, _ = judge_gps(
-            settings.campus_lat, settings.campus_lng, settings.campus_radius_m, loc.lat, loc.lng, loc.accuracy
-        )
-        if not ok:
+        # 노트북은 와이파이로 위치를 추정해 오차가 수백 m인 경우가 많다.
+        # 가입은 초대 코드도 함께 보므로, 장소 잠금 해제(오차 100m까지)보다 넉넉하게 판정한다.
+        if loc.accuracy > SIGNUP_MAX_ACCURACY_M:
+            raise fail(400, "low_accuracy")
+        d = distance_m(loc.lat, loc.lng, settings.campus_lat, settings.campus_lng)
+        if d > settings.campus_radius_m + min(loc.accuracy, SIGNUP_ACCURACY_BONUS_M):
             raise fail(400, "off_campus")
     elif find_place_by_code(session, loc.code) is None:
         raise fail(400, "bad_code")
