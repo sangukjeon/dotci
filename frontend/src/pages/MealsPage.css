@@ -1,25 +1,152 @@
-.meals__dates {
-  margin-top: var(--sp-3);
+.meals__intro {
+  padding-bottom: var(--sp-3);
 }
 
+/* 날짜: 한 줄 가로 스크롤, 요일 위·날짜 아래 */
+.meals__dates {
+  display: flex;
+  gap: 6px;
+  margin: var(--sp-3) calc(-1 * var(--sp-4)) 0;
+  padding: 2px var(--sp-4) var(--sp-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.meals__dates::-webkit-scrollbar {
+  display: none;
+}
+.meals__date {
+  flex: 1 0 42px; /* 폰에서도 7일이 한 줄에 다 들어가게 */
+  max-width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 60px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-2);
+  transition: transform 100ms ease-in-out;
+}
+.meals__date:active {
+  transform: scale(0.95);
+}
+.meals__date-week {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+.meals__date-num {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.meals__date--today .meals__date-week {
+  color: var(--primary);
+}
+.meals__date[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+.meals__date[aria-pressed="true"] .meals__date-week,
+.meals__date[aria-pressed="true"] .meals__date-num {
+  color: #fff;
+}
+
+/* 식당: 밑줄 탭, 가로 스크롤 */
+.meals__tabs {
+  display: flex;
+  gap: var(--sp-4);
+  margin: 0 calc(-1 * var(--sp-4));
+  padding: 0 var(--sp-4);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.meals__tabs::-webkit-scrollbar {
+  display: none;
+}
+.meals__tab {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 2px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.meals__tab[aria-selected="true"] {
+  border-bottom-color: var(--primary);
+  color: var(--text-strong);
+}
+
+/* 코너 카드: 대표 메뉴 크게, 나머지는 작은 알약 */
 .meals__corners {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
   margin-top: var(--sp-4);
 }
+.meals__corner {
+  padding: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.meals__corner--now {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-weak);
+}
+.meals__corner-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
 .meals__corner-name {
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 13px;
+  line-height: 20px;
   font-weight: 700;
   color: var(--primary-strong);
 }
-.meals__menu {
-  margin-top: var(--sp-1);
-  font-size: 15px;
-  line-height: 24px;
+.meals__now {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  line-height: 20px;
+  font-weight: 700;
+}
+.meals__main {
+  margin-top: 2px;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
   color: var(--text-strong);
   word-break: keep-all;
+}
+.meals__sides {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sp-2);
+}
+.meals__sides li {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
 }
 
 .meals__skeleton {

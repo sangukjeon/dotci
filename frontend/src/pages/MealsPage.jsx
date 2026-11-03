@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { UtensilsCrossed, WifiOff } from 'lucide-react'
+import { Clock, UtensilsCrossed, WifiOff } from 'lucide-react'
 import PageHeader from '../components/PageHeader.jsx'
-import { cafeteriasOf, dateLabel, kstDate, loadDay, loadWeek } from '../meals.js'
+import { cafeteriasOf, dateLabel, dateParts, kstDate, kstHour, loadDay, loadWeek } from '../meals.js'
 import './MealsPage.css'
+
+// 지금 시간에 맞는 끼니 코너 (조식·중식·석식이 있는 식당만)
+function nowCorner(corners) {
+  const hour = kstHour()
+  const want = hour < 10 ? '조식' : hour < 14 ? '중식' : '석식'
+  return corners.includes(want) ? want : null
+}
 
 // 오늘의 학식: 날짜 → 식당 → 코너별 메뉴
 export default function MealsPage() {
@@ -40,19 +47,33 @@ export default function MealsPage() {
     if (key === 'd') next.delete('c')
     setParams(next, { replace: true })
   }
+  const corners = picked ? Object.entries(day[picked]) : []
+  const current = date === today ? nowCorner(corners.map(([c]) => c)) : null
 
   return (
     <main className="page">
       <PageHeader title="오늘의 학식" />
 
-      <section className="page__intro">
+      <section className="page__intro meals__intro">
         <p className="page__h1">오늘 뭐 먹지?</p>
-        <div className="chips meals__dates" role="group" aria-label="날짜">
-          {dates.map((d) => (
-            <button key={d} type="button" className="chip" aria-pressed={d === date} onClick={() => select('d', d)}>
-              {d === today ? '오늘' : dateLabel(d)}
-            </button>
-          ))}
+        <p className="page__lead">실제 메뉴와 다를 수 있어요.</p>
+        <div className="meals__dates" role="group" aria-label="날짜">
+          {dates.map((d) => {
+            const { weekday, dayOfMonth } = dateParts(d)
+            return (
+              <button
+                key={d}
+                type="button"
+                className={d === today ? 'meals__date meals__date--today' : 'meals__date'}
+                aria-pressed={d === date}
+                aria-label={d === today ? `오늘 ${dateLabel(d)}` : dateLabel(d)}
+                onClick={() => select('d', d)}
+              >
+                <span className="meals__date-week">{d === today ? '오늘' : weekday}</span>
+                <span className="meals__date-num">{dayOfMonth}</span>
+              </button>
+            )
+          })}
         </div>
       </section>
 
@@ -65,20 +86,45 @@ export default function MealsPage() {
           <Empty icon={UtensilsCrossed} title="이날은 식단 정보가 없어요" body="주말·공휴일이거나 아직 식단이 올라오지 않았어요." />
         ) : (
           <>
-            <div className="chips" role="group" aria-label="식당">
+            <div className="meals__tabs" role="tablist" aria-label="식당">
               {names.map((name) => (
-                <button key={name} type="button" className="chip" aria-pressed={name === picked} onClick={() => select('c', name)}>
+                <button
+                  key={name}
+                  type="button"
+                  role="tab"
+                  className="meals__tab"
+                  aria-selected={name === picked}
+                  onClick={() => select('c', name)}
+                >
                   {name}
                 </button>
               ))}
             </div>
             <ul className="list-plain meals__corners">
-              {Object.entries(day[picked]).map(([corner, menu]) => (
-                <li key={corner} className="card meals__corner">
-                  <h2 className="meals__corner-name">{corner}</h2>
-                  <p className="meals__menu">{menu.join(' · ')}</p>
-                </li>
-              ))}
+              {corners.map(([corner, menu]) => {
+                const [main, ...sides] = menu
+                const now = corner === current
+                return (
+                  <li key={corner} className={now ? 'meals__corner meals__corner--now' : 'meals__corner'}>
+                    <p className="meals__corner-head">
+                      <span className="meals__corner-name">{corner}</span>
+                      {now && (
+                        <span className="meals__now">
+                          <Clock size={12} aria-hidden="true" /> 지금
+                        </span>
+                      )}
+                    </p>
+                    <p className="meals__main">{main}</p>
+                    {sides.length > 0 && (
+                      <ul className="list-plain meals__sides">
+                        {sides.map((item, i) => (
+                          <li key={`${i}-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                )
+              })}
             </ul>
           </>
         )}

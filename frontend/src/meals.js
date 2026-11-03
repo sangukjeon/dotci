@@ -68,9 +68,19 @@ export function cafeteriasOf(day) {
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
+// '2026-11-03' → { month: 11, dayOfMonth: 3, weekday: '화' }
+export function dateParts(date) {
+  const [y, m, d] = date.split('-').map(Number)
+  return { month: m, dayOfMonth: d, weekday: WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()] }
+}
+
 // '2026-11-03' → '11/3 (화)'
 export function dateLabel(date) {
-  const [y, m, d] = date.split('-').map(Number)
-  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay()
-  return `${m}/${d} (${WEEKDAYS[day]})`
+  const { month, dayOfMonth, weekday } = dateParts(date)
+  return `${month}/${dayOfMonth} (${weekday})`
+}
+
+// 한국 시간 기준 지금 몇 시
+export function kstHour() {
+  return Number(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', hour: 'numeric', hourCycle: 'h23' }).format(new Date()))
 }
