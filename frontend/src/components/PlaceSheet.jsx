@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { CircleCheck, Lock, X } from 'lucide-react'
 import { CATEGORIES, CATEGORY_KEYS } from '../categories.js'
+import { PLACE_CAFETERIA } from '../meals.js'
+import MealPeek from './MealPeek.jsx'
 import './PlaceSheet.css'
 
 // 지도에서 마커를 누르면 아래에서 올라오는 장소 카드
@@ -52,6 +54,8 @@ export default function PlaceSheet({ place, onClose }) {
           </span>
         ))}
       </div>
+
+      {PLACE_CAFETERIA[place.id] && <MealPeek cafeteria={PLACE_CAFETERIA[place.id]} />}
 
       <Link to={`/place/${place.id}`} className="btn-main">
         책상 열기

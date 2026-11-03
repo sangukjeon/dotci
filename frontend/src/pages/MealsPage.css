@@ -1,0 +1,97 @@
+.meals__dates {
+  margin-top: var(--sp-3);
+}
+
+.meals__corners {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+.meals__corner-name {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--primary-strong);
+}
+.meals__menu {
+  margin-top: var(--sp-1);
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-strong);
+  word-break: keep-all;
+}
+
+.meals__skeleton {
+  height: 160px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.meals__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+  color: var(--text-3);
+}
+.meals__empty-title {
+  margin-top: var(--sp-2);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.meals__empty-body {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+
+.meals__source {
+  margin-top: var(--sp-6);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-3);
+}
+
+/* 지도 장소 카드 안의 오늘 메뉴 미리보기 */
+.meal-peek {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3);
+  border-radius: var(--r-control);
+  background: var(--bg);
+  text-decoration: none;
+  color: inherit;
+}
+.meal-peek__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-strong);
+}
+.meal-peek__more {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.meal-peek__row {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meal-peek__row b {
+  margin-right: 6px;
+  color: var(--text-2);
+  font-weight: 600;
+}

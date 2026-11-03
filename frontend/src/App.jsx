@@ -15,6 +15,7 @@ import SubjectsPage from './pages/SubjectsPage.jsx'
 import DisplayPage from './pages/DisplayPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ExampleDeskPage from './pages/ExampleDeskPage.jsx'
+import MealsPage from './pages/MealsPage.jsx'
 
 const EXAMPLE_PATH = '/example'
 
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/ranking" element={<RequireAuth><RankingPage /></RequireAuth>} />
             <Route path="/courses" element={<RequireAuth><CoursesPage /></RequireAuth>} />
             <Route path="/courses/:id" element={<RequireAuth><CourseDetailPage /></RequireAuth>} />
+            <Route path="/meals" element={<RequireAuth><MealsPage /></RequireAuth>} />
             <Route path="/subjects" element={<RequireAuth><SubjectsPage /></RequireAuth>} />
             {/* 전시 부스 모니터: 로그인 없이 */}
             <Route path="/display" element={<DisplayPage />} />

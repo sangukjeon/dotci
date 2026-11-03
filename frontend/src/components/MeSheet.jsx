@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BookOpen, ChevronRight, LogOut, Route, ShieldCheck, Stamp, Trophy } from 'lucide-react'
+import { BookOpen, ChevronRight, LogOut, Route, ShieldCheck, Stamp, Trophy, UtensilsCrossed } from 'lucide-react'
 import Sheet from './Sheet.jsx'
 import { useAuth } from '../auth.jsx'
 import './MeSheet.css'
@@ -34,6 +34,11 @@ export default function MeSheet({ onClose }) {
         <li>
           <Link to="/me" className="me__row">
             <Stamp size={20} aria-hidden="true" /> 내 도감 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+          </Link>
+        </li>
+        <li>
+          <Link to="/meals" className="me__row">
+            <UtensilsCrossed size={20} aria-hidden="true" /> 오늘의 학식 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
           </Link>
         </li>
         <li>

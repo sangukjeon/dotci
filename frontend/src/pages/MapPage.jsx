@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { Link } from 'react-router-dom'
-import { BellRing, List, LocateFixed, Map as MapIcon, QrCode, UserRound, X } from 'lucide-react'
+import { BellRing, List, LocateFixed, Map as MapIcon, QrCode, UserRound, UtensilsCrossed, X } from 'lucide-react'
 import { getPlaces } from '../api.js'
 import { useAuth } from '../auth.jsx'
 import MeSheet from '../components/MeSheet.jsx'
@@ -140,6 +140,9 @@ export default function MapPage() {
         <div className="map-page__actions">
           <Link to="/scan" className="btn-sub map-page__action pressable">
             <QrCode size={20} aria-hidden="true" /> QR 찍기
+          </Link>
+          <Link to="/meals" className="btn-sub map-page__action pressable">
+            <UtensilsCrossed size={20} aria-hidden="true" /> 학식
           </Link>
           {mapError ? null : view === 'map' ? (
             <button className="btn-sub map-page__action pressable" onClick={() => setView('list')}>
