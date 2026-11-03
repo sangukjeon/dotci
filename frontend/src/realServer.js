@@ -109,6 +109,7 @@ export function writeNote(placeId, { category, content, course_name, hint }) {
 }
 
 export const addHelpful = (noteId) => post(`/api/notes/${noteId}/helpful`)
+export const removeHelpful = (noteId) => call(`/api/notes/${noteId}/helpful`, { method: 'DELETE' })
 export const deleteNote = (noteId) => call(`/api/notes/${noteId}`, { method: 'DELETE' })
 
 // ---------- 관리자 ----------

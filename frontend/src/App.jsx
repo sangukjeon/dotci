@@ -15,7 +15,7 @@ import SubjectsPage from './pages/SubjectsPage.jsx'
 import DisplayPage from './pages/DisplayPage.jsx'
 
 export default function App() {
-  const { waking, cancel } = useServerWake()
+  const { waking, done, cancel } = useServerWake()
 
   return (
     <AuthProvider>
@@ -37,7 +37,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
-        <WakeOverlay show={waking} onCancel={cancel} />
+        <WakeOverlay show={waking} done={done} onCancel={cancel} />
         <OfflineNotice />
       </ToastProvider>
     </AuthProvider>

@@ -153,9 +153,12 @@ export default function DeskPage() {
     setOpenNote((n) => (n && n.id === noteId ? { ...n, ...patch } : n))
   }
 
+  // 도움됐어요: 한 번 누르면 켜지고, 다시 누르면 취소
   const onHelpful = async () => {
-    const { helpful_count } = await server.addHelpful(openNote.id)
-    updateNote(openNote.id, { helpful_count, liked_by_me: true })
+    const liked = openNote.liked_by_me
+    const { helpful_count } = liked ? await server.removeHelpful(openNote.id) : await server.addHelpful(openNote.id)
+    updateNote(openNote.id, { helpful_count, liked_by_me: !liked })
+    if (liked) toast('도움됐어요를 취소했어요')
   }
   const onDelete = async () => {
     await server.deleteNote(openNote.id)

@@ -69,8 +69,9 @@ export default function NoteModal({ note, onClose, onHelpful, onDelete, onHide, 
           <button
             className={liked ? 'nmodal__heart nmodal__heart--on' : 'nmodal__heart'}
             onClick={run(onHelpful)}
-            disabled={busy || liked || note.is_mine}
+            disabled={busy || note.is_mine}
             aria-pressed={liked}
+            title={liked ? '다시 누르면 취소돼요' : undefined}
           >
             <AnimatePresence initial={false} mode="popLayout">
               <motion.span

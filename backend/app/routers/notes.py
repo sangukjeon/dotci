@@ -1,4 +1,4 @@
-"""쪽지 하나에 대한 일: 도움됐어요, 삭제, 관리자 숨기기, 도감 (CLAUDE.md 4장 F8·F9, 8장)."""
+"""쪽지 하나에 대한 일: 도움됐어요(누르기·취소), 삭제, 관리자 숨기기, 도감 (CLAUDE.md 4장 F8·F9, 8장)."""
 
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, col, delete, func, select
@@ -33,6 +33,19 @@ def add_helpful(note_id: int, session: Session = Depends(get_session), user: Use
     if session.get(Helpful, (note.id, user.id)) is None:
         session.add(Helpful(note_id=note.id, user_id=user.id))
         note.helpful_count += 1
+        session.add(note)
+        session.commit()
+    return {"helpful_count": note.helpful_count}
+
+
+@router.delete("/notes/{note_id}/helpful")
+def remove_helpful(note_id: int, session: Session = Depends(get_session), user: User = Depends(current_user)) -> dict:
+    """내가 누른 도움됐어요 취소. 누른 적 없으면 그대로 둔다."""
+    note = get_note(session, note_id)
+    helpful = session.get(Helpful, (note.id, user.id))
+    if helpful is not None:
+        session.delete(helpful)
+        note.helpful_count = max(0, note.helpful_count - 1)
         session.add(note)
         session.commit()
     return {"helpful_count": note.helpful_count}

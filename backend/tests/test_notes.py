@@ -137,6 +137,9 @@ def test_helpful_rules():
         unlock_gps(junior)
         assert junior.post(f"/api/notes/{note_id}/helpful").json() == {"helpful_count": 1}
         assert junior.post(f"/api/notes/{note_id}/helpful").json() == {"helpful_count": 1}  # 1인 1회
+        assert junior.delete(f"/api/notes/{note_id}/helpful").json() == {"helpful_count": 0}  # 취소
+        assert junior.delete(f"/api/notes/{note_id}/helpful").json() == {"helpful_count": 0}  # 두 번 취소해도 0
+        assert junior.post(f"/api/notes/{note_id}/helpful").json() == {"helpful_count": 1}  # 다시 누르기
     with make_client() as senior:
         login(senior)
         assert senior.post(f"/api/notes/{note_id}/helpful").json()["detail"]["code"] == "own_note"

@@ -363,6 +363,14 @@ export async function addHelpful(noteId) {
   return { helpful_count: note.helpful_count }
 }
 
+export async function removeHelpful(noteId) {
+  await delay(250)
+  const note = state.notes.find((n) => n.id === noteId)
+  if (!note) throw fail(404, 'not_found')
+  if (state.helpfuls.delete(noteId)) note.helpful_count = Math.max(0, note.helpful_count - 1)
+  return { helpful_count: note.helpful_count }
+}
+
 export async function deleteNote(noteId) {
   await delay()
   const note = state.notes.find((n) => n.id === noteId)

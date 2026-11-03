@@ -13,7 +13,7 @@ export const {
   // 로그인
   me, login, checkInvite, checkPassword, signup, logout, withdraw, guestLogin,
   // 장소·쪽지
-  withMockPlaces, placeSummary, listNotes, unlock, resolveCode, writeNote, addHelpful, deleteNote,
+  withMockPlaces, placeSummary, listNotes, unlock, resolveCode, writeNote, addHelpful, removeHelpful, deleteNote,
   // 관리자·도감
   hideNote, unhideNote, adminListNotes, collection,
   // 아직 목업인 확장 기능

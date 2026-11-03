@@ -5,6 +5,7 @@ const RETRY_MS = 3000
 const KEEP_AWAKE_MS = 10 * 60_000
 const SHOW_LOADING_AFTER_MS = 1500
 const REQUEST_TIMEOUT_MS = 10_000
+const DONE_HOLD_MS = 900 // 다 깨면 게이지 100%를 잠깐 보여 주고 닫는다
 
 // Render 무료 서버 깨우기 (CLAUDE.md 6장)
 // - 앱을 열면 /api/health 를 성공할 때까지 3초 간격으로 부른다.
@@ -14,6 +15,7 @@ const REQUEST_TIMEOUT_MS = 10_000
 // - cancel(): 안내 화면만 닫고, 깨우기는 뒤에서 계속한다.
 export function useServerWake() {
   const [waking, setWaking] = useState(false)
+  const [done, setDone] = useState(false)
   const running = useRef(false)
   const dismissed = useRef(false)
 
@@ -25,6 +27,7 @@ export function useServerWake() {
       if (running.current) return
       running.current = true
       dismissed.current = false
+      setDone(false)
       const slow = setTimeout(
         () => !cancelled && !dismissed.current && setWaking(true),
         SHOW_LOADING_AFTER_MS,
@@ -44,8 +47,10 @@ export function useServerWake() {
       }
       clearTimeout(slow)
       if (cancelled) return
+      setDone(true)
+      await new Promise((r) => setTimeout(r, DONE_HOLD_MS))
       running.current = false
-      setWaking(false)
+      if (!cancelled) setWaking(false)
     }
 
     wake()
@@ -68,5 +73,5 @@ export function useServerWake() {
     setWaking(false)
   }
 
-  return { waking, cancel }
+  return { waking, done, cancel }
 }
