@@ -9,11 +9,14 @@ import { nearbyHint, placeSummary } from '../mock/server.js' // TODO(10/12): 쪽
 import NaverMap from '../components/NaverMap.jsx'
 import PlaceList from '../components/PlaceList.jsx'
 import PlaceSheet from '../components/PlaceSheet.jsx'
+import { IS_DEMO } from '../demo.js'
 import { NAVER_CLIENT_ID } from '../naverMap.js'
 import './MapPage.css'
 
 const MAP_ERRORS = {
-  no_key: '지도 키가 아직 없어요. frontend/.env에 VITE_NAVER_MAP_CLIENT_ID를 넣어 주세요.',
+  no_key: IS_DEMO
+    ? '체험판은 지도 대신 목록으로 보여요. 장소를 눌러 책상을 열어 보세요.'
+    : '지도 키가 아직 없어요. frontend/.env에 VITE_NAVER_MAP_CLIENT_ID를 넣어 주세요.',
   auth: '지도 키를 확인해 주세요. 네이버 클라우드 콘솔에 이 주소가 등록되어 있어야 해요.',
   load_failed: '지도를 불러오지 못했어요. 목록으로 볼 수 있어요.',
 }

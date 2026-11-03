@@ -2,19 +2,78 @@
 
 > 점 하나, 이야기 하나.
 
-필요한 장소에 도착한 순간 선배가 남긴 쪽지(포스트잇)가 열리는 캠퍼스 웹 서비스입니다.
-2026 비교과 연계 창의융합 협력학습 경진대회 및 전시회 출품작 (발표 2026-11-05 14:00).
+**검색하지 마세요, 도착하세요.**
+캠퍼스의 그 장소에 직접 도착해야 선배가 남긴 쪽지가 열리는 위치 기반 웹 서비스입니다.
+게시판은 검색해야 찾을 수 있지만, DOTCI는 **장소가 곧 검색어**입니다.
 
-- 기획·결정 사항: [CLAUDE.md](CLAUDE.md)
-- 디자인 규칙: [DESIGN.md](DESIGN.md)
+- 대상: 우송대학교 서캠퍼스 9곳 (도서관, 학생회관, 체육관, 기숙사 등)
+- 출품: 2026 비교과 연계 창의융합 협력학습 경진대회 및 전시회 (발표 2026-11-05 14:00)
+- 개발: 컴퓨터공학과 1학년 전상욱
 
-## 구조
+## 체험판 바로 보기
+
+**👉 https://SangUk.github.io/dotci/** <!-- 저장소를 만든 뒤 실제 주소로 바꾸기 -->
+
+체험판은 **서버 없이 화면만** 올린 버전입니다.
+
+- 쪽지, 로그인, 도착 확인은 모두 브라우저 안의 **예시 데이터**로 동작합니다. 실제 선배의 팁이 아니에요.
+- 새로고침하면 처음 상태로 돌아가고, 다른 사람과 쪽지가 공유되지 않습니다.
+- 지도 대신 **장소 목록**으로 보입니다. (네이버 지도는 등록한 주소에서만 동작해요)
+- 아이디·비밀번호는 아무거나 입력해도 로그인됩니다. 진짜 비밀번호는 넣지 마세요.
+
+### 체험해 볼 것
+
+| 해 보기 | 방법 |
+|---|---|
+| 잠긴 쪽지 보기 | 목록에서 장소 선택 → 카드에 카테고리·힌트만 보여요 |
+| QR로 열기 | 주소 끝에 `place/w1-library?qr=MOCKQR1` → 카드가 뒤집히며 열려요 |
+| 6자리 코드로 열기 | 책상에서 코드 입력 `100001` (우송도서관) |
+| 도착 실패 안내 | `place/w1-library?mock=far` (거리 멂) · `?mock=blur` (위치 흐림) |
+| 쪽지 쓰기 · 도움됐어요 | 책상을 연 뒤 "흔적 남기기", 카드의 하트 |
+| 관람객 모드 | 로그인 화면 "로그인 없이 체험하기" |
+| 도감 · 수료증 | `me?mock=complete` |
+| 학과 대항전 · 멘토링 코스 · 과목별 팁 | `ranking` · `courses` · `subjects` |
+| 관리자 화면 | 아이디를 `admin`으로 시작해서 로그인 → `admin` |
+
+## 핵심 기능
+
+1. **장소 목록 · 지도**: 장소마다 쪽지 수 표시
+2. **잠긴 카드**: 도착 전에는 카테고리, 작성자 학년, 도움됐어요 수, 작성자 한마디(힌트)만 보여요
+3. **GPS 도착 확인**: 서버가 거리와 GPS 정확도를 함께 판정해요
+4. **QR 도착 확인**: GPS가 약한 실내는 장소에 붙은 QR이나 6자리 코드로 확인해요
+5. **쪽지 쓰기 · 도움됐어요**: 그 장소에 도착한 사람만 30분 안에 쓸 수 있어요
+
+## 기술 구성
+
+| 역할 | 기술 |
+|---|---|
+| 화면 | React (Vite), react-router-dom, motion, lucide-react, html5-qrcode |
+| 지도 | 네이버 지도 API (NAVER Cloud Maps) |
+| 서버 | Python FastAPI, SQLModel, bcrypt, PyJWT |
+| DB | PostgreSQL (Neon) |
+| 배포 | 체험판: GitHub Pages · 정식: Vercel + Render + Neon (예정) |
 
 ```
 폰 → https://도메인 (Vercel)
      ├─ /      → React 빌드 파일          (frontend/)
      └─ /api/* → Render의 FastAPI → Neon  (backend/)
 ```
+
+## 보안 원칙
+
+- 잠긴 쪽지의 **본문은 서버가 보내지 않습니다.** 화면에서 숨기는 방식이 아니에요.
+- 위치 좌표는 판정에만 쓰고 저장하지 않습니다.
+- 비밀값(DB 주소, JWT 키)은 `.env`와 배포 서비스 환경변수에만 둡니다. Git에는 `.env.example`만 올립니다.
+- 비밀번호는 bcrypt 해시로만 저장하고, 쪽지에는 서버가 자동으로 지은 닉네임만 보입니다.
+- LLM API(ChatGPT, Claude 등)는 쓰지 않습니다.
+
+## 진행 상황
+
+- [x] 모든 화면 (목업 데이터)
+- [x] 서버: 장소 목록, GPS 거리 판정 함수, 자동 닉네임
+- [x] 체험판 배포 (GitHub Pages)
+- [ ] 서버: 로그인·가입, 쪽지 조회·잠금 해제·쓰기 API
+- [ ] 정식 배포 (Vercel + Render) · 네이버 지도 연결
 
 ## 내 컴퓨터에서 실행하기 (Windows)
 
@@ -25,7 +84,7 @@ cd backend
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt
 cp .env.example .env          # 값 채우기. 비워 두면 SQLite(dev.db) 사용
-.venv/Scripts/python seed.py  # 학과·초대 코드·장소 10곳 넣기
+.venv/Scripts/python seed.py  # 학과·초대 코드·장소 넣기
 .venv/Scripts/uvicorn app.main:app --reload --port 8000
 ```
 
@@ -42,21 +101,16 @@ npm run dev
 
 http://localhost:5173 접속. `/api` 요청은 자동으로 8000번 서버로 넘어갑니다.
 
-## 보안 원칙
+**체험판으로 실행하기** (서버 없이): `frontend/.env`에 `VITE_DEMO=1`을 넣고 `npm run dev`
 
-- 잠긴 쪽지의 본문은 서버가 보내지 않습니다. (화면에서 숨기는 방식이 아님)
-- 비밀값은 `.env`와 배포 서비스 환경변수에만 둡니다. Git에는 `.env.example`만 올립니다.
-- 위치 좌표는 판정에만 쓰고 저장하지 않습니다.
+## 체험판 배포 방법
 
-## 목업 화면 확인용 주소 (가짜 서버, 내 컴퓨터에서만)
+`main`에 올리면 GitHub Actions(`.github/workflows/pages.yml`)가 자동으로 체험판을 빌드해서 GitHub Pages에 올립니다.
+처음 한 번만 저장소 **Settings → Pages → Source**를 **GitHub Actions**로 바꾸면 됩니다.
 
-| 주소 | 보이는 것 |
-|---|---|
-| `/?mock=near` | 지도 위 근처 알림 |
-| `/place/w1-library?mock=far` · `?mock=blur` · `?mock=offline` | 도착 실패 안내 (거리 멂 / 위치 흐림 / 연결 끊김) |
-| `/place/w1-library?qr=MOCKQR1` | QR로 바로 열기 (폰 카메라로 찍은 것과 같음) |
-| `/me?mock=complete` | 도감 완주 + 캠퍼스 수료증 |
-| `/ranking` · `/courses` · `/subjects` | 학과 대항전 · 멘토링 코스 · 과목별 수강 팁 |
-| `/admin` (아이디 `admin`으로 시작) | 쪽지 관리 · 신고 · 통계 |
-| `/display` | 전시 부스 모니터용 큰 화면 (로그인 없이) |
-| 로그인 화면 "로그인 없이 체험하기" | 관람객 게스트 모드 → 전시 부스 책상 |
+## 문서
+
+- 기획·결정 사항: [CLAUDE.md](CLAUDE.md)
+- 디자인 규칙: [DESIGN.md](DESIGN.md)
+
+장소 좌표 출처: © OpenStreetMap contributors (ODbL)

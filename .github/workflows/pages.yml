@@ -1,0 +1,52 @@
+# main에 올릴 때마다 화면(frontend)을 체험판으로 빌드해서 GitHub Pages에 올린다.
+# 서버 없이 목업 데이터로만 동작한다. 네이버 지도 키는 넣지 않아서 장소는 목록으로 보인다.
+name: GitHub Pages (체험판)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_DEMO: '1'
+          BASE_PATH: /${{ github.event.repository.name }}/
+      # GitHub Pages는 /place/... 같은 주소에서 새로고침하면 404.html을 보여 준다.
+      # 404.html을 index.html과 똑같이 만들어서 화면이 그대로 뜨게 한다.
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

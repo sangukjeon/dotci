@@ -1,6 +1,8 @@
 // 서버 호출은 모두 이 파일을 거친다.
 // 화면과 서버가 같은 주소(/api)를 쓰므로 쿠키가 자동으로 함께 간다. (CLAUDE.md 3장)
 
+import { DEMO_PLACES, IS_DEMO } from './demo.js'
+
 const RETRY_INTERVAL_MS = 3000
 const RETRY_MAX_MS = 60000
 
@@ -40,4 +42,5 @@ export async function apiFetch(path, options = {}) {
   }
 }
 
-export const getPlaces = () => apiFetch('/api/places')
+export const getPlaces = () =>
+  IS_DEMO ? Promise.resolve(DEMO_PLACES.map((p) => ({ ...p }))) : apiFetch('/api/places')

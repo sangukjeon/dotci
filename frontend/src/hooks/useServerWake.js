@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { IS_DEMO } from '../demo.js'
 
 const RETRY_MS = 3000
 const KEEP_AWAKE_MS = 10 * 60_000
@@ -13,6 +14,7 @@ export function useServerWake() {
   const running = useRef(false)
 
   useEffect(() => {
+    if (IS_DEMO) return // 체험판에는 깨울 서버가 없다
     let cancelled = false
 
     async function wake() {
