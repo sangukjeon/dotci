@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from './auth.jsx'
 import { OfflineNotice, ToastProvider } from './toast.jsx'
 import { useServerWake } from './hooks/useServerWake.js'
@@ -14,9 +14,14 @@ import { CourseDetailPage, CoursesPage } from './pages/CoursesPage.jsx'
 import SubjectsPage from './pages/SubjectsPage.jsx'
 import DisplayPage from './pages/DisplayPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import ExampleDeskPage from './pages/ExampleDeskPage.jsx'
+
+const EXAMPLE_PATH = '/example'
 
 export default function App() {
   const { waking, done } = useServerWake()
+  // 예시 책상을 보는 동안에는 깨우기 화면으로 덮지 않는다 (깨우기는 뒤에서 계속)
+  const onExample = useLocation().pathname === EXAMPLE_PATH
 
   return (
     <AuthProvider>
@@ -35,11 +40,13 @@ export default function App() {
             <Route path="/subjects" element={<RequireAuth><SubjectsPage /></RequireAuth>} />
             {/* 전시 부스 모니터: 로그인 없이 */}
             <Route path="/display" element={<DisplayPage />} />
+            {/* 서버 깨우는 동안 둘러보는 예시 책상: 로그인·서버 없이 */}
+            <Route path={EXAMPLE_PATH} element={<ExampleDeskPage waking={waking} />} />
             {/* 없는 주소: 404 화면 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
-        <WakeOverlay show={waking} done={done} />
+        <WakeOverlay show={waking && !onExample} done={done} />
         <OfflineNotice />
       </ToastProvider>
     </AuthProvider>

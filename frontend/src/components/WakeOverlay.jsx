@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import './WakeOverlay.css'
 
-// 서버 없이 도는 체험판 (기다리기 싫은 사람용)
-const DEMO_URL = 'https://sangukjeon.github.io/dotci/'
 
 // 기다리는 동안 4초마다 바뀌는 한 줄
 const STEPS = [
@@ -37,9 +36,9 @@ export default function WakeOverlay({ show, done }) {
           </div>
           <Progress done={done} />
           {!done && (
-            <a className="text-btn wake__demo" href={DEMO_URL}>
-              기다리는 동안 체험판 둘러보기
-            </a>
+            <Link className="text-btn wake__demo" to="/example">
+              기다리는 동안 예시 책상 열어 보기
+            </Link>
           )}
         </motion.div>
       )}
