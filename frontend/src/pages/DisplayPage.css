@@ -113,15 +113,12 @@
   align-items: center;
 }
 .display__qr-box {
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   flex-shrink: 0;
   border-radius: var(--r-card);
-  border: 2px dashed var(--line);
-  color: var(--text-strong);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fff;
 }
 .display__steps {
   margin: 0;

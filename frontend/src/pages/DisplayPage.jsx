@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Heart, QrCode, Users } from 'lucide-react'
+import { Heart, Users } from 'lucide-react'
 import { CATEGORIES } from '../categories.js'
 import * as server from '../server.js'
 import './DisplayPage.css'
@@ -71,9 +71,8 @@ export default function DisplayPage() {
 
         <aside className="display__side">
           <div className="display__qr">
-            <div className="display__qr-box" aria-label="부스 QR 코드 자리">
-              <QrCode size={96} strokeWidth={1.4} aria-hidden="true" />
-            </div>
+            {/* 관람객은 초대 코드가 없으므로 로그인 없이 체험할 수 있는 체험판으로 보낸다 */}
+            <img className="display__qr-box" src={`${import.meta.env.BASE_URL}booth-qr.svg`} alt="체험판 접속 QR 코드" />
             <ol className="display__steps">
               <li>폰 카메라로 QR을 찍어요</li>
               <li>책상이 열리면 선배들의 쪽지를 읽어요</li>
