@@ -37,7 +37,8 @@ async def bad_request(_request: Request, exc: RequestValidationError) -> JSONRes
     return JSONResponse(status_code=422, content={"detail": {"code": "bad_request", "fields": fields}})
 
 
-@app.get("/api/health")
+# HEAD도 받는다: UptimeRobot 같은 깨우기 모니터는 HEAD로 확인해서, GET만 받으면 405가 나 "down"으로 보인다
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def health() -> dict:
     return {"ok": True}
 
