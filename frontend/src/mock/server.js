@@ -643,6 +643,11 @@ export async function sendAnnouncement({ title, body, url = '/' }) {
   mockAnnouncements.unshift({ id: Date.now(), title, body, url, sent: 0, created_at: new Date().toISOString() })
   return { id: mockAnnouncements[0].id, sent: 0, removed: 0, failed: 0 }
 }
+export async function deleteAnnouncement(id) {
+  const i = mockAnnouncements.findIndex((a) => a.id === id)
+  if (i >= 0) mockAnnouncements.splice(i, 1)
+  return { ok: true }
+}
 export async function listAnnouncements() {
   return { subscribers: 0, items: mockAnnouncements.slice(0, 20) }
 }

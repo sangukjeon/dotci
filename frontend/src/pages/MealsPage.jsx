@@ -129,7 +129,7 @@ export default function MealsPage() {
           </>
         )}
         <p className="meals__source">
-          출처: 우송대학교 홈페이지 학생식당 안내 (wsu-meal-api로 수집) · {dateLabel(date)}
+          출처: 우송대학교 홈페이지 학생식당 안내 (wsu-meal-api로 수집){'\n'}기준: {dateLabel(date)}
         </p>
       </section>
     </main>

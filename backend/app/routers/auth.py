@@ -21,6 +21,7 @@ from ..models import (
     Helpful,
     InviteCode,
     Note,
+    NoteMilestone,
     Place,
     PushSubscription,
     Report,
@@ -239,6 +240,7 @@ def withdraw(response: Response, user: User = Depends(current_user), session: Se
     for note_ids in (child_ids, my_note_ids):
         session.exec(delete(Helpful).where(col(Helpful.note_id).in_(note_ids)))
         session.exec(delete(Report).where(col(Report.note_id).in_(note_ids)))
+        session.exec(delete(NoteMilestone).where(col(NoteMilestone.note_id).in_(note_ids)))
     session.exec(delete(Note).where(col(Note.id).in_(child_ids)))
     session.exec(delete(Note).where(Note.author_id == user.id))
 

@@ -1,4 +1,4 @@
-"""공지 푸시 알림 (웹 푸시).
+"""푸시 알림 (웹 푸시): 관리자 공지 + 내 쪽지 반응.
 
 흐름:
 1. 브라우저가 GET /api/push/key 로 서버 공개키를 받아 "알림 구독"을 만든다.
@@ -13,6 +13,8 @@ from urllib.parse import urlparse
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlmodel import Session, col, delete, select
+
+from ..db import engine
 
 from ..banned import find_banned
 from ..config import settings
@@ -109,6 +111,17 @@ def send_push(sub: PushSubscription, payload: str) -> int:
         return 0
 
 
+def send_to_user(user_id, payload: str) -> None:
+    """한 사람의 모든 기기에 알림 보내기. 응답을 돌려준 뒤 백그라운드에서 실행된다 (도움됐어요 버튼이 느려지지 않게)."""
+    if not settings.push_enabled:
+        return
+    with Session(engine) as session:
+        for sub in session.exec(select(PushSubscription).where(PushSubscription.user_id == user_id)).all():
+            if send_push(sub, payload) in (404, 410):
+                session.delete(sub)
+        session.commit()
+
+
 @router.post("/admin/announcements")
 def send_announcement(
     body: AnnouncementIn, session: Session = Depends(get_session), admin: User = Depends(admin_user)
@@ -125,7 +138,7 @@ def send_announcement(
     if not url.startswith("/") or url.startswith("//"):
         raise fail(400, "bad_url")
 
-    payload = json.dumps({"title": title, "body": text, "url": url}, ensure_ascii=False)
+    payload = json.dumps({"title": title, "body": text, "url": url, "tag": "dotci-announcement"}, ensure_ascii=False)
     sent = removed = failed = 0
     for sub in session.exec(select(PushSubscription)).all():
         status = send_push(sub, payload)
@@ -154,3 +167,16 @@ def list_announcements(session: Session = Depends(get_session), _admin: User = D
             for a in rows
         ],
     }
+
+
+@router.delete("/admin/announcements/{announcement_id}")
+def delete_announcement(
+    announcement_id: int, session: Session = Depends(get_session), _admin: User = Depends(admin_user)
+) -> dict:
+    """보낸 공지 기록만 지운다. 이미 폰에 도착한 알림은 되돌릴 수 없다."""
+    ann = session.get(Announcement, announcement_id)
+    if ann is None:
+        raise fail(404, "not_found")
+    session.delete(ann)
+    session.commit()
+    return {"ok": True}

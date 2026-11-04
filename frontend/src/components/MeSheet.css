@@ -28,21 +28,33 @@
   color: var(--text-2);
 }
 
+/* 묶음: 작은 제목 + 연회색 둥근 카드 */
+.me__group + .me__group {
+  margin-top: var(--sp-4);
+}
+.me__group-title {
+  margin: 0 0 6px 4px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--text-2);
+}
 .me__menu {
   list-style: none;
   margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--line);
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--bg);
 }
-.me__menu li {
-  border-bottom: 1px solid var(--line);
+.me__menu li + li {
+  border-top: 1px solid var(--line);
 }
 .me__row {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
   width: 100%;
-  min-height: 56px;
+  min-height: 52px;
   text-decoration: none;
   color: var(--text-strong);
   font-weight: 600;
@@ -88,9 +100,9 @@
   margin-top: var(--sp-4);
 }
 
-/* 공지 알림 스위치 */
+/* 알림 스위치 (공지 + 내 쪽지 반응) */
 .me__push {
-  padding-bottom: var(--sp-3);
+  padding: 0;
 }
 .me__push-row {
   min-height: 56px;
@@ -99,7 +111,8 @@
   margin-left: auto;
 }
 .me__push-help {
-  margin-top: -6px;
+  margin-top: -8px;
+  padding-bottom: var(--sp-3);
   padding-left: 32px;
   font-size: 13px;
   line-height: 20px;
@@ -136,7 +149,7 @@
   transform: translateX(20px);
 }
 
-/* 처음 한 번 묻는 공지 알림 안내 */
+/* 처음 한 번 묻는 알림 안내 */
 .push-prompt {
   display: flex;
   flex-direction: column;

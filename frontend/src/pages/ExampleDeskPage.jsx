@@ -99,8 +99,8 @@ export default function ExampleDeskPage({ waking }) {
           <Info size={18} aria-hidden="true" />
           <span>
             {waking
-              ? '서버를 깨우는 동안 둘러보는 예시 책상이에요. 쪽지는 화면 확인용 예시예요.'
-              : '서버가 준비됐어요! 이제 진짜 DOTCI를 시작해 보세요.'}
+              ? '서버를 깨우는 동안 둘러보는 예시 책상이에요.\n쪽지는 화면 확인용 예시예요.'
+              : '서버가 준비됐어요!\n이제 진짜 DOTCI를 시작해 보세요.'}
           </span>
         </div>
         {!waking && (

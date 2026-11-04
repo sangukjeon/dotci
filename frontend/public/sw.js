@@ -1,6 +1,6 @@
 // DOTCI 서비스 워커
 // 1) 인터넷이 없을 때 "연결이 끊겼어요" 페이지를 보여 준다.
-// 2) 관리자 공지 푸시 알림을 받아 폰 알림으로 띄우고, 누르면 해당 화면을 연다.
+// 2) 푸시 알림(관리자 공지, 내 쪽지 반응)을 받아 폰 알림으로 띄우고, 누르면 해당 화면을 연다.
 // - 화면 파일·API 응답은 저장(캐시)하지 않는다 → 옛 화면이 남는 문제가 생기지 않는다.
 // - 페이지 이동(주소창 입력, 새로고침)이 네트워크 오류로 실패할 때만 offline.html을 대신 보여 준다.
 const CACHE = 'dotci-offline-v1'
@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(fetch(event.request).catch(() => caches.match(OFFLINE_URL)))
 })
 
-// ---------- 공지 푸시 알림 ----------
+// ---------- 푸시 알림 (공지 + 내 쪽지 반응) ----------
 
 const ICON = new URL('icons/icon-192.png', self.registration.scope).href
 const BADGE = new URL('icons/badge-96.png', self.registration.scope).href
@@ -37,13 +37,13 @@ self.addEventListener('push', (event) => {
   } catch {
     data = { body: event.data?.text() }
   }
-  const title = data.title || 'DOTCI 공지'
+  const title = data.title || 'DOTCI'
   event.waitUntil(
     self.registration.showNotification(title, {
       body: data.body || '',
       icon: ICON,
       badge: BADGE,
-      tag: 'dotci-announcement', // 공지가 여러 개 와도 알림 창에는 최신 것 하나만
+      tag: data.tag || 'dotci', // 같은 종류(공지끼리, 같은 쪽지끼리)는 최신 것 하나만 남긴다
       renotify: true,
       data: { url: data.url || '/' },
     }),

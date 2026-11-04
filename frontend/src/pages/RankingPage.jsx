@@ -23,7 +23,7 @@ export default function RankingPage() {
 
       <section className="page__intro">
         <p className="page__h1">어느 학과가 가장 도움을 줬을까요?</p>
-        <p className="page__lead">학과 사람들이 남긴 쪽지가 받은 도움됐어요를 모두 더해요. 쪽지 수가 아니라 도움이 된 만큼 올라가요.</p>
+        <p className="page__lead">학과 사람들이 남긴 쪽지가 받은 도움됐어요를 모두 더해요.{'\n'}쪽지 수가 아니라 도움이 된 만큼 올라가요.</p>
         {mine >= 0 && (
           <p className="rank__mine">
             우리 학과 <b>{user.department}</b>는 지금 <b>{mine + 1}위</b>예요

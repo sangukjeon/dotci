@@ -10,7 +10,7 @@ const MAX = 200
 const HINT_MAX = 15
 
 const ERRORS = {
-  write_expired: '쓸 수 있는 시간(30분)이 지났어요. 다시 도착 확인을 해 주세요.',
+  write_expired: '쓸 수 있는 시간(30분)이 지났어요.\n다시 도착 확인을 해 주세요.',
   length: `${MIN}~${MAX}자로 남겨 주세요.`,
   hint_length: `뒷면 한마디는 ${HINT_MAX}자까지예요.`,
   too_fast: '1분 뒤에 다시 남길 수 있어요.',
@@ -39,8 +39,8 @@ export default function WriteSheet({ placeId, placeName, onClose, onWritten }) {
     } catch (err) {
       setError(
         err.code === 'banned_word'
-          ? `"${err.word}" 같은 표현은 남길 수 없어요. 다른 말로 바꿔 주세요.`
-          : (ERRORS[err.code] ?? '저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+          ? `"${err.word}" 같은 표현은 남길 수 없어요.\n다른 말로 바꿔 주세요.`
+          : (ERRORS[err.code] ?? '저장하지 못했어요.\n잠시 후 다시 시도해 주세요.'),
       )
     } finally {
       setBusy(false)
@@ -80,7 +80,7 @@ export default function WriteSheet({ placeId, placeName, onClose, onWritten }) {
           <>
             <div className="banner banner--info" style={{ marginBottom: 'var(--sp-4)' }}>
               <Info size={18} aria-hidden="true" />
-              <span>자리·출석·과제처럼 수업 듣는 데 도움 되는 팁을 남겨 주세요. 교수님 평가는 남기지 않아요.</span>
+              <span>자리·출석·과제처럼 수업 듣는 데 도움 되는 팁을 남겨 주세요.{'\n'}교수님 평가는 남기지 않아요.</span>
             </div>
             <label className="field">
               <span className="field__label">과목명 (선택)</span>
@@ -111,7 +111,7 @@ export default function WriteSheet({ placeId, placeName, onClose, onWritten }) {
             onChange={(e) => setHint(e.target.value.slice(0, HINT_MAX))}
             placeholder="시험기간 필수"
           />
-          <span className="field__help">잠겨 있을 때 카드 뒷면에 보이는 말이에요. 궁금하게 만들어 보세요.</span>
+          <span className="field__help">잠겨 있을 때 카드 뒷면에 보이는 말이에요.{'\n'}궁금하게 만들어 보세요.</span>
         </label>
 
         {error && (

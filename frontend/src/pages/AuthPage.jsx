@@ -18,7 +18,7 @@ const AGREEMENTS = [
   { key: 'terms', label: '이용약관 동의', doc: 'terms' },
   { key: 'consent', label: '개인정보 수집·이용 동의', doc: 'consent' },
   { key: 'age', label: '만 14세 이상이에요' },
-  { key: 'push', label: '공지 알림 받기', doc: 'push', optional: true },
+  { key: 'push', label: '알림 받기 (공지·내 쪽지 반응)', doc: 'push', optional: true },
 ]
 const REQUIRED = AGREEMENTS.filter((a) => !a.optional)
 
@@ -27,11 +27,11 @@ const LOGIN_ERRORS = {
   locked: '5번 틀려서 잠겼어요. 10분 뒤에 다시 시도해 주세요.',
 }
 const SIGNUP_ERRORS = {
-  bad_invite: '초대 코드를 확인해 주세요. 학과 대표에게 받은 코드를 넣어요.',
-  off_campus: '위치가 캠퍼스 밖으로 잡혔어요. 근처 장소의 QR 아래 6자리 코드로 확인해 주세요.',
+  bad_invite: '초대 코드를 확인해 주세요.\n학과 대표에게 받은 코드를 넣어요.',
+  off_campus: '위치가 캠퍼스 밖으로 잡혔어요.\n근처 장소의 QR 아래 6자리 코드로 확인해 주세요.',
   low_accuracy: '위치가 흐리게 잡혔어요(노트북은 자주 그래요). 근처 장소의 QR 아래 6자리 코드로 확인해 주세요.',
   bad_code: '장소 코드를 확인해 주세요.',
-  bad_request: '입력한 값을 확인해 주세요. 아이디는 영문·숫자 3~20자, 비밀번호는 8자 이상이에요.',
+  bad_request: '입력한 값을 확인해 주세요.\n아이디는 영문·숫자 3~20자, 비밀번호는 8자 이상이에요.',
   username_taken: '이미 쓰고 있는 아이디예요.',
 }
 
@@ -101,7 +101,7 @@ function LoginForm({ goTo }) {
       await login(form)
       navigate(goTo, { replace: true })
     } catch (err) {
-      const base = LOGIN_ERRORS[err.code] ?? '로그인하지 못했어요. 잠시 후 다시 시도해 주세요.'
+      const base = LOGIN_ERRORS[err.code] ?? '로그인하지 못했어요.\n잠시 후 다시 시도해 주세요.'
       setError(err.remaining && err.remaining <= 3 ? `${base} ${err.remaining}번 더 틀리면 10분 동안 잠겨요.` : base)
     } finally {
       setBusy(false)
@@ -131,7 +131,7 @@ function LoginForm({ goTo }) {
         />
       </label>
       {error && <p className="field__error" role="alert">{error}</p>}
-      <p className="field__help">로그인은 어디서나 돼요. 쪽지는 그 장소에 가야 열려요.</p>
+      <p className="field__help">로그인은 어디서나 돼요.{'\n'}쪽지는 그 장소에 가야 열려요.</p>
       <div className="auth__legal">
         <LegalLinks />
       </div>
@@ -149,10 +149,10 @@ const GRADES = [1, 2, 3, 4]
 
 // 서버가 알려 주는 "너무 쉬운 비밀번호" 이유
 const WEAK_PASSWORD = {
-  common: '너무 흔한 비밀번호예요. 유출 목록에 자주 나오는 값이라 다른 걸로 정해 주세요.',
-  has_username: '비밀번호에 아이디가 들어 있어요. 다른 걸로 정해 주세요.',
-  repeated: '같은 글자만 반복돼요. 다른 걸로 정해 주세요.',
-  sequence: '1234·qwerty처럼 차례대로 누른 비밀번호예요. 다른 걸로 정해 주세요.',
+  common: '너무 흔한 비밀번호예요.\n유출 목록에 자주 나오는 값이라 다른 걸로 정해 주세요.',
+  has_username: '비밀번호에 아이디가 들어 있어요.\n다른 걸로 정해 주세요.',
+  repeated: '같은 글자만 반복돼요.\n다른 걸로 정해 주세요.',
+  sequence: '1234·qwerty처럼 차례대로 누른 비밀번호예요.\n다른 걸로 정해 주세요.',
 }
 
 function SignupForm({ goTo }) {
@@ -184,7 +184,7 @@ function SignupForm({ goTo }) {
       if (!ok) return setError(WEAK_PASSWORD[reason] ?? '다른 비밀번호로 정해 주세요.')
       setStep(2)
     } catch {
-      setError('연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.')
+      setError('연결이 원활하지 않아요.\n잠시 후 다시 시도해 주세요.')
     } finally {
       setBusy(false)
     }
@@ -212,7 +212,7 @@ function SignupForm({ goTo }) {
       const pos = await getPosition()
       setLocation({ method: 'gps', ...pos })
     } catch (err) {
-      setError(err.code === 'denied' ? '위치 권한이 없어요. 아래 장소 코드로 확인해 주세요.' : '위치를 받지 못했어요. 장소 코드로 확인해 주세요.')
+      setError(err.code === 'denied' ? '위치 권한이 없어요.\n아래 장소 코드로 확인해 주세요.' : '위치를 받지 못했어요.\n장소 코드로 확인해 주세요.')
     } finally {
       setBusy(false)
     }
@@ -223,7 +223,7 @@ function SignupForm({ goTo }) {
     const loc = location ?? (manualCode.length === 6 ? { method: 'qr', code: manualCode } : null)
     if (!loc) return setError('학교에 있는지 확인해 주세요.')
     if (!requiredOk) return setError('필수 항목에 모두 동의해 주세요.')
-    // 공지 알림에 동의했으면 "가입하기"를 누른 이 순간 브라우저 허용 창을 띄운다.
+    // 알림에 동의했으면 "가입하기"를 누른 이 순간 브라우저 허용 창을 띄운다.
     // (아이폰 등은 버튼을 누른 직후에만 허용 창을 띄울 수 있어서, 가입 요청을 기다리기 전에 부른다)
     const permission = agreed.push ? askPushPermission() : null
     if (!agreed.push) markPushAsked()
@@ -240,7 +240,7 @@ function SignupForm({ goTo }) {
         setStep(1)
         return setError(WEAK_PASSWORD[err.reason] ?? '다른 비밀번호로 정해 주세요.')
       }
-      setError(SIGNUP_ERRORS[err.code] ?? '가입하지 못했어요. 잠시 후 다시 시도해 주세요.')
+      setError(SIGNUP_ERRORS[err.code] ?? '가입하지 못했어요.\n잠시 후 다시 시도해 주세요.')
     } finally {
       setBusy(false)
     }
@@ -306,7 +306,7 @@ function SignupForm({ goTo }) {
               placeholder="학과 대표에게 받은 코드"
               autoCapitalize="characters"
             />
-            <span className="field__help">학과 대표(과대·학생회)에게 받은 코드예요. 학과는 코드로 정해져요.</span>
+            <span className="field__help">학과 대표(과대·학생회)에게 받은 코드예요.{'\n'}학과는 코드로 정해져요.</span>
           </label>
           {error && <p className="field__error" role="alert">{error}</p>}
           <div className="bottom-plate">
@@ -328,7 +328,7 @@ function SignupForm({ goTo }) {
 
           <p className="field__label">학교에 있는지 확인할게요</p>
           <p className="field__help" style={{ marginBottom: 'var(--sp-3)' }}>
-            캠퍼스 안에서만 가입할 수 있어요. 위치는 확인에만 쓰고 저장하지 않아요.
+            캠퍼스 안에서만 가입할 수 있어요.{'\n'}위치는 확인에만 쓰고 저장하지 않아요.
           </p>
 
           {location ? (
@@ -393,11 +393,14 @@ function SignupForm({ goTo }) {
               ))}
             </ul>
             <p className="field__help">
-              실명·학번·전화번호·이메일은 받지 않고, 위치는 확인할 때만 쓰고 저장하지 않아요. 자세한 내용은{' '}
-              <button type="button" className="auth__inline-link" onClick={() => setReading('privacy')}>
-                개인정보처리방침
-              </button>
-              에 있어요.
+              실명·학번·전화번호·이메일은 받지 않아요.{'\n'}위치는 확인할 때만 쓰고 저장하지 않아요.{'\n'}
+              <span className="nowrap">
+                자세한 내용은{' '}
+                <button type="button" className="auth__inline-link" onClick={() => setReading('privacy')}>
+                  개인정보처리방침
+                </button>
+                에 있어요.
+              </span>
             </p>
           </div>
 

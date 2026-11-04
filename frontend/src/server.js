@@ -17,7 +17,7 @@ export const {
   // 관리자·도감
   hideNote, unhideNote, adminListNotes, collection,
   // 공지 푸시 알림
-  pushKey, pushSubscribe, pushUnsubscribe, sendAnnouncement, listAnnouncements,
+  pushKey, pushSubscribe, pushUnsubscribe, sendAnnouncement, listAnnouncements, deleteAnnouncement,
   // 아직 목업인 확장 기능
   BOOTH_CODE, REPORT_REASONS, reportNote, reportedByMe, reportCount, departmentRanking, adminStats,
   listCourses, getCourse, listSubjects, nearbyHint, isCompleteMock, displayFeed, addVisitorNote,

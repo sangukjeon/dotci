@@ -129,3 +129,4 @@ export const pushSubscribe = (subscription) => post('/api/push/subscribe', subsc
 export const pushUnsubscribe = (endpoint) => post('/api/push/unsubscribe', { endpoint })
 export const sendAnnouncement = ({ title, body, url }) => post('/api/admin/announcements', { title, body, url })
 export const listAnnouncements = () => call('/api/admin/announcements')
+export const deleteAnnouncement = (id) => call(`/api/admin/announcements/${id}`, { method: 'DELETE' })

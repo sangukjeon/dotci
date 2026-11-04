@@ -16,10 +16,10 @@ import './MapPage.css'
 
 const MAP_ERRORS = {
   no_key: IS_DEMO
-    ? '체험판은 지도 대신 목록으로 보여요. 장소를 눌러 책상을 열어 보세요.'
+    ? '체험판은 지도 대신 목록으로 보여요.\n장소를 눌러 책상을 열어 보세요.'
     : '지도 키가 아직 없어요. frontend/.env에 VITE_NAVER_MAP_CLIENT_ID를 넣어 주세요.',
-  auth: '지도 키를 확인해 주세요. 네이버 클라우드 콘솔에 이 주소가 등록되어 있어야 해요.',
-  load_failed: '지도를 불러오지 못했어요. 목록으로 볼 수 있어요.',
+  auth: '지도 키를 확인해 주세요.\n네이버 클라우드 콘솔에 이 주소가 등록되어 있어야 해요.',
+  load_failed: '지도를 불러오지 못했어요.\n목록으로 볼 수 있어요.',
 }
 
 export default function MapPage() {
@@ -68,7 +68,7 @@ export default function MapPage() {
   if (loadError) {
     return (
       <main className="map-page map-page--center">
-        <p>장소를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+        <p>장소를 불러오지 못했어요.{'\n'}잠시 후 다시 시도해 주세요.</p>
         <button className="btn-sub pressable" onClick={retry}>
           다시 시도
         </button>
@@ -155,7 +155,7 @@ export default function MapPage() {
       )}
 
       <AnimatePresence>{showMe && <MeSheet onClose={() => setShowMe(false)} />}</AnimatePresence>
-      {/* 처음 한 번만: 공지 알림 받을지 묻기 */}
+      {/* 처음 한 번만: 알림 받을지 묻기 */}
       <PushPrompt />
     </main>
   )

@@ -1,12 +1,15 @@
 """쪽지 하나에 대한 일: 도움됐어요(누르기·취소), 삭제, 관리자 숨기기, 도감 (CLAUDE.md 4장 F8·F9, 8장)."""
 
-from fastapi import APIRouter, Depends
+import json
+
+from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlmodel import Session, col, delete, func, select
 
 from ..db import get_session
 from ..deps import admin_user, current_user, fail
-from ..models import Helpful, Note, Report, Unlock, User
+from ..models import Helpful, Note, NoteMilestone, Place, Report, Unlock, User
 from .places import get_place, iso
+from .push import send_to_user
 
 router = APIRouter(prefix="/api", tags=["notes"])
 
@@ -18,8 +21,29 @@ def get_note(session: Session, note_id: int) -> Note:
     return note
 
 
+# 도움됐어요가 이 수에 처음 닿을 때만 쓴 사람에게 알림 (너무 자주 오지 않게)
+MILESTONES = (1, 3, 10, 30, 100)
+
+
+def reaction_payload(note: Note, place_name: str, count: int) -> str:
+    body = (
+        f"{place_name}에 남긴 쪽지가 누군가에게 도움이 됐어요."
+        if count == 1
+        else f"{place_name}에 남긴 쪽지에 도움됐어요가 {count}개 모였어요."
+    )
+    return json.dumps(
+        {"title": "내 쪽지가 도움됐어요 💙", "body": body, "url": f"/place/{note.place_id}", "tag": f"note-{note.id}"},
+        ensure_ascii=False,
+    )
+
+
 @router.post("/notes/{note_id}/helpful")
-def add_helpful(note_id: int, session: Session = Depends(get_session), user: User = Depends(current_user)) -> dict:
+def add_helpful(
+    note_id: int,
+    background: BackgroundTasks,
+    session: Session = Depends(get_session),
+    user: User = Depends(current_user),
+) -> dict:
     """연 쪽지에만, 1인 1회, 자기 쪽지는 안 됨."""
     note = get_note(session, note_id)
     if note.is_hidden:
@@ -34,7 +58,14 @@ def add_helpful(note_id: int, session: Session = Depends(get_session), user: Use
         session.add(Helpful(note_id=note.id, user_id=user.id))
         note.helpful_count += 1
         session.add(note)
+        count = note.helpful_count
+        notify = count in MILESTONES and session.get(NoteMilestone, (note.id, count)) is None
+        if notify:
+            session.add(NoteMilestone(note_id=note.id, milestone=count))
         session.commit()
+        if notify:
+            place = session.get(Place, note.place_id)
+            background.add_task(send_to_user, note.author_id, reaction_payload(note, place.name if place else "캠퍼스", count))
     return {"helpful_count": note.helpful_count}
 
 
@@ -55,6 +86,7 @@ def _delete_note(session: Session, note: Note) -> None:
     ids = [note.id, *session.exec(select(Note.id).where(Note.parent_id == note.id)).all()]
     session.exec(delete(Helpful).where(col(Helpful.note_id).in_(ids)))
     session.exec(delete(Report).where(col(Report.note_id).in_(ids)))
+    session.exec(delete(NoteMilestone).where(col(NoteMilestone.note_id).in_(ids)))
     session.exec(delete(Note).where(Note.parent_id == note.id))
     session.delete(note)
     session.commit()

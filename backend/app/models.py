@@ -160,3 +160,14 @@ class Announcement(SQLModel, table=True):
     url: str = Field(default="/", max_length=100)  # 알림을 누르면 열 앱 안 주소
     sent_count: int = 0
     created_at: datetime = Field(default_factory=now_utc, index=True)
+
+
+class NoteMilestone(SQLModel, table=True):
+    """쪽지 반응 알림을 이미 보낸 단계 (같은 단계 알림을 두 번 보내지 않으려고).
+    도움됐어요를 취소했다가 다시 눌러도 같은 알림이 또 가지 않는다."""
+
+    __tablename__ = "note_milestones"
+
+    note_id: int = Field(primary_key=True)  # 쪽지를 지울 때 함께 지운다
+    milestone: int = Field(primary_key=True)  # 1, 3, 10, 30, 100
+    created_at: datetime = Field(default_factory=now_utc)

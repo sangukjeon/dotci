@@ -21,6 +21,16 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  /* 한글 줄 넘김: 낱말 중간에서 끊지 않는다 ("확인해 주/세요" 방지).
+     대신 주소·아이디처럼 띄어쓰기 없는 긴 글자는 칸을 넘지 않게 아무 데서나 끊는다. */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  /* 문구 안의 줄바꿈(\n, {'\n'})을 화면에서도 줄바꿈으로 보여 준다. 문장이 끝나는 곳에서 줄을 바꾸는 데 쓴다 */
+  white-space: pre-line;
+}
+/* 낱말 덩어리를 한 줄에 붙여 둘 때 ("개인정보처리방침에 있어요" 처럼 링크와 조사가 떨어지지 않게) */
+.nowrap {
+  white-space: nowrap;
 }
 
 h1,
@@ -28,6 +38,16 @@ h2,
 h3,
 p {
   margin: 0;
+}
+/* 🆕 제목은 줄 길이를 고르게, 문단은 마지막 줄에 한 글자만 남지 않게 (지원하는 브라우저에서만) */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
 }
 
 /* 화면 틀: 폰 기준, 큰 화면에서는 가운데 480px */

@@ -32,7 +32,8 @@ export function CoursesPage() {
               <span className="course-card__body">
                 <span className="course-card__title">{c.title}</span>
                 <span className="course-card__meta">
-                  {c.by} · {c.summary}
+                  {c.summary}
+                  {'\n'}<span className="course-card__by">{c.by}</span>
                 </span>
                 <span className="course-card__bar" aria-label={`${c.total}곳 중 ${c.done}곳 열었어요`}>
                   <span style={{ width: `${(c.done / c.total) * 100}%` }} />
@@ -81,7 +82,7 @@ export function CourseDetailPage() {
             <p className="page__lead">
               {course.by} · {course.total}곳 중 <b>{course.done}</b>곳 열었어요
             </p>
-            {course.done === course.total && <p className="course__done">코스를 모두 마쳤어요. 이제 다음 후배를 위한 흔적을 남겨 주세요.</p>}
+            {course.done === course.total && <p className="course__done">코스를 모두 마쳤어요.{'\n'}이제 다음 후배를 위한 흔적을 남겨 주세요.</p>}
           </section>
 
           <ol className="list-plain page__section steps">

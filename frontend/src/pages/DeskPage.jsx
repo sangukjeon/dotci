@@ -16,22 +16,22 @@ import './DeskPage.css'
 function bannerFor(result) {
   switch (result.reason) {
     case 'too_far':
-      return { tone: 'warn', text: `아직 ${result.distance_m}m 남았어요. 조금 더 가까이 와 주세요.` }
+      return { tone: 'warn', text: `아직 ${result.distance_m}m 남았어요.\n조금 더 가까이 와 주세요.` }
     case 'low_accuracy':
     case 'timeout':
     case 'unavailable':
-      return { tone: 'warn', text: '위치가 흐릿해요. 창가나 밖으로 나가거나 QR을 찍어 주세요.', qr: true }
+      return { tone: 'warn', text: '위치가 흐릿해요.\n창가나 밖으로 나가거나 QR을 찍어 주세요.', qr: true }
     case 'denied':
     case 'unsupported':
-      return { tone: 'info', text: '위치 권한이 꺼져 있어요. 위치 없이도 QR로 열 수 있어요.', qr: true }
+      return { tone: 'info', text: '위치 권한이 꺼져 있어요.\n위치 없이도 QR로 열 수 있어요.', qr: true }
     case 'bad_code':
       return { tone: 'warn', text: '코드를 다시 확인해 주세요.', qr: true }
     case 'rate_limited':
       return { tone: 'warn', text: '잠시 뒤에 다시 시도해 주세요.' }
     case 'network':
-      return { tone: 'warn', text: '연결이 끊겼어요. 인터넷을 확인하고 다시 눌러 주세요.' }
+      return { tone: 'warn', text: '연결이 끊겼어요.\n인터넷을 확인하고 다시 눌러 주세요.' }
     default:
-      return { tone: 'warn', text: '확인하지 못했어요. 잠시 후 다시 시도해 주세요.' }
+      return { tone: 'warn', text: '확인하지 못했어요.\n잠시 후 다시 시도해 주세요.' }
   }
 }
 
@@ -218,7 +218,7 @@ export default function DeskPage() {
             {loadError === 'notfound' ? '찾을 수 없는 장소예요' : '책상을 불러오지 못했어요'}
           </p>
           <p className="desk-page__state-body">
-            {loadError === 'notfound' ? '주소가 바뀌었거나 없어진 장소예요. 지도에서 다시 골라 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.'}
+            {loadError === 'notfound' ? '주소가 바뀌었거나 없어진 장소예요.\n지도에서 다시 골라 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.'}
           </p>
           {loadError === 'notfound' ? (
             <Link to="/" className="btn-sub">

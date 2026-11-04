@@ -42,7 +42,7 @@ export default function ScanPage() {
       navigate(`/place/${target}`, { replace: true, state: { qrCode: code } })
     } catch {
       handled.current = false
-      setError('어느 장소의 코드인지 찾지 못했어요. 다시 확인해 주세요.')
+      setError('어느 장소의 코드인지 찾지 못했어요.\n다시 확인해 주세요.')
       setBusy(false)
     }
   }

@@ -32,52 +32,68 @@ export default function MeSheet({ onClose }) {
         </div>
       </div>
 
-      <ul className="me__menu">
-        <li>
-          <Link to="/me" className="me__row">
-            <Stamp size={20} aria-hidden="true" /> 내 도감 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/meals" className="me__row">
-            <UtensilsCrossed size={20} aria-hidden="true" /> 오늘의 학식 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/courses" className="me__row">
-            <Route size={20} aria-hidden="true" /> 멘토링 코스 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/subjects" className="me__row">
-            <BookOpen size={20} aria-hidden="true" /> 과목별 수강 팁 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/ranking" className="me__row">
-            <Trophy size={20} aria-hidden="true" /> 학과 대항전 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
-          </Link>
-        </li>
-        {user.is_admin && (
+      {/* 성격별로 묶어서 보여 준다: 내 기록 / 캠퍼스 생활 / 설정 */}
+      <section className="me__group" aria-labelledby="me-g1">
+        <h3 id="me-g1" className="me__group-title">내 기록</h3>
+        <ul className="me__menu">
           <li>
-            <Link to="/admin" className="me__row">
-              <ShieldCheck size={20} aria-hidden="true" /> 관리자 화면 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+            <Link to="/me" className="me__row">
+              <Stamp size={20} aria-hidden="true" /> 내 도감 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
             </Link>
           </li>
-        )}
-        <li>
-          <PushToggle />
-        </li>
-        <li>
-          <button className="me__row" onClick={logout}>
-            <LogOut size={20} aria-hidden="true" /> 로그아웃
-          </button>
-        </li>
-      </ul>
+          <li>
+            <Link to="/ranking" className="me__row">
+              <Trophy size={20} aria-hidden="true" /> 학과 대항전 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+            </Link>
+          </li>
+        </ul>
+      </section>
+
+      <section className="me__group" aria-labelledby="me-g2">
+        <h3 id="me-g2" className="me__group-title">캠퍼스 생활</h3>
+        <ul className="me__menu">
+          <li>
+            <Link to="/meals" className="me__row">
+              <UtensilsCrossed size={20} aria-hidden="true" /> 오늘의 학식 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+            </Link>
+          </li>
+          <li>
+            <Link to="/courses" className="me__row">
+              <Route size={20} aria-hidden="true" /> 멘토링 코스 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+            </Link>
+          </li>
+          <li>
+            <Link to="/subjects" className="me__row">
+              <BookOpen size={20} aria-hidden="true" /> 과목별 수강 팁 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+            </Link>
+          </li>
+        </ul>
+      </section>
+
+      <section className="me__group" aria-labelledby="me-g3">
+        <h3 id="me-g3" className="me__group-title">설정</h3>
+        <ul className="me__menu">
+          <li>
+            <PushToggle />
+          </li>
+          {user.is_admin && (
+            <li>
+              <Link to="/admin" className="me__row">
+                <ShieldCheck size={20} aria-hidden="true" /> 관리자 화면 <ChevronRight className="me__chev" size={18} aria-hidden="true" />
+              </Link>
+            </li>
+          )}
+          <li>
+            <button className="me__row" onClick={logout}>
+              <LogOut size={20} aria-hidden="true" /> 로그아웃
+            </button>
+          </li>
+        </ul>
+      </section>
 
       {confirm ? (
         <div className="me__danger-box">
-          <p>탈퇴하면 계정과 남긴 쪽지, 연 장소 기록이 모두 지워져요. 되돌릴 수 없어요.</p>
+          <p>탈퇴하면 계정과 남긴 쪽지, 연 장소 기록이 모두 지워져요.{'\n'}되돌릴 수 없어요.</p>
           <div className="me__danger-actions">
             <button className="btn-sub" onClick={() => setConfirm(false)}>
               취소

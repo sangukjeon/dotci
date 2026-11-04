@@ -119,7 +119,7 @@ export default function CollectionPage() {
             })}
           </ul>
         ) : (
-          <p className="coll__empty">아직 남긴 흔적이 없어요. 장소를 열고 30분 안에 남길 수 있어요.</p>
+          <p className="coll__empty">아직 남긴 흔적이 없어요.{'\n'}장소를 열고 30분 안에 남길 수 있어요.</p>
         )}
       </section>
     </main>

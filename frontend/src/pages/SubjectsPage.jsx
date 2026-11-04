@@ -29,7 +29,7 @@ export default function SubjectsPage() {
       <PageHeader title="과목별 수강 팁" />
       <section className="page__intro">
         <p className="page__h1">이 과목, 어디에 팁이 있을까요?</p>
-        <p className="page__lead">선배들이 남긴 자리·출석·과제 팁이 있는 장소를 알려 줘요. 내용은 그 장소에 가야 열려요.</p>
+        <p className="page__lead">선배들이 남긴 자리·출석·과제 팁이 있는 장소를 알려 줘요.{'\n'}내용은 그 장소에 가야 열려요.</p>
         <label className="subj__search">
           <Search size={18} aria-hidden="true" />
           <input
@@ -58,7 +58,7 @@ export default function SubjectsPage() {
               {s.course_name} <span className="subj__count">{s.note_count}</span>
             </button>
           ))}
-          {subjects && filtered.length === 0 && <p className="subj__empty">아직 "{q}" 팁이 없어요. 첫 팁을 남겨 주세요.</p>}
+          {subjects && filtered.length === 0 && <p className="subj__empty">아직 "{q}" 팁이 없어요.{'\n'}첫 팁을 남겨 주세요.</p>}
         </div>
       </section>
 

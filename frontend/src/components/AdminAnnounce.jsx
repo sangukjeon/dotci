@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Megaphone } from 'lucide-react'
-import { listAnnouncements, sendAnnouncement } from '../server.js'
+import { Megaphone, Trash2 } from 'lucide-react'
+import { deleteAnnouncement, listAnnouncements, sendAnnouncement } from '../server.js'
 import { useToast } from '../toast.jsx'
 
 const TITLE_MAX = 40
@@ -23,6 +23,7 @@ export default function AdminAnnounce() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [history, setHistory] = useState({ subscribers: 0, items: [] })
+  const [removing, setRemoving] = useState(null) // 지울지 묻고 있는 공지 id
 
   const load = useCallback(() => {
     listAnnouncements().then(setHistory).catch(() => {})
@@ -41,17 +42,29 @@ export default function AdminAnnounce() {
       setForm({ title: '', body: '', url: '/' })
       load()
     } catch (err) {
-      setError(ERRORS[err.code] ?? '보내지 못했어요. 잠시 뒤 다시 해 주세요.')
+      setError(ERRORS[err.code] ?? '보내지 못했어요.\n잠시 뒤 다시 해 주세요.')
     } finally {
       setBusy(false)
       setConfirming(false)
     }
   }
 
+  const remove = async (id) => {
+    try {
+      await deleteAnnouncement(id)
+      toast('공지 기록을 지웠어요')
+      load()
+    } catch {
+      toast('지우지 못했어요. 잠시 뒤 다시 해 주세요')
+    } finally {
+      setRemoving(null)
+    }
+  }
+
   return (
     <section className="announce">
       <p className="announce__lead">
-        알림을 켠 <b>{history.subscribers}명</b>에게 폰 알림으로 보내요. 보낸 뒤에는 취소할 수 없어요.
+        알림을 켠 <b>{history.subscribers}명</b>에게 폰 알림으로 보내요.{'\n'}보낸 뒤에는 취소할 수 없어요.
       </p>
 
       <div className="announce__card">
@@ -83,7 +96,9 @@ export default function AdminAnnounce() {
       <label className="field">
         <span className="field__label">알림을 누르면 열 화면</span>
         <input className="input" value={form.url} onChange={set('url')} placeholder="/" />
-        <span className="field__help">"/"는 지도예요. 예: /place/w16-union (학생회관 책상), /meals (학식)</span>
+        <span className="field__help">
+          "/"는 지도예요.{'\n'}예: /place/w16-union (학생회관 책상), /meals (학식)
+        </span>
       </label>
       </div>
 
@@ -117,11 +132,36 @@ export default function AdminAnnounce() {
       <ul className="announce__list">
         {history.items.map((a) => (
           <li key={a.id} className="announce__item">
-            <span className="announce__item-title">{a.title}</span>
-            <span className="announce__item-body">{a.body}</span>
-            <span className="announce__item-meta">
-              {timeLabel(a.created_at)} · {a.sent}명에게 보냄 · {a.url}
-            </span>
+            <div className="announce__item-main">
+              <span className="announce__item-title">{a.title}</span>
+              <span className="announce__item-body">{a.body}</span>
+              <span className="announce__item-meta">
+                {timeLabel(a.created_at)} · {a.sent}명에게 보냄 · {a.url}
+              </span>
+              {removing === a.id && (
+                <div className="announce__remove">
+                  <p>기록만 지워져요.{'\n'}이미 폰에 간 알림은 그대로예요.</p>
+                  <div className="announce__remove-actions">
+                    <button type="button" className="btn-sub" onClick={() => setRemoving(null)}>
+                      취소
+                    </button>
+                    <button type="button" className="announce__remove-btn" onClick={() => remove(a.id)}>
+                      지우기
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            {removing !== a.id && (
+              <button
+                type="button"
+                className="icon-btn announce__trash"
+                onClick={() => setRemoving(a.id)}
+                aria-label={`"${a.title}" 공지 기록 지우기`}
+              >
+                <Trash2 size={18} aria-hidden="true" />
+              </button>
+            )}
           </li>
         ))}
         {history.items.length === 0 && <li className="announce__empty">아직 보낸 공지가 없어요</li>}
