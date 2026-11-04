@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { LegalLinks } from '../pages/LegalPage.jsx'
 import { BookOpen, ChevronRight, LogOut, Route, ShieldCheck, Stamp, Trophy, UtensilsCrossed } from 'lucide-react'
 import Sheet from './Sheet.jsx'
 import { useAuth } from '../auth.jsx'
@@ -87,6 +88,9 @@ export default function MeSheet({ onClose }) {
           탈퇴하기
         </button>
       )}
+      <div className="me__legal">
+        <LegalLinks full />
+      </div>
     </Sheet>
   )
 }

@@ -83,3 +83,7 @@
   color: #fff;
   font-weight: 600;
 }
+
+.me__legal {
+  margin-top: var(--sp-4);
+}

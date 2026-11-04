@@ -16,6 +16,7 @@ import DisplayPage from './pages/DisplayPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ExampleDeskPage from './pages/ExampleDeskPage.jsx'
 import MealsPage from './pages/MealsPage.jsx'
+import LegalPage from './pages/LegalPage.jsx'
 
 const EXAMPLE_PATH = '/example'
 
@@ -42,6 +43,10 @@ export default function App() {
             <Route path="/subjects" element={<RequireAuth><SubjectsPage /></RequireAuth>} />
             {/* 전시 부스 모니터: 로그인 없이 */}
             <Route path="/display" element={<DisplayPage />} />
+            {/* 약관: 로그인 없이 */}
+            <Route path="/terms" element={<LegalPage doc="terms" />} />
+            <Route path="/privacy" element={<LegalPage doc="privacy" />} />
+            <Route path="/consent" element={<LegalPage doc="consent" />} />
             {/* 서버 깨우는 동안 둘러보는 예시 책상: 로그인·서버 없이 */}
             <Route path={EXAMPLE_PATH} element={<ExampleDeskPage waking={waking} />} />
             {/* 없는 주소: 404 화면 */}

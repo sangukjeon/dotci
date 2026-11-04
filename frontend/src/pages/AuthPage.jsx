@@ -1,10 +1,22 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { AnimatePresence } from 'motion/react'
 import { ChevronLeft, ChevronRight, CircleCheck, MapPin, QrCode } from 'lucide-react'
 import { GUEST_HOME, useAuth } from '../auth.jsx'
 import { BOOTH_CODE, checkInvite, checkPassword, GUEST_ENABLED } from '../server.js'
 import { getPosition } from '../geo.js'
+import { DOCS } from '../legal.js'
+import Sheet from '../components/Sheet.jsx'
+import LegalDoc from '../components/LegalDoc.jsx'
+import { LegalLinks } from './LegalPage.jsx'
 import './AuthPage.css'
+
+// 가입 동의 항목: 모두 필수. doc이 있으면 '보기'로 전문을 연다.
+const AGREEMENTS = [
+  { key: 'terms', label: '이용약관 동의', doc: 'terms' },
+  { key: 'consent', label: '개인정보 수집·이용 동의', doc: 'consent' },
+  { key: 'age', label: '만 14세 이상이에요' },
+]
 
 const LOGIN_ERRORS = {
   bad_credentials: '아이디 또는 비밀번호를 확인해 주세요.',
@@ -116,6 +128,9 @@ function LoginForm({ goTo }) {
       </label>
       {error && <p className="field__error" role="alert">{error}</p>}
       <p className="field__help">로그인은 어디서나 돼요. 쪽지는 그 장소에 가야 열려요.</p>
+      <div className="auth__legal">
+        <LegalLinks />
+      </div>
 
       <div className="bottom-plate">
         <button className="btn-main" type="submit" disabled={busy}>
@@ -144,7 +159,9 @@ function SignupForm({ goTo }) {
   const [department, setDepartment] = useState('')
   const [location, setLocation] = useState(null) // {method:'gps', lat, lng, accuracy} | {method:'qr', code}
   const [manualCode, setManualCode] = useState('')
-  const [agree, setAgree] = useState(false)
+  const [agreed, setAgreed] = useState({}) // { terms: true, consent: true, age: true }
+  const [reading, setReading] = useState(null) // 보고 있는 약관 'terms' | 'consent'
+  const agreeAll = AGREEMENTS.every((a) => agreed[a.key])
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -200,7 +217,7 @@ function SignupForm({ goTo }) {
     e.preventDefault()
     const loc = location ?? (manualCode.length === 6 ? { method: 'qr', code: manualCode } : null)
     if (!loc) return setError('학교에 있는지 확인해 주세요.')
-    if (!agree) return setError('수집 항목 안내에 동의해 주세요.')
+    if (!agreeAll) return setError('필수 항목에 모두 동의해 주세요.')
     setBusy(true)
     setError('')
     try {
@@ -327,18 +344,42 @@ function SignupForm({ goTo }) {
           )}
 
           <div className="auth__consent">
-            <p className="field__label">수집하는 정보</p>
-            <ul>
-              <li>아이디, 학년, 학과(초대 코드로 정해짐)</li>
-              <li>쪽지에 보이는 이름은 자동으로 지어져요</li>
-              <li>실명·학번·전화번호·이메일은 받지 않아요</li>
-              <li>위치는 확인할 때만 쓰고 저장하지 않아요</li>
-              <li>탈퇴하면 계정과 기록을 모두 지워요</li>
-            </ul>
-            <label className="auth__check">
-              <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-              위 내용을 확인했고 동의해요
+            <label className="auth__check auth__check--all">
+              <input
+                type="checkbox"
+                checked={agreeAll}
+                onChange={(e) => setAgreed(Object.fromEntries(AGREEMENTS.map((x) => [x.key, e.target.checked])))}
+              />
+              전체 동의
             </label>
+            <ul className="auth__agree-list">
+              {AGREEMENTS.map((x) => (
+                <li key={x.key} className="auth__agree-row">
+                  <label className="auth__check">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(agreed[x.key])}
+                      onChange={(e) => setAgreed({ ...agreed, [x.key]: e.target.checked })}
+                    />
+                    <span>
+                      <b className="auth__required">[필수]</b> {x.label}
+                    </span>
+                  </label>
+                  {x.doc && (
+                    <button type="button" className="text-btn auth__view" onClick={() => setReading(x.doc)}>
+                      보기
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <p className="field__help">
+              실명·학번·전화번호·이메일은 받지 않고, 위치는 확인할 때만 쓰고 저장하지 않아요. 자세한 내용은{' '}
+              <button type="button" className="auth__inline-link" onClick={() => setReading('privacy')}>
+                개인정보처리방침
+              </button>
+              에 있어요.
+            </p>
           </div>
 
           {error && <p className="field__error" role="alert">{error}</p>}
@@ -349,6 +390,14 @@ function SignupForm({ goTo }) {
           </div>
         </form>
       )}
+
+      <AnimatePresence>
+        {reading && (
+          <Sheet title={DOCS[reading].title} onClose={() => setReading(null)} labelId="legal-sheet-title">
+            <LegalDoc doc={reading} />
+          </Sheet>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
