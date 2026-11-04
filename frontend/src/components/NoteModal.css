@@ -29,10 +29,18 @@
   gap: 6px;
   min-height: 44px;
 }
-.nmodal__chip {
+/* 카테고리 칩과 '공식' 태그를 같은 높이·같은 줄 가운데로 맞춘다 */
+.nmodal__chip,
+.nmodal__head .tag {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 9px;
   font-size: 13px;
-  line-height: 20px;
-  padding: 2px 8px;
+  line-height: 1;
+  font-weight: 600;
 }
 .nmodal__close {
   margin-left: auto;
