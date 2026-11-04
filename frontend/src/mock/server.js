@@ -24,6 +24,8 @@ const MOCK_INVITES = { 'CSE-2026': '컴퓨터공학과', 'EE-2026': '전자공�
 const PLACE_IDS = [
   'w1-library', 'w4-railway', 'w6-liberal', 'w7-admin', 'w11-gym',
   'w13-tower', 'w16-union', 'w17-media', 'dorm-cheongun1', 'booth',
+  // 11/4 추가 (부스 코드가 바뀌지 않게 뒤에 붙임)
+  'field', 'w2-intl', 'w3-intldorm', 'w5-health', 'w8-kinder', 'w9-jeongnye', 'w10-welfare', 'w12-sica', 'w14-culinary', 'w15-food', 'w18-art', 'w19-endicott',
 ]
 
 // 전시 부스 (11/5 확장). 진짜 DB에는 아직 없어서 목업에서만 장소 목록에 덧붙인다.
