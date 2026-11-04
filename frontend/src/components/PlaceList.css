@@ -40,3 +40,33 @@
   font-weight: 700;
   color: var(--text);
 }
+
+/* 페이지 넘기기: ‹ 1 2 3 › */
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-top: var(--sp-3);
+}
+.pager__num,
+.pager__arrow {
+  min-width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pager__num[aria-current="page"] {
+  background: var(--primary);
+  color: #fff;
+}
+.pager__arrow:disabled {
+  color: var(--line);
+  cursor: default;
+}
