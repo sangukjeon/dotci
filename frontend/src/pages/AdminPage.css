@@ -132,9 +132,29 @@
 .announce__lead b {
   color: var(--text-strong);
 }
+/* 입력칸(연회색)이 보이도록 흰 카드에 담는다 */
+.announce__card {
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-4);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.announce__card .field:last-child {
+  margin-bottom: 0;
+}
+.announce__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
 .announce__count {
-  align-self: flex-end;
+  font-size: 12px;
+  color: var(--text-3);
   font-variant-numeric: tabular-nums;
+}
+.announce .textarea {
+  resize: none;
 }
 .announce .btn-main {
   width: 100%;

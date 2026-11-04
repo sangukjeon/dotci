@@ -54,32 +54,38 @@ export default function AdminAnnounce() {
         알림을 켠 <b>{history.subscribers}명</b>에게 폰 알림으로 보내요. 보낸 뒤에는 취소할 수 없어요.
       </p>
 
+      <div className="announce__card">
       <label className="field">
-        <span className="field__label">제목</span>
-        <input className="input" value={form.title} maxLength={TITLE_MAX} onChange={set('title')} placeholder="축제 주간 쪽지 이벤트" />
-        <span className="field__help announce__count">
-          {form.title.length}/{TITLE_MAX}
+        <span className="announce__label-row">
+          <span className="field__label">제목</span>
+          <span className="announce__count">
+            {form.title.length}/{TITLE_MAX}
+          </span>
         </span>
+        <input className="input" value={form.title} maxLength={TITLE_MAX} onChange={set('title')} placeholder="예: 축제 주간 쪽지 이벤트" />
       </label>
       <label className="field">
-        <span className="field__label">내용</span>
+        <span className="announce__label-row">
+          <span className="field__label">내용</span>
+          <span className="announce__count">
+            {form.body.length}/{BODY_MAX}
+          </span>
+        </span>
         <textarea
           className="textarea"
           rows={3}
           value={form.body}
           maxLength={BODY_MAX}
           onChange={set('body')}
-          placeholder="학생회관 책상에 축제 꿀팁 쪽지가 열렸어요. 들러 보세요!"
+          placeholder="예: 학생회관 책상에 축제 꿀팁 쪽지가 열렸어요. 들러 보세요!"
         />
-        <span className="field__help announce__count">
-          {form.body.length}/{BODY_MAX}
-        </span>
       </label>
       <label className="field">
-        <span className="field__label">알림을 누르면 열 화면 (선택)</span>
-        <input className="input" value={form.url} onChange={set('url')} placeholder="/place/w16-union" />
-        <span className="field__help">비워 두면 지도가 열려요. 예: /place/w16-union, /meals</span>
+        <span className="field__label">알림을 누르면 열 화면</span>
+        <input className="input" value={form.url} onChange={set('url')} placeholder="/" />
+        <span className="field__help">"/"는 지도예요. 예: /place/w16-union (학생회관 책상), /meals (학식)</span>
       </label>
+      </div>
 
       {error && (
         <p className="field__error" role="alert">
