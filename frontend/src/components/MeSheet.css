@@ -87,3 +87,51 @@
 .me__legal {
   margin-top: var(--sp-4);
 }
+
+/* 공지 알림 스위치 */
+.me__push {
+  padding-bottom: var(--sp-3);
+}
+.me__push-row {
+  min-height: 56px;
+}
+.me__push-row .switch {
+  margin-left: auto;
+}
+.me__push-help {
+  margin-top: -6px;
+  padding-left: 32px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 32px;
+  border-radius: 16px;
+  background: var(--line);
+  transition: background-color 0.2s ease;
+}
+.switch[aria-checked='true'] {
+  background: var(--primary);
+}
+.switch:disabled {
+  opacity: 0.5;
+}
+.switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(20, 26, 36, 0.25);
+  transition: transform 0.2s ease;
+}
+.switch[aria-checked='true'] .switch__thumb {
+  transform: translateX(20px);
+}

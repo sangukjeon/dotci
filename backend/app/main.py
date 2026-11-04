@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 
 from .config import settings
 from .db import create_db_and_tables
-from .routers import auth, notes, places
+from .routers import auth, notes, places, push
 
 
 @asynccontextmanager
@@ -46,3 +46,4 @@ def health() -> dict:
 app.include_router(auth.router)
 app.include_router(places.router)
 app.include_router(notes.router)
+app.include_router(push.router)

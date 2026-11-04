@@ -134,3 +134,29 @@ class Report(SQLModel, table=True):
     reason: str = Field(max_length=100)
     created_at: datetime = Field(default_factory=now_utc)
 
+
+class PushSubscription(SQLModel, table=True):
+    """공지 알림을 받겠다고 한 브라우저 하나. endpoint는 브라우저 회사(구글·애플 등)의 알림 주소."""
+
+    __tablename__ = "push_subscriptions"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: uuid.UUID = Field(foreign_key="users.id", index=True)
+    endpoint: str = Field(max_length=1000, unique=True)
+    p256dh: str = Field(max_length=200)  # 알림 내용 암호화용 공개키 (브라우저가 만든 값)
+    auth: str = Field(max_length=100)
+    created_at: datetime = Field(default_factory=now_utc)
+
+
+class Announcement(SQLModel, table=True):
+    """관리자가 보낸 공지 기록."""
+
+    __tablename__ = "announcements"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    author_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id")  # 보낸 관리자가 탈퇴하면 비움
+    title: str = Field(max_length=40)
+    body: str = Field(max_length=120)
+    url: str = Field(default="/", max_length=100)  # 알림을 누르면 열 앱 안 주소
+    sent_count: int = 0
+    created_at: datetime = Field(default_factory=now_utc, index=True)

@@ -9,13 +9,26 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, Response
 from pydantic import BaseModel, Field
-from sqlmodel import Session, col, delete, or_, select
+from sqlmodel import Session, col, delete, or_, select, update
 
 from ..config import settings
 from ..db import get_session
 from ..deps import current_user, fail
 from ..geo import distance_m
-from ..models import Department, Helpful, InviteCode, Note, Place, Report, TimetableEntry, Unlock, User, now_utc
+from ..models import (
+    Announcement,
+    Department,
+    Helpful,
+    InviteCode,
+    Note,
+    Place,
+    PushSubscription,
+    Report,
+    TimetableEntry,
+    Unlock,
+    User,
+    now_utc,
+)
 from ..nicknames import random_nickname
 from ..passwords import weak_reason
 from ..security import (
@@ -219,7 +232,7 @@ def me(user: User = Depends(current_user), session: Session = Depends(get_sessio
 
 @router.delete("/me")
 def withdraw(response: Response, user: User = Depends(current_user), session: Session = Depends(get_session)) -> dict:
-    """탈퇴: 계정과 그 사람이 남긴 기록(쪽지, 해제, 도움됐어요, 신고, 시간표)을 모두 지운다."""
+    """탈퇴: 계정과 그 사람이 남긴 기록(쪽지, 해제, 도움됐어요, 신고, 시간표, 알림 구독)을 모두 지운다."""
     my_note_ids = select(Note.id).where(Note.author_id == user.id)
     # 내 쪽지에 달린 덧붙이기·도움됐어요·신고부터 지운다 (외래 키 순서)
     child_ids = select(Note.id).where(col(Note.parent_id).in_(my_note_ids))
@@ -233,6 +246,8 @@ def withdraw(response: Response, user: User = Depends(current_user), session: Se
     session.exec(delete(Report).where(Report.user_id == user.id))
     session.exec(delete(Unlock).where(Unlock.user_id == user.id))
     session.exec(delete(TimetableEntry).where(TimetableEntry.user_id == user.id))
+    session.exec(delete(PushSubscription).where(PushSubscription.user_id == user.id))
+    session.exec(update(Announcement).where(Announcement.author_id == user.id).values(author_id=None))
     session.delete(user)
     session.commit()
 

@@ -121,3 +121,11 @@ export const adminListNotes = (placeId) => call(`/api/admin/places/${encodeURICo
 // ---------- 도감 ----------
 
 export const collection = () => call('/api/me/collection')
+
+// ---------- 공지 푸시 알림 ----------
+
+export const pushKey = () => call('/api/push/key')
+export const pushSubscribe = (subscription) => post('/api/push/subscribe', subscription)
+export const pushUnsubscribe = (endpoint) => post('/api/push/unsubscribe', { endpoint })
+export const sendAnnouncement = ({ title, body, url }) => post('/api/admin/announcements', { title, body, url })
+export const listAnnouncements = () => call('/api/admin/announcements')

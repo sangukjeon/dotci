@@ -3,6 +3,8 @@ import { AuthProvider, RequireAuth } from './auth.jsx'
 import { OfflineNotice, ToastProvider } from './toast.jsx'
 import { useServerWake } from './hooks/useServerWake.js'
 import WakeOverlay from './components/WakeOverlay.jsx'
+import OfflineScreen from './components/OfflineScreen.jsx'
+import { useOnline } from './hooks/useOnline.js'
 import AuthPage from './pages/AuthPage.jsx'
 import MapPage from './pages/MapPage.jsx'
 import DeskPage from './pages/DeskPage.jsx'
@@ -24,6 +26,7 @@ export default function App() {
   const { waking, done } = useServerWake()
   // 예시 책상을 보는 동안에는 깨우기 화면으로 덮지 않는다 (깨우기는 뒤에서 계속)
   const onExample = useLocation().pathname === EXAMPLE_PATH
+  const online = useOnline()
 
   return (
     <AuthProvider>
@@ -53,7 +56,9 @@ export default function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
-        <WakeOverlay show={waking && !onExample} done={done} />
+        {/* 인터넷이 끊기면 깨우기 화면 대신 오프라인 화면 (예시 책상은 연결 없이도 볼 수 있어서 덮지 않는다) */}
+        <WakeOverlay show={waking && online && !onExample} done={done} />
+        {!online && !onExample && <OfflineScreen />}
         <OfflineNotice />
       </ToastProvider>
     </AuthProvider>

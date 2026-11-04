@@ -28,6 +28,17 @@ class Settings(BaseSettings):
     campus_lng: float = 127.44536
     campus_radius_m: int = 400
 
+    # 공지 푸시 알림(웹 푸시) 서명 키. 만들기: python make_vapid.py
+    # 공개키는 브라우저에 보내도 되지만, 비밀키는 .env와 Render 환경변수에만 둔다.
+    # 둘 중 하나라도 비어 있으면 알림 기능은 꺼진다.
+    vapid_public_key: str = ""
+    vapid_private_key: str = ""
+    vapid_subject: str = "mailto:lead@dotci.co.kr"
+
+    @property
+    def push_enabled(self) -> bool:
+        return bool(self.vapid_public_key and self.vapid_private_key)
+
     @property
     def is_prod(self) -> bool:
         return self.env == "prod"

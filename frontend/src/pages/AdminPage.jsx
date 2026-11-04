@@ -7,6 +7,7 @@ import { CATEGORIES } from '../categories.js'
 import { useToast } from '../toast.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
 import AdminStats from '../components/AdminStats.jsx'
+import AdminAnnounce from '../components/AdminAnnounce.jsx'
 import * as server from '../server.js'
 import './AdminPage.css'
 
@@ -17,7 +18,7 @@ export default function AdminPage() {
   const [placeId, setPlaceId] = useState('')
   const [notes, setNotes] = useState([])
   const [writing, setWriting] = useState(false)
-  const [tab, setTab] = useState('notes') // notes | stats
+  const [tab, setTab] = useState('notes') // notes | stats | announce
 
   useEffect(() => {
     getPlaces()
@@ -59,9 +60,14 @@ export default function AdminPage() {
         <button role="tab" aria-selected={tab === 'stats'} className="admin__tab" onClick={() => setTab('stats')}>
           통계
         </button>
+        <button role="tab" aria-selected={tab === 'announce'} className="admin__tab" onClick={() => setTab('announce')}>
+          공지
+        </button>
       </div>
 
-      {tab === 'stats' ? (
+      {tab === 'announce' ? (
+        <AdminAnnounce />
+      ) : tab === 'stats' ? (
         <AdminStats places={places.filter((p) => !p.is_booth)} />
       ) : (
       <>

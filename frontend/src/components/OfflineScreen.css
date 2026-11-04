@@ -1,0 +1,72 @@
+.offline {
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* 서버 깨우기 화면(100)보다 위 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-6);
+  text-align: center;
+  background: var(--bg);
+}
+
+.offline__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--sp-4);
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+}
+/* 신호를 찾는 듯 퍼지는 원 */
+.offline__ping {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  opacity: 0;
+  animation: offline-ping 2s ease-out infinite;
+}
+@keyframes offline-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.offline__title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.offline__body {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.offline__btn {
+  width: min(320px, 100%);
+  margin-top: var(--sp-6);
+}
+.offline__link {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2);
+  font-size: 14px;
+  color: var(--primary);
+  text-decoration: none;
+}
+.offline__link:hover {
+  text-decoration: underline;
+}

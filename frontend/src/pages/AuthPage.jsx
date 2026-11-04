@@ -8,6 +8,7 @@ import { getPosition } from '../geo.js'
 import { DOCS } from '../legal.js'
 import Sheet from '../components/Sheet.jsx'
 import LegalDoc from '../components/LegalDoc.jsx'
+import PasswordStrength from '../components/PasswordStrength.jsx'
 import { LegalLinks } from './LegalPage.jsx'
 import './AuthPage.css'
 
@@ -259,7 +260,11 @@ function SignupForm({ goTo }) {
           <label className="field">
             <span className="field__label">비밀번호</span>
             <input className="input" type="password" autoComplete="new-password" value={form.password} onChange={set('password')} />
-            <span className="field__help">8자 이상, 다른 사이트에서 쓰지 않는 비밀번호</span>
+            {form.password ? (
+              <PasswordStrength password={form.password} username={form.username} />
+            ) : (
+              <span className="field__help">8자 이상, 다른 사이트에서 쓰지 않는 비밀번호</span>
+            )}
           </label>
           <div className="field">
             <span className="field__label" id="grade-label">학년</span>

@@ -46,14 +46,10 @@ export const useToast = () => useContext(ToastContext)
 export function OfflineNotice() {
   const show = useToast()
   useEffect(() => {
-    const off = () => show('연결이 끊겼어요. 인터넷을 확인해 주세요')
+    // 끊겼을 때는 OfflineScreen이 화면 전체로 알려 주고, 다시 연결되면 여기서 짧게 알려 준다
     const on = () => show('다시 연결됐어요', { success: true })
-    window.addEventListener('offline', off)
     window.addEventListener('online', on)
-    return () => {
-      window.removeEventListener('offline', off)
-      window.removeEventListener('online', on)
-    }
+    return () => window.removeEventListener('online', on)
   }, [show])
   return null
 }

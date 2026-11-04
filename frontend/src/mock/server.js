@@ -625,3 +625,24 @@ export function addVisitorNote() {
   state.notes.push(note)
   return { id: note.id, category: note.category, content: note.content, author_nickname: note.author.nickname, created_at: note.created_at }
 }
+
+// ---------- 공지 푸시 알림 (체험판: 실제 알림 없이 기록만) ----------
+
+const mockAnnouncements = []
+export async function pushKey() {
+  return { public_key: null } // 체험판에는 알림 서버가 없다
+}
+export async function pushSubscribe() {
+  return { ok: true }
+}
+export async function pushUnsubscribe() {
+  return { ok: true }
+}
+export async function sendAnnouncement({ title, body, url = '/' }) {
+  await delay(300)
+  mockAnnouncements.unshift({ id: Date.now(), title, body, url, sent: 0, created_at: new Date().toISOString() })
+  return { id: mockAnnouncements[0].id, sent: 0, removed: 0, failed: 0 }
+}
+export async function listAnnouncements() {
+  return { subscribers: 0, items: mockAnnouncements.slice(0, 20) }
+}

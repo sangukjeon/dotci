@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#F2F3F8" />
+    <title>인터넷 연결이 끊겼어요 · DOTCI</title>
+    <!-- 인터넷 없이 열리는 페이지라 글꼴·그림을 밖에서 받지 않는다 (모두 이 파일 안에) -->
+    <style>
+      :root {
+        --bg: #f2f3f8;
+        --surface: #ffffff;
+        --line: #e5e8ef;
+        --text-strong: #141a24;
+        --text-2: #697383;
+        --primary: #2b6bf3;
+        --primary-strong: #1e56d6;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 24px 16px;
+        background: var(--bg);
+        color: var(--text-strong);
+        font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+        text-align: center;
+        word-break: keep-all;
+      }
+      .icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 96px;
+        height: 96px;
+        margin-bottom: 16px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        color: var(--text-2);
+      }
+      .icon::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 50%;
+        border: 2px solid var(--primary);
+        opacity: 0;
+        animation: ping 2s ease-out infinite;
+      }
+      @keyframes ping {
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.6); opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .icon::after { animation: none; }
+      }
+      .brand {
+        position: fixed;
+        top: 20px;
+        left: 0;
+        right: 0;
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+      .brand span { color: var(--primary); }
+      h1 {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 700;
+      }
+      p {
+        font-size: 14px;
+        line-height: 22px;
+        color: var(--text-2);
+      }
+      button {
+        width: min(320px, 100%);
+        min-height: 52px;
+        margin-top: 24px;
+        border: 0;
+        border-radius: 14px;
+        background: var(--primary);
+        color: #fff;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:active { background: var(--primary-strong); }
+      button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="brand" aria-hidden="true">DOTCI<span>.</span></div>
+    <div class="icon" aria-hidden="true">
+      <!-- lucide wifi-off -->
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h.01" />
+        <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+        <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
+        <path d="M19 12.859a10 10 0 0 0-2.007-1.523" />
+        <path d="M2 8.82a15 15 0 0 1 4.177-2.643" />
+        <path d="M22 8.82a15 15 0 0 0-11.288-3.764" />
+        <path d="m2 2 20 20" />
+      </svg>
+    </div>
+    <h1>인터넷 연결이 끊겼어요</h1>
+    <p>와이파이나 모바일 데이터를 확인해 주세요.<br />연결되면 자동으로 다시 열려요.</p>
+    <button type="button" id="retry">다시 시도</button>
+    <script>
+      // 연결이 돌아오면 원래 보려던 주소를 다시 연다
+      window.addEventListener('online', () => location.reload())
+      document.getElementById('retry').addEventListener('click', () => location.reload())
+    </script>
+  </body>
+</html>

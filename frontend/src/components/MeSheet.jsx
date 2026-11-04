@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { LegalLinks } from '../pages/LegalPage.jsx'
 import { BookOpen, ChevronRight, LogOut, Route, ShieldCheck, Stamp, Trophy, UtensilsCrossed } from 'lucide-react'
 import Sheet from './Sheet.jsx'
+import PushToggle from './PushToggle.jsx'
 import { useAuth } from '../auth.jsx'
 import './MeSheet.css'
 
@@ -64,6 +65,9 @@ export default function MeSheet({ onClose }) {
             </Link>
           </li>
         )}
+        <li>
+          <PushToggle />
+        </li>
         <li>
           <button className="me__row" onClick={logout}>
             <LogOut size={20} aria-hidden="true" /> 로그아웃
