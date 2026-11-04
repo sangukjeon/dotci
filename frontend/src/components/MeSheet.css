@@ -135,3 +135,46 @@
 .switch[aria-checked='true'] .switch__thumb {
   transform: translateX(20px);
 }
+
+/* 처음 한 번 묻는 공지 알림 안내 */
+.push-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding-bottom: var(--sp-2);
+  text-align: center;
+}
+.push-prompt__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--sp-2);
+  border-radius: 50%;
+  background: var(--primary-weak);
+  color: var(--primary);
+}
+.push-prompt__body {
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text);
+}
+.push-prompt__body b {
+  color: var(--text-strong);
+}
+.push-prompt__help {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.push-prompt__actions {
+  display: flex;
+  gap: var(--sp-2);
+  width: 100%;
+  margin-top: var(--sp-4);
+}
+.push-prompt__actions > * {
+  flex: 1;
+}

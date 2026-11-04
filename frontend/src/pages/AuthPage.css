@@ -161,6 +161,10 @@
   color: var(--primary);
   font-weight: 700;
 }
+.auth__optional {
+  color: var(--text-2);
+  font-weight: 700;
+}
 .auth__view {
   flex-shrink: 0;
   font-size: 13px;

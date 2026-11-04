@@ -28,7 +28,35 @@ function keyBytes(base64url) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0))
 }
 
+// "처음 한 번 물어보기"를 이미 했는지 (이 브라우저에만 저장)
+const ASKED_KEY = 'dotci:push-asked'
+export function pushAsked() {
+  try {
+    return localStorage.getItem(ASKED_KEY) === '1'
+  } catch {
+    return true // 저장소를 못 쓰면 매번 묻지 않도록 이미 물은 것으로 친다
+  }
+}
+export function markPushAsked() {
+  try {
+    localStorage.setItem(ASKED_KEY, '1')
+  } catch {
+    /* 저장 못 해도 괜찮다 */
+  }
+}
+
+// 브라우저 알림 허용 창만 띄운다. 버튼을 누른 직후(같은 클릭 안에서) 불러야 아이폰에서도 뜬다.
+export function askPushPermission() {
+  markPushAsked()
+  if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return Promise.resolve('unsupported')
+  }
+  if (Notification.permission !== 'default') return Promise.resolve(Notification.permission)
+  return Notification.requestPermission()
+}
+
 export async function enablePush() {
+  markPushAsked()
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') return permission === 'denied' ? 'denied' : 'off'
   const { public_key } = await pushKey()

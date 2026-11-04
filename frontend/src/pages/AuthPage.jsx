@@ -9,6 +9,7 @@ import { DOCS } from '../legal.js'
 import Sheet from '../components/Sheet.jsx'
 import LegalDoc from '../components/LegalDoc.jsx'
 import PasswordStrength from '../components/PasswordStrength.jsx'
+import { askPushPermission, enablePush, markPushAsked } from '../push.js'
 import { LegalLinks } from './LegalPage.jsx'
 import './AuthPage.css'
 
@@ -17,7 +18,9 @@ const AGREEMENTS = [
   { key: 'terms', label: '이용약관 동의', doc: 'terms' },
   { key: 'consent', label: '개인정보 수집·이용 동의', doc: 'consent' },
   { key: 'age', label: '만 14세 이상이에요' },
+  { key: 'push', label: '공지 알림 받기', doc: 'push', optional: true },
 ]
+const REQUIRED = AGREEMENTS.filter((a) => !a.optional)
 
 const LOGIN_ERRORS = {
   bad_credentials: '아이디 또는 비밀번호를 확인해 주세요.',
@@ -162,7 +165,8 @@ function SignupForm({ goTo }) {
   const [manualCode, setManualCode] = useState('')
   const [agreed, setAgreed] = useState({}) // { terms: true, consent: true, age: true }
   const [reading, setReading] = useState(null) // 보고 있는 약관 'terms' | 'consent'
-  const agreeAll = AGREEMENTS.every((a) => agreed[a.key])
+  const agreeAll = AGREEMENTS.every((a) => agreed[a.key]) // "전체 동의" 체크 표시 (선택 포함)
+  const requiredOk = REQUIRED.every((a) => agreed[a.key])
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -218,11 +222,16 @@ function SignupForm({ goTo }) {
     e.preventDefault()
     const loc = location ?? (manualCode.length === 6 ? { method: 'qr', code: manualCode } : null)
     if (!loc) return setError('학교에 있는지 확인해 주세요.')
-    if (!agreeAll) return setError('필수 항목에 모두 동의해 주세요.')
+    if (!requiredOk) return setError('필수 항목에 모두 동의해 주세요.')
+    // 공지 알림에 동의했으면 "가입하기"를 누른 이 순간 브라우저 허용 창을 띄운다.
+    // (아이폰 등은 버튼을 누른 직후에만 허용 창을 띄울 수 있어서, 가입 요청을 기다리기 전에 부른다)
+    const permission = agreed.push ? askPushPermission() : null
+    if (!agreed.push) markPushAsked()
     setBusy(true)
     setError('')
     try {
       await signup({ ...form, location: loc })
+      if (permission) permission.then((p) => p === 'granted' && enablePush().catch(() => {}))
       navigate(goTo, { replace: true })
     } catch (err) {
       // 위치 확인에 실패하면 받은 위치를 버려서, 다시 시도하거나 장소 코드를 넣을 수 있게 한다
@@ -367,7 +376,12 @@ function SignupForm({ goTo }) {
                       onChange={(e) => setAgreed({ ...agreed, [x.key]: e.target.checked })}
                     />
                     <span>
-                      <b className="auth__required">[필수]</b> {x.label}
+                      {x.optional ? (
+                        <b className="auth__optional">[선택]</b>
+                      ) : (
+                        <b className="auth__required">[필수]</b>
+                      )}{' '}
+                      {x.label}
                     </span>
                   </label>
                   {x.doc && (

@@ -5,6 +5,7 @@ import { BellRing, List, LocateFixed, Map as MapIcon, QrCode, UserRound, X } fro
 import { getPlaces } from '../api.js'
 import { useAuth } from '../auth.jsx'
 import MeSheet from '../components/MeSheet.jsx'
+import PushPrompt from '../components/PushPrompt.jsx'
 import { nearbyHint, placeSummary } from '../server.js'
 import NaverMap from '../components/NaverMap.jsx'
 import PlaceList from '../components/PlaceList.jsx'
@@ -154,6 +155,8 @@ export default function MapPage() {
       )}
 
       <AnimatePresence>{showMe && <MeSheet onClose={() => setShowMe(false)} />}</AnimatePresence>
+      {/* 처음 한 번만: 공지 알림 받을지 묻기 */}
+      <PushPrompt />
     </main>
   )
 }
