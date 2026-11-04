@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Megaphone, Trash2 } from 'lucide-react'
 import { deleteAnnouncement, listAnnouncements, sendAnnouncement } from '../server.js'
 import { useToast } from '../toast.jsx'
+import Sentences from './Sentences.jsx'
 
 const TITLE_MAX = 40
 const BODY_MAX = 120
@@ -64,7 +65,9 @@ export default function AdminAnnounce() {
   return (
     <section className="announce">
       <p className="announce__lead">
-        알림을 켠 <b>{history.subscribers}명</b>에게 폰 알림으로 보내요.{'\n'}보낸 뒤에는 취소할 수 없어요.
+        <Sentences>
+          알림을 켠 <b>{history.subscribers}명</b>에게 폰 알림으로 보내요.{'\n'}보낸 뒤에는 취소할 수 없어요.
+        </Sentences>
       </p>
 
       <div className="announce__card">
@@ -97,14 +100,16 @@ export default function AdminAnnounce() {
         <span className="field__label">알림을 누르면 열 화면</span>
         <input className="input" value={form.url} onChange={set('url')} placeholder="/" />
         <span className="field__help">
-          "/"는 지도예요.{'\n'}예: /place/w16-union (학생회관 책상), /meals (학식)
+          <Sentences>
+            "/"는 지도예요.{'\n'}예: /place/w16-union (학생회관 책상), /meals (학식)
+          </Sentences>
         </span>
       </label>
       </div>
 
       {error && (
         <p className="field__error" role="alert">
-          {error}
+          <Sentences>{error}</Sentences>
         </p>
       )}
 
@@ -140,7 +145,7 @@ export default function AdminAnnounce() {
               </span>
               {removing === a.id && (
                 <div className="announce__remove">
-                  <p>기록만 지워져요.{'\n'}이미 폰에 간 알림은 그대로예요.</p>
+                  <p><Sentences>기록만 지워져요.{'\n'}이미 폰에 간 알림은 그대로예요.</Sentences></p>
                   <div className="announce__remove-actions">
                     <button type="button" className="btn-sub" onClick={() => setRemoving(null)}>
                       취소

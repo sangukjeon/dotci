@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Bell } from 'lucide-react'
 import { disablePush, enablePush, pushState } from '../push.js'
 import { useToast } from '../toast.jsx'
+import Sentences from './Sentences.jsx'
 
 // 상태별 안내 (스위치 아래 작은 글씨)
 const HELP = {
@@ -64,7 +65,7 @@ export default function PushToggle() {
       {/* 켜져 있거나 꺼져 있을 때는 설명 없이 깔끔하게, 켤 수 없는 이유가 있을 때만 안내 */}
       {showHelp && (
         <p id="push-help" className="me__push-help">
-          {HELP[state]}
+          <Sentences>{HELP[state]}</Sentences>
         </p>
       )}
     </div>

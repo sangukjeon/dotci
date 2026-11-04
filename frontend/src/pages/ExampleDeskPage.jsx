@@ -6,6 +6,7 @@ import { useToast } from '../toast.jsx'
 import Desk from '../components/Desk.jsx'
 import NoteModal from '../components/NoteModal.jsx'
 import './DeskPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 서버가 깨어나는 동안 둘러보는 예시 책상 (로그인·서버 없이 화면 안에서만 동작)
 // 쪽지는 화면 확인용 예시이고 실제 선배 팁이 아니다.
@@ -98,9 +99,9 @@ export default function ExampleDeskPage({ waking }) {
         <div className="banner banner--info desk-page__banner" role="status">
           <Info size={18} aria-hidden="true" />
           <span>
-            {waking
+            <Sentences>{waking
               ? '서버를 깨우는 동안 둘러보는 예시 책상이에요.\n쪽지는 화면 확인용 예시예요.'
-              : '서버가 준비됐어요!\n이제 진짜 DOTCI를 시작해 보세요.'}
+              : '서버가 준비됐어요!\n이제 진짜 DOTCI를 시작해 보세요.'}</Sentences>
           </span>
         </div>
         {!waking && (

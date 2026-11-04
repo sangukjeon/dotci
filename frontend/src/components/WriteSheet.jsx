@@ -4,6 +4,7 @@ import Sheet from './Sheet.jsx'
 import { CATEGORIES, CATEGORY_KEYS } from '../categories.js'
 import * as server from '../server.js'
 import './WriteSheet.css'
+import Sentences from './Sentences.jsx'
 
 const MIN = 10
 const MAX = 200
@@ -80,7 +81,7 @@ export default function WriteSheet({ placeId, placeName, onClose, onWritten }) {
           <>
             <div className="banner banner--info" style={{ marginBottom: 'var(--sp-4)' }}>
               <Info size={18} aria-hidden="true" />
-              <span>자리·출석·과제처럼 수업 듣는 데 도움 되는 팁을 남겨 주세요.{'\n'}교수님 평가는 남기지 않아요.</span>
+              <span><Sentences>자리·출석·과제처럼 수업 듣는 데 도움 되는 팁을 남겨 주세요.{'\n'}교수님 평가는 남기지 않아요.</Sentences></span>
             </div>
             <label className="field">
               <span className="field__label">과목명 (선택)</span>
@@ -111,12 +112,12 @@ export default function WriteSheet({ placeId, placeName, onClose, onWritten }) {
             onChange={(e) => setHint(e.target.value.slice(0, HINT_MAX))}
             placeholder="시험기간 필수"
           />
-          <span className="field__help">잠겨 있을 때 카드 뒷면에 보이는 말이에요.{'\n'}궁금하게 만들어 보세요.</span>
+          <span className="field__help"><Sentences>잠겨 있을 때 카드 뒷면에 보이는 말이에요.{'\n'}궁금하게 만들어 보세요.</Sentences></span>
         </label>
 
         {error && (
           <p className="field__error" role="alert">
-            {error}
+            <Sentences>{error}</Sentences>
           </p>
         )}
 

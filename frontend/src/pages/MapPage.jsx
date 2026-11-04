@@ -13,6 +13,7 @@ import PlaceSheet from '../components/PlaceSheet.jsx'
 import { IS_DEMO } from '../demo.js'
 import { NAVER_CLIENT_ID } from '../naverMap.js'
 import './MapPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 const MAP_ERRORS = {
   no_key: IS_DEMO
@@ -68,7 +69,7 @@ export default function MapPage() {
   if (loadError) {
     return (
       <main className="map-page map-page--center">
-        <p>장소를 불러오지 못했어요.{'\n'}잠시 후 다시 시도해 주세요.</p>
+        <p><Sentences>장소를 불러오지 못했어요.{'\n'}잠시 후 다시 시도해 주세요.</Sentences></p>
         <button className="btn-sub pressable" onClick={retry}>
           다시 시도
         </button>
@@ -98,7 +99,7 @@ export default function MapPage() {
             </p>
             <MeButton user={user} onClick={() => setShowMe(true)} />
           </div>
-          {mapError && <p className="map-page__notice">{MAP_ERRORS[mapError]}</p>}
+          {mapError && <p className="map-page__notice"><Sentences>{MAP_ERRORS[mapError]}</Sentences></p>}
           <PlaceList places={places ?? []} />
         </div>
       )}

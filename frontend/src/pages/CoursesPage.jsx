@@ -5,6 +5,7 @@ import { getPlaces } from '../api.js'
 import PageHeader from '../components/PageHeader.jsx'
 import * as server from '../server.js'
 import './CoursesPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 멘토링 코스 목록: 학생회·멘토가 만든 "정해진 순서대로 도는 장소 묶음"
 export function CoursesPage() {
@@ -32,8 +33,9 @@ export function CoursesPage() {
               <span className="course-card__body">
                 <span className="course-card__title">{c.title}</span>
                 <span className="course-card__meta">
-                  {c.summary}
-                  {'\n'}<span className="course-card__by">{c.by}</span>
+                  <Sentences>
+                    {c.by} ·{'\n'}{c.summary}
+                  </Sentences>
                 </span>
                 <span className="course-card__bar" aria-label={`${c.total}곳 중 ${c.done}곳 열었어요`}>
                   <span style={{ width: `${(c.done / c.total) * 100}%` }} />
@@ -82,7 +84,7 @@ export function CourseDetailPage() {
             <p className="page__lead">
               {course.by} · {course.total}곳 중 <b>{course.done}</b>곳 열었어요
             </p>
-            {course.done === course.total && <p className="course__done">코스를 모두 마쳤어요.{'\n'}이제 다음 후배를 위한 흔적을 남겨 주세요.</p>}
+            {course.done === course.total && <p className="course__done"><Sentences>코스를 모두 마쳤어요.{'\n'}이제 다음 후배를 위한 흔적을 남겨 주세요.</Sentences></p>}
           </section>
 
           <ol className="list-plain page__section steps">

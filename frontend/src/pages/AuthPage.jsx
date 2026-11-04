@@ -12,6 +12,7 @@ import PasswordStrength from '../components/PasswordStrength.jsx'
 import { askPushPermission, enablePush, markPushAsked } from '../push.js'
 import { LegalLinks } from './LegalPage.jsx'
 import './AuthPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 가입 동의 항목: 모두 필수. doc이 있으면 '보기'로 전문을 연다.
 const AGREEMENTS = [
@@ -130,8 +131,8 @@ function LoginForm({ goTo }) {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
       </label>
-      {error && <p className="field__error" role="alert">{error}</p>}
-      <p className="field__help">로그인은 어디서나 돼요.{'\n'}쪽지는 그 장소에 가야 열려요.</p>
+      {error && <p className="field__error" role="alert"><Sentences>{error}</Sentences></p>}
+      <p className="field__help"><Sentences>로그인은 어디서나 돼요.{'\n'}쪽지는 그 장소에 가야 열려요.</Sentences></p>
       <div className="auth__legal">
         <LegalLinks />
       </div>
@@ -286,7 +287,7 @@ function SignupForm({ goTo }) {
             </div>
           </div>
           <p className="field__help">쪽지에 보이는 이름은 "조용한 다람쥐 42"처럼 자동으로 지어져요.</p>
-          {error && <p className="field__error" role="alert">{error}</p>}
+          {error && <p className="field__error" role="alert"><Sentences>{error}</Sentences></p>}
           <div className="bottom-plate">
             <button className="btn-main" type="submit" disabled={busy}>
               {busy ? '확인 중...' : '다음'}
@@ -306,9 +307,9 @@ function SignupForm({ goTo }) {
               placeholder="학과 대표에게 받은 코드"
               autoCapitalize="characters"
             />
-            <span className="field__help">학과 대표(과대·학생회)에게 받은 코드예요.{'\n'}학과는 코드로 정해져요.</span>
+            <span className="field__help"><Sentences>학과 대표(과대·학생회)에게 받은 코드예요.{'\n'}학과는 코드로 정해져요.</Sentences></span>
           </label>
-          {error && <p className="field__error" role="alert">{error}</p>}
+          {error && <p className="field__error" role="alert"><Sentences>{error}</Sentences></p>}
           <div className="bottom-plate">
             <button className="btn-main" type="submit" disabled={busy || !form.invite_code}>
               {busy ? '확인 중...' : '코드 확인'}
@@ -328,7 +329,7 @@ function SignupForm({ goTo }) {
 
           <p className="field__label">학교에 있는지 확인할게요</p>
           <p className="field__help" style={{ marginBottom: 'var(--sp-3)' }}>
-            캠퍼스 안에서만 가입할 수 있어요.{'\n'}위치는 확인에만 쓰고 저장하지 않아요.
+            <Sentences>캠퍼스 안에서만 가입할 수 있어요.{'\n'}위치는 확인에만 쓰고 저장하지 않아요.</Sentences>
           </p>
 
           {location ? (
@@ -393,8 +394,10 @@ function SignupForm({ goTo }) {
               ))}
             </ul>
             <p className="field__help">
-              실명·학번·전화번호·이메일은 받지 않아요.{'\n'}위치는 확인할 때만 쓰고 저장하지 않아요.{'\n'}
-              <span className="nowrap">
+              <Sentences>
+                실명·학번·전화번호·이메일은 받지 않아요.{'\n'}위치는 확인할 때만 쓰고 저장하지 않아요.
+              </Sentences>{' '}
+              <span className="sentence">
                 자세한 내용은{' '}
                 <button type="button" className="auth__inline-link" onClick={() => setReading('privacy')}>
                   개인정보처리방침
@@ -404,7 +407,7 @@ function SignupForm({ goTo }) {
             </p>
           </div>
 
-          {error && <p className="field__error" role="alert">{error}</p>}
+          {error && <p className="field__error" role="alert"><Sentences>{error}</Sentences></p>}
           <div className="bottom-plate">
             <button className="btn-main" type="submit" disabled={busy}>
               {busy ? '가입 중...' : '가입하기'}

@@ -5,6 +5,7 @@ import { getPlaces } from '../api.js'
 import PageHeader from '../components/PageHeader.jsx'
 import * as server from '../server.js'
 import './SubjectsPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 과목별 수강 팁: 과목을 고르면 "팁이 있는 장소"만 보여 준다. 내용은 그 장소에 가야 열린다.
 // 별점·교수 평가는 없다 (CLAUDE.md F10).
@@ -29,7 +30,7 @@ export default function SubjectsPage() {
       <PageHeader title="과목별 수강 팁" />
       <section className="page__intro">
         <p className="page__h1">이 과목, 어디에 팁이 있을까요?</p>
-        <p className="page__lead">선배들이 남긴 자리·출석·과제 팁이 있는 장소를 알려 줘요.{'\n'}내용은 그 장소에 가야 열려요.</p>
+        <p className="page__lead"><Sentences>선배들이 남긴 자리·출석·과제 팁이 있는 장소를 알려 줘요.{'\n'}내용은 그 장소에 가야 열려요.</Sentences></p>
         <label className="subj__search">
           <Search size={18} aria-hidden="true" />
           <input
@@ -58,7 +59,7 @@ export default function SubjectsPage() {
               {s.course_name} <span className="subj__count">{s.note_count}</span>
             </button>
           ))}
-          {subjects && filtered.length === 0 && <p className="subj__empty">아직 "{q}" 팁이 없어요.{'\n'}첫 팁을 남겨 주세요.</p>}
+          {subjects && filtered.length === 0 && <p className="subj__empty"><Sentences>아직 "{q}" 팁이 없어요.{'\n'}첫 팁을 남겨 주세요.</Sentences></p>}
         </div>
       </section>
 

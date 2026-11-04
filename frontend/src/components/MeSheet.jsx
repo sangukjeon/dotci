@@ -6,6 +6,7 @@ import Sheet from './Sheet.jsx'
 import PushToggle from './PushToggle.jsx'
 import { useAuth } from '../auth.jsx'
 import './MeSheet.css'
+import Sentences from './Sentences.jsx'
 
 // 지도 오른쪽 위 "내 정보" 버튼을 누르면 올라오는 시트
 export default function MeSheet({ onClose }) {
@@ -93,7 +94,7 @@ export default function MeSheet({ onClose }) {
 
       {confirm ? (
         <div className="me__danger-box">
-          <p>탈퇴하면 계정과 남긴 쪽지, 연 장소 기록이 모두 지워져요.{'\n'}되돌릴 수 없어요.</p>
+          <p><Sentences>탈퇴하면 계정과 남긴 쪽지, 연 장소 기록이 모두 지워져요.{'\n'}되돌릴 수 없어요.</Sentences></p>
           <div className="me__danger-actions">
             <button className="btn-sub" onClick={() => setConfirm(false)}>
               취소

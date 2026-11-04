@@ -4,6 +4,7 @@ import { Html5Qrcode } from 'html5-qrcode'
 import { CameraOff, ChevronLeft, Keyboard } from 'lucide-react'
 import * as server from '../server.js'
 import './ScanPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 const READER_ID = 'qr-reader'
 
@@ -96,7 +97,7 @@ export default function ScanPage() {
           <p className="scan__help">장소에 붙은 QR을 네모 안에 맞춰 주세요</p>
           {error && (
             <p className="field__error scan__error" role="alert">
-              {error}
+              <Sentences>{error}</Sentences>
             </p>
           )}
           <button className="text-btn scan__switch" onClick={() => setManual(true)}>
@@ -127,7 +128,7 @@ export default function ScanPage() {
           </label>
           {error && (
             <p className="field__error" role="alert">
-              {error}
+              <Sentences>{error}</Sentences>
             </p>
           )}
           {!cameraError && (

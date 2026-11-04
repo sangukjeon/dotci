@@ -5,6 +5,7 @@ import Sheet from './Sheet.jsx'
 import { enablePush, markPushAsked, pushAsked, pushState } from '../push.js'
 import { useToast } from '../toast.jsx'
 import './MeSheet.css'
+import Sentences from './Sentences.jsx'
 
 const SHOW_AFTER_MS = 1500 // 지도가 뜬 뒤 잠깐 있다가 묻는다
 
@@ -56,7 +57,9 @@ export default function PushPrompt() {
               <BellRing size={28} />
             </span>
             <p className="push-prompt__body">
-              <b>내 쪽지가 도움됐을 때</b>, 그리고 축제·이벤트 같은 <b>공지</b>를 폰 알림으로 알려 드려요.{'\n'}광고는 보내지 않아요.
+              <Sentences>
+                <b>내 쪽지가 도움됐을 때</b>, 그리고 축제·이벤트 같은 <b>공지</b>를 폰 알림으로 알려 드려요.{'\n'}광고는 보내지 않아요.
+              </Sentences>
             </p>
             <p className="push-prompt__help">내 정보 → 알림에서 언제든 끄고 켤 수 있어요.</p>
             <div className="push-prompt__actions">

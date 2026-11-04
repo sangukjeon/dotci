@@ -4,6 +4,7 @@ import { Clock, UtensilsCrossed, WifiOff } from 'lucide-react'
 import PageHeader from '../components/PageHeader.jsx'
 import { cafeteriasOf, dateLabel, dateParts, kstDate, kstHour, loadDay, loadWeek } from '../meals.js'
 import './MealsPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 지금 시간에 맞는 끼니 코너 (조식·중식·석식이 있는 식당만)
 function nowCorner(corners) {
@@ -129,7 +130,9 @@ export default function MealsPage() {
           </>
         )}
         <p className="meals__source">
-          출처: 우송대학교 홈페이지 학생식당 안내 (wsu-meal-api로 수집){'\n'}기준: {dateLabel(date)}
+          <Sentences>
+            출처: 우송대학교 홈페이지 학생식당 안내 (wsu-meal-api로 수집) ·{'\n'}{dateLabel(date)}
+          </Sentences>
         </p>
       </section>
     </main>

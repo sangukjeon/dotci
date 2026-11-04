@@ -11,6 +11,7 @@ import NoteModal from '../components/NoteModal.jsx'
 import WriteSheet from '../components/WriteSheet.jsx'
 import * as server from '../server.js'
 import './DeskPage.css'
+import Sentences from '../components/Sentences.jsx'
 
 // 실패 이유 → 안내 문구 (CLAUDE.md 8장 reason)
 function bannerFor(result) {
@@ -218,7 +219,7 @@ export default function DeskPage() {
             {loadError === 'notfound' ? '찾을 수 없는 장소예요' : '책상을 불러오지 못했어요'}
           </p>
           <p className="desk-page__state-body">
-            {loadError === 'notfound' ? '주소가 바뀌었거나 없어진 장소예요.\n지도에서 다시 골라 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.'}
+            <Sentences>{loadError === 'notfound' ? '주소가 바뀌었거나 없어진 장소예요.\n지도에서 다시 골라 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.'}</Sentences>
           </p>
           {loadError === 'notfound' ? (
             <Link to="/" className="btn-sub">
@@ -278,7 +279,9 @@ export default function DeskPage() {
         {banner && (
           <div className={`banner banner--${banner.tone} desk-page__banner`} role="alert">
             {banner.tone === 'warn' ? <TriangleAlert size={18} aria-hidden="true" /> : <Info size={18} aria-hidden="true" />}
-            <span>{banner.text}</span>
+            <span>
+              <Sentences>{banner.text}</Sentences>
+            </span>
           </div>
         )}
 
